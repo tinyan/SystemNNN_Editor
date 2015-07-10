@@ -854,6 +854,8 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 	int tab = 2;
 	int tabHeader = tab + 2;
 	int komaTab = tab + 2;
+	int messageTab = tab + 4;
+	int effectTab = tab + 4;
 
 	char json[1024];
 
@@ -991,6 +993,9 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 			if (makeJsonFlag != NULL)
 			{
 				pKoma->OutputData(makeJsonFlag,"{",komaTab);
+
+				pFilm->OutputData(makeJsonFlag,"\"KomaHeader\" :",komaTab+1);
+				pFilm->OutputData(makeJsonFlag,"[",komaTab+1);
 			}
 
 
@@ -1011,7 +1016,7 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 							int varpara[2];
 							varpara[0] = varNumber;
 							varpara[1] = varData;
-							m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_SETVAR,2,varpara);
+							m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_SETVAR,2,varpara,makeJsonFlag,komaTab+2);
 							m_miniCompiler->AddNowCode();
 						}
 					}
@@ -1025,13 +1030,13 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 			{
 				int demopara[1];
 				demopara[0] = demo;
-				m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_SETDEMOFLAG,1,demopara);
+				m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_SETDEMOFLAG,1,demopara,makeJsonFlag,komaTab+2);
 				m_miniCompiler->AddNowCode();
 			}
 
 			if (pKoma->GetWindowOffFlag())
 			{
-				m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_NOMESSAGEWINDOW);
+				m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_NOMESSAGEWINDOW,0,NULL,makeJsonFlag,komaTab+2);
 				m_miniCompiler->AddNowCode();
 			}
 
@@ -1047,7 +1052,7 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 					{
 						cutin = 1;
 						int cutinFlag = 1;
-						m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_CUTIN,1,&cutinFlag);
+						m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_CUTIN,1,&cutinFlag,makeJsonFlag,komaTab+2);
 						m_miniCompiler->AddNowCode();
 					}
 				}
@@ -1057,7 +1062,7 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 					{
 						cutin = 0;
 						int cutinFlag = 0;
-						m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_CUTIN,1,&cutinFlag);
+						m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_CUTIN,1,&cutinFlag,makeJsonFlag,komaTab+2);
 						m_miniCompiler->AddNowCode();
 					}
 				}
@@ -1072,9 +1077,10 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 			if (overrapCount != 0)
 			{
 				//prepareoverrapstart
-				m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_PREPAREOVERRAP);
+				m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_PREPAREOVERRAP,0,NULL,makeJsonFlag,komaTab+2);
 				m_miniCompiler->AddNowCode();
 			}
+
 
 
 
@@ -1103,7 +1109,7 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 				//error!
 			}
 
-			SetStartKoma(pKoma,nextType,nextWindowMode);
+			SetStartKoma(pKoma,nextType,nextWindowMode,makeJsonFlag,komaTab+2);
 
 
 			//setcg
@@ -1116,7 +1122,7 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 				setcgpara[0] = setCGPlayer;
 				setcgpara[1] = setCGNumber;
 
-				m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_SETCG,2,setcgpara);
+				m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_SETCG,2,setcgpara,makeJsonFlag,komaTab+2);
 				m_miniCompiler->AddNowCode();
 			}
 
@@ -1144,7 +1150,7 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 				if (fadeIn != -1) paraKosuu = 4;
 				if (fadeOut != -1) paraKosuu = 5;
 
-				m_miniCompiler->Pass2Music(paraKosuu,bgmPara);
+				m_miniCompiler->Pass2Music(paraKosuu,bgmPara,NULL,makeJsonFlag,komaTab+2);
 				m_miniCompiler->AddNowCode();
 			}
 			else if (bgm == -1)
@@ -1160,7 +1166,7 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 					paraKosuu = 2;
 				}
 
-				m_miniCompiler->Pass2Music(paraKosuu,bgmPara);
+				m_miniCompiler->Pass2Music(paraKosuu,bgmPara,NULL,makeJsonFlag,komaTab+2);
 				m_miniCompiler->AddNowCode();
 			}
 			else if (bgm == -2)
@@ -1171,7 +1177,7 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 				bgmPara[0] = -2;
 				bgmPara[1] = volume;
 
-				m_miniCompiler->Pass2Music(paraKosuu,bgmPara);
+				m_miniCompiler->Pass2Music(paraKosuu,bgmPara,NULL,makeJsonFlag,komaTab+2);
 				m_miniCompiler->AddNowCode();
 			}
 
@@ -1180,12 +1186,12 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 			int frameControl = pKoma->GetFrameTime();
 			if (frameControl>0)
 			{
-				m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_FRAMECONTROL,1,&frameControl);
+				m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_FRAMECONTROL,1,&frameControl,makeJsonFlag,komaTab+2);
 				m_miniCompiler->AddNowCode();
 			}
 			else if (frameControl == -1)
 			{
-				m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_SETDEFAULTFRAME,0,&frameControl);
+				m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_SETDEFAULTFRAME,0,&frameControl,makeJsonFlag,komaTab+2);
 				m_miniCompiler->AddNowCode();
 
 			}
@@ -1195,28 +1201,28 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 			{
 				windowNumber--;
 
-				m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_WINDOWNUMBER,1,&windowNumber);
+				m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_WINDOWNUMBER,1,&windowNumber,makeJsonFlag,komaTab+2);
 				m_miniCompiler->AddNowCode();
 			}
 
 			int cursorNumber = pKoma->GetCursorNumber();
 			if (cursorNumber > 0)
 			{
-				m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_CURSORNUMBER,1,&cursorNumber);
+				m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_CURSORNUMBER,1,&cursorNumber,makeJsonFlag,komaTab+2);
 				m_miniCompiler->AddNowCode();
 			}
 
 			int mouseNumber = pKoma->GetMouseNumber();
 			if (mouseNumber > 0)
 			{
-				m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_MOUSENUMBER,1,&mouseNumber);
+				m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_MOUSENUMBER,1,&mouseNumber,makeJsonFlag,komaTab+2);
 				m_miniCompiler->AddNowCode();
 			}
 
 			int autoMessage = pKoma->GetAutoMessage();
 			if (autoMessage != 0)
 			{
-				m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_AUTOMESSAGE,1,&autoMessage);
+				m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_AUTOMESSAGE,1,&autoMessage,makeJsonFlag,komaTab+2);
 				m_miniCompiler->AddNowCode();
 				lastAutoMessage = autoMessage;
 			}
@@ -1224,7 +1230,7 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 			int cannotClick = pKoma->GetCannotClick();
 			if (cannotClick != 0)
 			{
-				m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_CANNOTCLICK,1,&cannotClick);
+				m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_CANNOTCLICK,1,&cannotClick,makeJsonFlag,komaTab+2);
 				m_miniCompiler->AddNowCode();
 				lastCannotClick = cannotClick;
 			}
@@ -1232,7 +1238,7 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 			int cannotSkip = pKoma->GetCannotSkip();
 			if (cannotSkip != 0)
 			{
-				m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_CANNOTSKIP,1,&cannotSkip);
+				m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_CANNOTSKIP,1,&cannotSkip,makeJsonFlag,komaTab+2);
 				m_miniCompiler->AddNowCode();
 				lastCannotSkip = cannotSkip;
 			}
@@ -1241,7 +1247,7 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 			int optionOff = pKoma->GetOptionOff();
 			if (optionOff != 0)
 			{
-				m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_OPTIONOFF,1,&optionOff);
+				m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_OPTIONOFF,1,&optionOff,makeJsonFlag,komaTab+2);
 				m_miniCompiler->AddNowCode();
 				lastOptionOff = optionOff;
 			}
@@ -1250,12 +1256,20 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 			int expFilmStatus = pKoma->GetExpStatus();
 			if (expFilmStatus != 0)
 			{
-				m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_FILMEXPSTATUS,1,&expFilmStatus);
+				m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_FILMEXPSTATUS,1,&expFilmStatus,makeJsonFlag,komaTab+2);
 				m_miniCompiler->AddNowCode();
 			}
 
 
 
+			if (makeJsonFlag != NULL)
+			{
+				pKoma->OutputData(makeJsonFlag,"{ \"type\" : \"_\" }",komaTab+2);
+				pKoma->OutputData(makeJsonFlag,"],",komaTab+1);
+
+				pFilm->OutputData(makeJsonFlag,"\"EffectList\" :",komaTab+1);
+				pFilm->OutputData(makeJsonFlag,"[",komaTab+1);
+			}
 
 			//effect
 
@@ -1283,7 +1297,7 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 						varpara[1] = m_varListNumber[varControl[layer]];
 					}
 
-					m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_VARCONTROLLAYER,2,varpara);
+					m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_VARCONTROLLAYER,2,varpara,makeJsonFlag,effectTab);
 					m_miniCompiler->AddNowCode();
 				}
 
@@ -1341,7 +1355,7 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 
 									if ((varControl[layer] == 0) || (m_varControlConfig == 0))
 									{
-										SearchAndSetCG(filename,layer);
+										SearchAndSetCG(filename,layer,makeJsonFlag,effectTab);
 									}
 									else
 									{
@@ -1349,12 +1363,12 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 										int varNumber = m_varListNumber[varControl[layer]];
 
 
-										SearchAndSetCGByVar(filename,layer,varNumber);
+										SearchAndSetCGByVar(filename,layer,varNumber,makeJsonFlag,effectTab);
 									}
 								}
 							}
 
-							m_miniCompiler->Pass2SystemFunctionLoad(CODE_SYSTEMFUNCTION_LOADDWQ,layer,filename);
+							m_miniCompiler->Pass2SystemFunctionLoad(CODE_SYSTEMFUNCTION_LOADDWQ,layer,filename,makeJsonFlag,effectTab);
 							m_miniCompiler->AddNowCode();
 
 							//rect
@@ -1379,7 +1393,7 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 							para[7] = dst.right;
 							para[8] = dst.bottom;
 
-							m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_SETEFFECTRECT,9,para);
+							m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_SETEFFECTRECT,9,para,makeJsonFlag,effectTab);
 							m_miniCompiler->AddNowCode();
 						}
 					}
@@ -1390,7 +1404,7 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 						int eff0 = pKoma->GetEffect(layer);
 						if (eff0 != EFFECT_MAE)
 						{
-							m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_CLEAREFFECTLAYER,1,&layer);
+							m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_CLEAREFFECTLAYER,1,&layer,makeJsonFlag,effectTab);
 							m_miniCompiler->AddNowCode();
 						}
 					}
@@ -1438,7 +1452,7 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 									int animeNumber = animeStart + anime;
 									wsprintf(filename,"bganime%d",animeNumber);
 
-									SearchAndSetCG(filename,layer);
+									SearchAndSetCG(filename,layer,makeJsonFlag,effectTab);
 								}
 							}
 						}
@@ -1467,12 +1481,12 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 
 					if (eff != EFFECT_KILLEFFECT)
 					{
-						m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_SETEFFECT,2+paraKosuu,paras);
+						m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_SETEFFECT,2+paraKosuu,paras,makeJsonFlag,effectTab);
 						m_miniCompiler->AddNowCode();
 					}
 					else
 					{
-						m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_CLEAREFFECTLAYER,1,&layer);
+						m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_CLEAREFFECTLAYER,1,&layer,makeJsonFlag,effectTab);
 						m_miniCompiler->AddNowCode();
 
 					}
@@ -1485,7 +1499,7 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 						CKomaData* pKomaMae = pFilm->GetKoma(j-1);
 						if (pKomaMae->GetEffectFlag(layer))
 						{
-							m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_CLEAREFFECTLAYER,1,&layer);
+							m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_CLEAREFFECTLAYER,1,&layer,makeJsonFlag,effectTab);
 							m_miniCompiler->AddNowCode();
 						}
 					}
@@ -1526,7 +1540,7 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 
 						if (foundKomaSearch != -1)
 						{
-							m_miniCompiler->Pass2SystemFunctionLoad(CODE_SYSTEMFUNCTION_PRELOADDWQ,layer,preloadFilename);
+							m_miniCompiler->Pass2SystemFunctionLoad(CODE_SYSTEMFUNCTION_PRELOADDWQ,layer,preloadFilename,makeJsonFlag,effectTab);
 							m_miniCompiler->AddNowCode();
 
 						}
@@ -1547,17 +1561,34 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 				dat[0] = overrapType;
 				dat[1] = overrapCount;
 
-				m_miniCompiler->Pass2SystemCommand(CODE_SYSTEMCOMMAND_OVERRAP,2,dat);
+				m_miniCompiler->Pass2SystemCommand(CODE_SYSTEMCOMMAND_OVERRAP,2,dat,makeJsonFlag,effectTab);
 				m_miniCompiler->AddNowCode();
 			}
 
 
 
+			//@@@@@@@@@@@@@@@@@@message
 
+
+			if (makeJsonFlag != NULL)
+			{
+				pKoma->OutputData(makeJsonFlag,"{ \"type\" : \"_\" }",komaTab+2);
+				pKoma->OutputData(makeJsonFlag,"],",komaTab+1);
+
+				pFilm->OutputData(makeJsonFlag,"\"MessageList\" :",komaTab+1);
+				pFilm->OutputData(makeJsonFlag,"[",komaTab+1);
+			}
 
 //			int kosuu3 = pKoma->GetObjectKosuu();
 			for (int i=0;i<kosuu3;i++)
 			{
+				if (makeJsonFlag != NULL)
+				{
+					pKoma->OutputData(makeJsonFlag,"[",messageTab);
+				}
+
+
+
 				LPSTR picFileName[16];
 				if (i==0)
 				{
@@ -1573,7 +1604,7 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 				if (typ == 3) id[0] = -1;
 
 
-				m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_STARTMESSAGE,1,id);
+				m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_STARTMESSAGE,1,id,makeJsonFlag,messageTab+1);
 				m_miniCompiler->AddNowCode();
 
 
@@ -1586,21 +1617,21 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 
 					mpara[0] = musicVolume;
 					mpara[1] = musicFadeTime;
-					m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_MUSICVOLUMEONLY,2,mpara);
+					m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_MUSICVOLUMEONLY,2,mpara,makeJsonFlag,messageTab+1);
 					m_miniCompiler->AddNowCode();
 				}
 
 				int expStatus = pMessage->GetExpStatus();
 				if (expStatus != 0)
 				{
-					m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_MESSAGEEXPSTATUS,1,&expStatus);
+					m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_MESSAGEEXPSTATUS,1,&expStatus,makeJsonFlag,messageTab+1);
 					m_miniCompiler->AddNowCode();
 				}
 
 				int messageFontSizeType = pMessage->GetMessageFontSizeType();
 				if (messageFontSizeType > 0)
 				{
-					m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_CHANGEMESSAGEFONTSIZETYPE,1,&messageFontSizeType);
+					m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_CHANGEMESSAGEFONTSIZETYPE,1,&messageFontSizeType,makeJsonFlag,messageTab+1);
 					m_miniCompiler->AddNowCode();
 					lastFontType = messageFontSizeType;
 				}
@@ -1627,7 +1658,7 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 					if (fontMustChange)
 					{
 						int fontSizeType1 = 0;
-						m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_CHANGEMESSAGEFONTSIZETYPE,1,&fontSizeType1);
+						m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_CHANGEMESSAGEFONTSIZETYPE,1,&fontSizeType1,makeJsonFlag,messageTab+1);
 						m_miniCompiler->AddNowCode();
 
 						lastFontType = 0;
@@ -1656,7 +1687,7 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 							int tm = pMessage->GetVoiceFadeTime(ch);
 							int fpara[1];
 							fpara[0] = tm;
-							m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_NEXTFADE_VOICE,1,fpara);
+							m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_NEXTFADE_VOICE,1,fpara,makeJsonFlag,messageTab+1);
 							m_miniCompiler->AddNowCode();
 						}
 					}
@@ -1666,7 +1697,7 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 						int vpara[2];
 						vpara[0] = ch;
 						vpara[1] = pMessage->GetVoiceVolume(ch);
-						m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_VOLUMEONLY_VOICE,2,vpara);
+						m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_VOLUMEONLY_VOICE,2,vpara,makeJsonFlag,messageTab+1);
 						m_miniCompiler->AddNowCode();
 					}
 					else if (pMessage->CheckVoiceFlag(ch) == FALSE)
@@ -1691,7 +1722,7 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 								{
 									useDef = pMessage->CheckIncludeSeimei(defaultVoiceFlag);
 								}
-								m_miniCompiler->Pass2Voice(NULL,ch,0,NULL,useDef);
+								m_miniCompiler->Pass2Voice(NULL,ch,0,NULL,useDef,makeJsonFlag,messageTab+1);
 								m_miniCompiler->AddNowCode();
 							//	m_miniCompiler->Pass2VoiceFlag(m_voiceFlagNumber);
 							//	m_miniCompiler->AddNowCode();
@@ -1705,7 +1736,7 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 					{
 						if (0)
 						{
-							m_miniCompiler->Pass2Voice(NULL,ch,0,NULL);
+							m_miniCompiler->Pass2Voice(NULL,ch,0,NULL,0,makeJsonFlag,messageTab+1);
 							m_miniCompiler->AddNowCode();
 						}
 						else
@@ -1784,12 +1815,12 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 								useDef = pMessage->CheckIncludeSeimei(defaultVoiceFlag);
 							}
 
-							m_miniCompiler->Pass2Voice(vfile,ch,vpKosuu,vpara,useDef);
+							m_miniCompiler->Pass2Voice(vfile,ch,vpKosuu,vpara,useDef,makeJsonFlag,messageTab+1);
 
 	//						m_miniCompiler->Pass2SystemFunctionMessage(CODE_SYSTEMFUNCTION_VOICE,vfile);
 							m_miniCompiler->AddNowCode();
 
-							m_miniCompiler->Pass2VoiceFlag(m_voiceFlagNumber);
+							m_miniCompiler->Pass2VoiceFlag(m_voiceFlagNumber,makeJsonFlag,messageTab+1);
 							m_miniCompiler->AddNowCode();
 							AddVoiceFlagFilename(vfile);
 
@@ -1814,7 +1845,7 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 							int tm = pMessage->GetSEFadeTime(ch);
 							int fpara[1];
 							fpara[0] = tm;
-							m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_NEXTFADE_SE,1,fpara);
+							m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_NEXTFADE_SE,1,fpara,makeJsonFlag,messageTab+1);
 							m_miniCompiler->AddNowCode();
 						}
 					}
@@ -1886,13 +1917,13 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 							}
 						}
 
-						m_miniCompiler->Pass2Sound(senum,ch,spKosuu,spara);
+						m_miniCompiler->Pass2Sound(senum,ch,spKosuu,spara,makeJsonFlag,messageTab+1);
 						m_miniCompiler->AddNowCode();
 
 					}
 					else if (seMode == 2)//stop
 					{
-						m_miniCompiler->Pass2Sound(-1,ch,0,NULL);
+						m_miniCompiler->Pass2Sound(-1,ch,0,NULL,makeJsonFlag,messageTab+1);
 						m_miniCompiler->AddNowCode();
 					}
 					else if (seMode == 3)//volume only
@@ -1900,7 +1931,7 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 						int vpara[2];
 						vpara[0] = ch;
 						vpara[1] = pMessage->GetSeVolume(ch);
-						m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_VOLUMEONLY_SE,2,vpara);
+						m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_VOLUMEONLY_SE,2,vpara,makeJsonFlag,messageTab+1);
 						m_miniCompiler->AddNowCode();
 					}
 				}
@@ -1923,7 +1954,7 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 						{
 							int termPara[1];
 							termPara[0] = term;
-							m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_SETTERM,1,termPara);
+							m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_SETTERM,1,termPara,makeJsonFlag,messageTab+1);
 							m_miniCompiler->AddNowCode();
 						}
 					}
@@ -1936,7 +1967,7 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 						int mustFaceData[1];
 						mustFaceData[0] = 0;
 
-						m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_MUSTFACE,1,mustFaceData);
+						m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_MUSTFACE,1,mustFaceData,makeJsonFlag,messageTab+1);
 						m_miniCompiler->AddNowCode();
 						lastMustFace = 0;
 					}
@@ -1978,7 +2009,7 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 								int mustFaceData[1];
 								mustFaceData[0] = mustFace;
 
-								m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_MUSTFACE,1,mustFaceData);
+								m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_MUSTFACE,1,mustFaceData,makeJsonFlag,messageTab+1);
 								m_miniCompiler->AddNowCode();
 
 								lastMustFace = mustFace;
@@ -1989,7 +2020,7 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 								int faceData[2];
 								faceData[0] = faceChara;
 								faceData[1] = face;
-								m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_FACE,2,faceData);
+								m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_FACE,2,faceData,makeJsonFlag,messageTab+1);
 								m_miniCompiler->AddNowCode();
 							}
 						}
@@ -2083,20 +2114,59 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 						}
 					}
 
-					m_miniCompiler->Pass2SystemCommandMessage(cmd,mes,pMessage->GetID(),cutinCode);
+					m_miniCompiler->Pass2SystemCommandMessage(cmd,mes,pMessage->GetID(),cutinCode,makeJsonFlag,messageTab+1);
 				}
 				else
 				{
 					int ln = pMessage->GetDrawCount();
-					m_miniCompiler->Pass2SystemCommand(CODE_SYSTEMCOMMAND_DRAW,1,&ln);
+					m_miniCompiler->Pass2SystemCommand(CODE_SYSTEMCOMMAND_DRAW,1,&ln,makeJsonFlag,messageTab+1);
 				}
 				m_miniCompiler->AddNowCode();
 
+
+
+				if (makeJsonFlag != NULL)
+				{
+				//	pMessage->OutputData(makeJsonFlag,"{ \"type\" : \"_\" }",messageTab+1);
+					if (i < kosuu3-1)
+					{
+						pMessage->OutputData(makeJsonFlag,"],",messageTab);
+					}
+					else
+					{
+						pMessage->OutputData(makeJsonFlag,"]",messageTab);
+					}
+				}
+
+			}				
+
+			if (makeJsonFlag != NULL)
+			{
+				pKoma->OutputData(makeJsonFlag,"],",komaTab+1);
 			}
 
+
+
+
+			if (makeJsonFlag != NULL)
+			{
+				pKoma->OutputData(makeJsonFlag,"\"KomaFooter\" : ",komaTab+1);
+				pKoma->OutputData(makeJsonFlag,"[",komaTab+1);
+			}
+
+
 //ここにコマエンドマーカー追加	@@@@@@@@@@@@@@@@@
-			m_miniCompiler->Pass2Simple(COMMANDDATATYPE_ENDKOMA);
+			m_miniCompiler->Pass2Simple(COMMANDDATATYPE_ENDKOMA,makeJsonFlag,komaTab+2);
 			m_miniCompiler->AddNowCode();
+
+
+
+
+			if (makeJsonFlag != NULL)
+			{
+				pKoma->OutputData(makeJsonFlag,"{ \"type\" : \"_\" }",komaTab+2);
+				pKoma->OutputData(makeJsonFlag,"]",komaTab+1);
+			}
 
 
 			if (makeJsonFlag != NULL)
@@ -2126,7 +2196,7 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 			int mustFaceData[1];
 			mustFaceData[0] = 0;
 
-			m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_MUSTFACE,1,mustFaceData);
+			m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_MUSTFACE,1,mustFaceData,makeJsonFlag,tabHeader);
 			m_miniCompiler->AddNowCode();
 			lastMustFace = 0;
 		}
@@ -2140,7 +2210,7 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 				varpara[0] = layer;
 				varpara[1] = 0;
 
-				m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_VARCONTROLLAYER,2,varpara);
+				m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_VARCONTROLLAYER,2,varpara,makeJsonFlag,tabHeader);
 				m_miniCompiler->AddNowCode();
 				varControl[layer] = 0;
 			}
@@ -2151,21 +2221,21 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 		if (lastAutoMessage != 0)
 		{
 			int autoMessage2 = -1;
-			m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_AUTOMESSAGE,1,&autoMessage2);
+			m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_AUTOMESSAGE,1,&autoMessage2,makeJsonFlag,tabHeader);
 			m_miniCompiler->AddNowCode();
 		}
 
 		if (lastCannotClick == 1)
 		{
 			int cannotClick2 = -1;
-			m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_CANNOTCLICK,1,&cannotClick2);
+			m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_CANNOTCLICK,1,&cannotClick2,makeJsonFlag,tabHeader);
 			m_miniCompiler->AddNowCode();
 		}
 
 		if (lastCannotSkip == 1)
 		{
 			int cannotSkip2 = -1;
-			m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_CANNOTSKIP,1,&cannotSkip2);
+			m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_CANNOTSKIP,1,&cannotSkip2,makeJsonFlag,tabHeader);
 			m_miniCompiler->AddNowCode();
 		}
 
@@ -2173,7 +2243,7 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 		if (lastOptionOff == 1)
 		{
 			int optionOff2 = -1;
-			m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_OPTIONOFF,1,&optionOff2);
+			m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_OPTIONOFF,1,&optionOff2,makeJsonFlag,tabHeader);
 			m_miniCompiler->AddNowCode();
 		}
 
@@ -2181,7 +2251,7 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 		if (configMask != 0)
 		{
 			int configMask2 = -1;
-			m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_CONFIGMASK,1,&configMask2);
+			m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_CONFIGMASK,1,&configMask2,makeJsonFlag,tabHeader);
 			m_miniCompiler->AddNowCode();
 		}
 
@@ -2189,14 +2259,14 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 		if (cutin != 0)
 		{
 			int cutinFlag = 0;
-			m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_CUTIN,1,&cutinFlag);
+			m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_CUTIN,1,&cutinFlag,makeJsonFlag,tabHeader);
 			m_miniCompiler->AddNowCode();
 		}
 
 		if (lastFontType > 0)
 		{
 			int fontSizeType1 = 0;
-			m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_CHANGEMESSAGEFONTSIZETYPE,1,&fontSizeType1);
+			m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_CHANGEMESSAGEFONTSIZETYPE,1,&fontSizeType1,makeJsonFlag,tabHeader);
 			m_miniCompiler->AddNowCode();
 		}
 
@@ -2204,7 +2274,7 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 		{
 			int renameLayerOff = 0;
 
-			m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_RENAMELAYER,1,&renameLayerOff);
+			m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_RENAMELAYER,1,&renameLayerOff,makeJsonFlag,tabHeader);
 			m_miniCompiler->AddNowCode();
 		}
 
@@ -2213,20 +2283,21 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 		int setfilmpara[1];
 		setfilmpara[0] = k+1;
 
-		m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_SETFILM,1,setfilmpara);
+		m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_SETFILM,1,setfilmpara,makeJsonFlag,tabHeader);
 		m_miniCompiler->AddNowCode();
 
 //(endfilm)
-		m_miniCompiler->Pass2Simple(COMMANDDATATYPE_ENDFILM);
+		m_miniCompiler->Pass2Simple(COMMANDDATATYPE_ENDFILM,makeJsonFlag,tabHeader);
 		m_miniCompiler->AddNowCode();
 
 		//set return
-		m_miniCompiler->Pass2Simple(COMMANDDATATYPE_RET);
+		m_miniCompiler->Pass2Simple(COMMANDDATATYPE_RET,makeJsonFlag,tabHeader);
 		m_miniCompiler->AddNowCode();
 
 
 		if (makeJsonFlag != NULL)
 		{
+			pFilm->OutputData(makeJsonFlag,"{ \"type\" : \"_\" }",tab+1);
 			pFilm->OutputData(makeJsonFlag,"]",tab+1);
 
 			if (k < kosuu-1)
@@ -2249,7 +2320,7 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 
 
 
-void CScriptCompiler::SetStartKoma(CKomaData* pKoma,int nextType,int nextWindowMode)
+void CScriptCompiler::SetStartKoma(CKomaData* pKoma,int nextType,int nextWindowMode,FILE* makeJsonFlag,int tab)
 {
 	int kosuu = pKoma->GetObjectKosuu();
 	int found = -1;
@@ -2276,7 +2347,7 @@ void CScriptCompiler::SetStartKoma(CKomaData* pKoma,int nextType,int nextWindowM
 	id[1] = nextType;
 	id[2] = nextWindowMode;
 
-	m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_STARTKOMA,3,id);
+	m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_STARTKOMA,3,id,makeJsonFlag,tab);
 	m_miniCompiler->AddNowCode();
 }
 
@@ -3227,7 +3298,7 @@ void CScriptCompiler::AllBuild(FILE* makeJsonFlag)
 }
 
 
-void CScriptCompiler::SearchAndSetCG(LPSTR filename,int layer)
+void CScriptCompiler::SearchAndSetCG(LPSTR filename,int layer,FILE* makeJsonFlag,int tab)
 {
 	for (int j=0;j<m_cgDataListKosuu;j++)
 	{
@@ -3247,7 +3318,7 @@ void CScriptCompiler::SearchAndSetCG(LPSTR filename,int layer)
 				setcgpara[1] = i+1;
 				setcgpara[2] = layer;
 
-				m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_SETCG,3,setcgpara);
+				m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_SETCG,3,setcgpara,makeJsonFlag,tab);
 				m_miniCompiler->AddNowCode();
 
 				SetUseCg(j,i);
@@ -3258,7 +3329,7 @@ void CScriptCompiler::SearchAndSetCG(LPSTR filename,int layer)
 }
 
 
-void CScriptCompiler::SearchAndSetCGByVar(LPSTR filename,int layer,int var)
+void CScriptCompiler::SearchAndSetCGByVar(LPSTR filename,int layer,int var,FILE* makeJsonFlag,int tab)
 {
 	for (int j=0;j<m_cgDataListKosuu;j++)
 	{
@@ -3294,7 +3365,7 @@ void CScriptCompiler::SearchAndSetCGByVar(LPSTR filename,int layer,int var)
 					setcgpara[3] = var;
 					setcgpara[4] = k + 1;
 
-					m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_SETCGBYVAR,5,setcgpara);
+					m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_SETCGBYVAR,5,setcgpara,makeJsonFlag,tab);
 					m_miniCompiler->AddNowCode();
 
 					SetUseCg(j,i);

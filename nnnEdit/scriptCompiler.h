@@ -29,14 +29,14 @@ public:
 
 
 	int GetPass2ErrorLine(void){return m_pass2ErrorLine;}
-	void SetStartKoma(CKomaData* pKoma,int nextType,int nextWindowMode);
+	void SetStartKoma(CKomaData* pKoma,int nextType,int nextWindowMode,FILE* makeJsonFlag = NULL,int tab = 0);
 
 	BOOL BuildSpt(BOOL bMesFlag = TRUE,FILE* makeJsonFlag = NULL);
 	void AllBuild(FILE* makeJsonFlag = NULL);
 	BOOL KaisekiScenePass1(void);
 	BOOL KaisekiScenePass2(int n);
-	void SearchAndSetCG(LPSTR filename,int layer);
-	void SearchAndSetCGByVar(LPSTR filename,int layer,int varNumber);
+	void SearchAndSetCG(LPSTR filename,int layer,FILE* makeJsonFlag = NULL,int tab = 0);
+	void SearchAndSetCGByVar(LPSTR filename,int layer,int varNumber,FILE* makeJsonFlag = NULL,int tab = 0);
 	BOOL LoadCGList(void);
 	int CheckSameCGList(void);
 

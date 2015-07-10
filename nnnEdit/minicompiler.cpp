@@ -130,6 +130,101 @@ char CMiniCompiler::m_systemConst[][32]=
 	"","",//endmark
 };
 
+
+
+/*
+CODE_SYSTEMFUNCTION_FILMENDENABLE
+CODE_SYSTEMFUNCTION_FILMTYPETIME
+CODE_SYSTEMFUNCTION_CONFIGMASK
+CODE_SYSTEMFUNCTION_CLEARALLEFFECT
+CODE_SYSTEMFUNCTION_RENAMELAYER
+CODE_SYSTEMFUNCTION_CUTIN
+*/
+
+
+/*
+	if (typ == COMMANDDATATYPE_NOP)
+	if (typ == COMMANDDATATYPE_RET)
+	if (typ == COMMANDDATATYPE_NEXT)
+	if (typ == COMMANDDATATYPE_END)
+	if (typ == COMMANDDATATYPE_EXIT)
+	if (typ == COMMANDDATATYPE_ELSE)
+	if (typ == COMMANDDATATYPE_ENDFILM)
+	if (typ == COMMANDDATATYPE_ENDKOMA)
+	if (typ == COMMANDDATATYPE_ENDIF)
+
+*/
+
+CMiniCompiler::MYFUNCTIONTONAME CMiniCompiler::m_functionToNameTable[]=
+{
+	{CODE_SYSTEMFUNCTION_FILMENDENABLE,"filmEndEnable"},
+	{CODE_SYSTEMFUNCTION_FILMTYPETIME,"filmTypeTime"},
+	{CODE_SYSTEMFUNCTION_CONFIGMASK,"configMask"},
+	{CODE_SYSTEMFUNCTION_CLEARALLEFFECT,"clearAllEffect"},
+	{CODE_SYSTEMFUNCTION_RENAMELAYER,"renameLayer"},
+	{CODE_SYSTEMFUNCTION_CUTIN,"cutin"},
+	{CODE_SYSTEMFUNCTION_MUSTFACE,"mustFace"},
+	{CODE_SYSTEMFUNCTION_VARCONTROLLAYER,"varControlLayer"},
+	{CODE_SYSTEMFUNCTION_AUTOMESSAGE,"autoMessage"},
+	{CODE_SYSTEMFUNCTION_CANNOTCLICK,"cannotClick"},
+	{CODE_SYSTEMFUNCTION_CANNOTSKIP,"cannotSkip"},
+	{CODE_SYSTEMFUNCTION_OPTIONOFF,"optionOff"},
+	{CODE_SYSTEMFUNCTION_CONFIGMASK,"configMask"},
+	{CODE_SYSTEMFUNCTION_CUTIN,"cutin"},
+	{CODE_SYSTEMFUNCTION_CHANGEMESSAGEFONTSIZETYPE,"changeMessageFontSizeType"},
+	{CODE_SYSTEMFUNCTION_SETFILM,"setFilm"},
+	{COMMANDDATATYPE_ENDKOMA,"endKoma"},
+	{COMMANDDATATYPE_ENDFILM,"endFilm"},
+	{CODE_SYSTEMFUNCTION_SETCGBYVAR,"setCGByVar"},
+	{CODE_SYSTEMFUNCTION_SETCG,"setCG"},
+	{CODE_SYSTEMFUNCTION_SETVAR,"setVar"},
+	{CODE_SYSTEMFUNCTION_SETDEMOFLAG,"setDemoFlag"},
+	{CODE_SYSTEMFUNCTION_NOMESSAGEWINDOW,"noMessageWindow"},
+	{CODE_SYSTEMFUNCTION_PREPAREOVERRAP,"prepareOverrap"},
+	{CODE_SYSTEMFUNCTION_STARTKOMA,"startKoma"},
+	{CODE_SYSTEMFUNCTION_FRAMECONTROL,"frameControl"},
+	{CODE_SYSTEMFUNCTION_SETDEFAULTFRAME,"setDefaultFrame"},
+	{CODE_SYSTEMFUNCTION_WINDOWNUMBER,"windowNumber"},
+	{CODE_SYSTEMFUNCTION_CURSORNUMBER,"cursorNumber"},
+	{CODE_SYSTEMFUNCTION_MOUSENUMBER,"mouseNumber"},
+	{CODE_SYSTEMFUNCTION_FILMEXPSTATUS,"filmExpStatus"},
+	{CODE_SYSTEMFUNCTION_SETEFFECTRECT,"setEffectRect"},
+	{CODE_SYSTEMFUNCTION_CLEAREFFECTLAYER,"clearEffectLayer"},
+	{CODE_SYSTEMFUNCTION_SETEFFECT,"setEffect"},
+	{CODE_SYSTEMFUNCTION_PRELOADDWQ,"preLoadDWQ"},
+	{CODE_SYSTEMFUNCTION_LOADDWQ,"loadDWQ"},
+	{CODE_SYSTEMFUNCTION_STARTMESSAGE,"startMessage"},
+	{CODE_SYSTEMFUNCTION_MUSICVOLUMEONLY,"musicVolumeOnly"},
+	{CODE_SYSTEMFUNCTION_MESSAGEEXPSTATUS,"messageExpStatus"},
+	{CODE_SYSTEMFUNCTION_NEXTFADE_VOICE,"nextFadeVoice"},
+	{CODE_SYSTEMFUNCTION_VOLUMEONLY_VOICE,"volumeOnlyVoice"},
+	{CODE_SYSTEMFUNCTION_SETVOICEFLAG,"setVoiceFlag"},
+	{CODE_SYSTEMFUNCTION_NEXTFADE_SE,"nextFadeSE"},
+	{CODE_SYSTEMFUNCTION_SOUND,"sound"},
+	{CODE_SYSTEMFUNCTION_VOLUMEONLY_SE,"volumeOnlySE"},
+	{CODE_SYSTEMFUNCTION_SETTERM,"setTerm"},
+	{CODE_SYSTEMFUNCTION_FACE,"face"},
+
+
+
+
+	{CODE_SYSTEMCOMMAND_OVERRAP,"overrap"},
+	{CODE_SYSTEMCOMMAND_DRAW,"draw"},
+	{CODE_SYSTEMCOMMAND_PRINT,"print"},
+	{CODE_SYSTEMCOMMAND_LPRINT,"lprint"},
+	{CODE_SYSTEMCOMMAND_APPEND,"append"},
+
+	{COMMANDDATATYPE_NOP,"nop"},
+	{COMMANDDATATYPE_RET,"ret"},
+	{COMMANDDATATYPE_NEXT,"next"},
+	{COMMANDDATATYPE_END,"end"},
+	{COMMANDDATATYPE_EXIT,"exit"},
+	{COMMANDDATATYPE_ELSE,"else"},
+	{COMMANDDATATYPE_ENDIF,"endif"},
+
+	{-1,"endmark"}
+};
+
 CMiniCompiler::CMiniCompiler()
 {
 	m_pass1OkFlag = FALSE;
@@ -200,6 +295,12 @@ CMiniCompiler::CMiniCompiler()
 		n++;
 	}
 	m_enzanshiKosuu = n;
+
+	m_functionToNameNumber = 0;
+	while (m_functionToNameTable[m_functionToNameNumber].type != -1)
+	{
+		m_functionToNameNumber++;
+	}
 }
 
 
@@ -768,7 +869,7 @@ int CMiniCompiler::SearchToken(int n, int cd,int cd2)
 // -1,out
 //
 //
-BOOL CMiniCompiler::Pass2Music(int paraKosuu,int* paraPtr)
+BOOL CMiniCompiler::Pass2Music(int paraKosuu,int* paraPtr, LPSTR filename,FILE* jsonFlag,int tab)
 {
 	m_objectCode[0] = 4+paraKosuu;
 	m_objectCode[1] = IDENTIFY_SYSTEMFUNCTION;
@@ -780,6 +881,35 @@ BOOL CMiniCompiler::Pass2Music(int paraKosuu,int* paraPtr)
 		m_objectCode[4+i] = paraPtr[i];
 	}
 
+	if (jsonFlag != NULL)
+	{
+		char mes[1024];
+		int n = paraKosuu;
+
+		LPSTR functionName = "Music";
+		if (n == 0)
+		{
+			wsprintf(mes,"{ \"type\" : \"%s\" , \"Param\" : null },",functionName);
+			OutputData(jsonFlag,mes,tab);
+		}
+		else
+		{
+			wsprintf(mes,"{ \"type\" : \"%s\" , \"Param\" : [%d",functionName,n);
+			for (int i=0;i<n;i++)
+			{
+				char nummes[256];
+				wsprintf(nummes,",%d",*(paraPtr+i));
+				strcat_s(mes,1024,nummes);
+			}
+			strcat_s(mes,1024,"] },");
+
+			OutputData(jsonFlag,mes,tab);
+		}
+	}
+
+
+
+
 	m_objectSize = 4+paraKosuu;
 	m_pass2OkFlag = TRUE;
 
@@ -788,7 +918,7 @@ BOOL CMiniCompiler::Pass2Music(int paraKosuu,int* paraPtr)
 
 
 
-BOOL CMiniCompiler::Pass2SystemCommand(int cmd, int n, int* pData)
+BOOL CMiniCompiler::Pass2SystemCommand(int cmd, int n, int* pData,FILE* jsonFlag,int tab)
 {
 	m_objectCode[0] = 4+n;
 	m_objectCode[1] = IDENTIFY_SYSTEMCOMMAND;
@@ -800,6 +930,32 @@ BOOL CMiniCompiler::Pass2SystemCommand(int cmd, int n, int* pData)
 		m_objectCode[4+i] = *(pData+i);
 	}
 
+
+	if (jsonFlag != NULL)
+	{
+		char mes[1024];
+		LPSTR functionName = GetFunctionName(cmd);
+		if (n == 0)
+		{
+			wsprintf(mes,"{ \"type\" : \"%s\" , \"Param\" : null },",functionName);
+			OutputData(jsonFlag,mes,tab);
+		}
+		else
+		{
+			wsprintf(mes,"{ \"type\" : \"%s\" , \"Param\" : [%d",functionName,n);
+			for (int i=0;i<n;i++)
+			{
+				char nummes[256];
+				wsprintf(nummes,",%d",*(pData+i));
+				strcat_s(mes,1024,nummes);
+			}
+			strcat_s(mes,1024,"] },");
+
+			OutputData(jsonFlag,mes,tab);
+		}
+	}
+
+
 	m_objectSize = 4+n;
 	m_pass2OkFlag = TRUE;
 
@@ -807,9 +963,9 @@ BOOL CMiniCompiler::Pass2SystemCommand(int cmd, int n, int* pData)
 }
 
 
-BOOL CMiniCompiler::Pass2SystemCommandMessage(int cmd, LPSTR mes,int id,int cutin)
+BOOL CMiniCompiler::Pass2SystemCommandMessage(int cmd, LPSTR message,int id,int cutin,FILE* jsonFlag,int tab)
 {
-	AddMes(mes);
+	AddMes(message);
 
 	m_objectCode[0] = 6;
 	m_objectCode[1] = IDENTIFY_SYSTEMCOMMAND;
@@ -827,8 +983,144 @@ BOOL CMiniCompiler::Pass2SystemCommandMessage(int cmd, LPSTR mes,int id,int cuti
 	m_objectSize = 6;
 	m_pass2OkFlag = TRUE;
 
+	if (jsonFlag)
+	{
+		LPSTR functionName = GetFunctionName(cmd);
+		char mes[1024];
+		wsprintf(mes,"{ \"type\" : \"%s\" , \"Param\" :",functionName);
+		OutputData(jsonFlag,mes,tab);
+		OutputData(jsonFlag,"{",tab+1);
+
+		wsprintf(mes,"\"messageID\" : %d ,",id);
+		OutputData(jsonFlag,mes,tab+2);
+
+		wsprintf(mes,"\"cutinData\" : %d ,",cutin);
+		OutputData(jsonFlag,mes,tab+2);
+
+		OutputData(jsonFlag,"\"message\" :",tab+2);
+		OutputData(jsonFlag,"[",tab+2);
+
+	
+		int n = GetMessageGyo(message);
+		for (int i=0;i<n;i++)
+		{
+			int ln = GetMessage1Gyo(i,message);
+		//	if (ln > 0)
+			if (1)
+			{
+				LPSTR message1gyo = m_tmpMessage;
+				if (i < n-1)
+				{
+					wsprintf(mes,"\"%s\",",message1gyo);
+				}
+				else
+				{
+					wsprintf(mes,"\"%s\"",message1gyo);
+				}
+			}
+			OutputData(jsonFlag,mes,tab+3);
+		}
+
+		OutputData(jsonFlag,"]",tab+2);
+
+		OutputData(jsonFlag,"}",tab+1);
+		OutputData(jsonFlag,"}",tab);
+	}
+
+
+
 	return TRUE;
 }
+
+
+int CMiniCompiler::GetMessageGyo(LPSTR mes)
+{
+	if (mes == NULL) return 0;
+
+	int kosuu = 0;
+	int ln = strlen(mes);
+	int ptr = 0;
+
+	while (ptr<ln)
+	{
+		if (*(mes+ptr) == 0x00d)
+		{
+			kosuu++;
+			ptr++;
+		}
+		ptr++;
+	}
+
+	if (*(mes+ln-2) != 0x00d)
+	{
+		kosuu++;
+	}
+
+	return kosuu;
+}
+
+
+
+int CMiniCompiler::GetMessage1Gyo(int n,LPSTR mes)
+{
+	if (mes == NULL) return 0;
+
+	int ln = strlen(mes);
+	
+	int ptr = 0;
+
+	int found = -1;
+	if (n == 0) found = 0;
+	int k = 0;
+
+	if (n>0)
+	{
+		while (ptr<ln)
+		{
+			if (*(mes+ptr) == 0x00d)
+			{
+				k++;
+				ptr += 2;
+				if (n == k)
+				{
+					found = ptr;
+					break;
+				}
+			}
+			else
+			{
+				ptr++;
+			}
+		}
+	}
+
+	if (found == -1) return 0;
+
+	int ptr2 = found;
+	int ln2 = 0;
+
+	while (ptr2<ln)
+	{
+		if (*(mes+ptr2) == 0x00d)
+		{
+			memcpy(m_tmpMessage,mes+found,ln2);
+			m_tmpMessage[ln2] = 0;
+			m_tmpMessage[ln2+1] = 0;
+			return ln2;
+		}
+
+		ptr2++;
+		ln2++;
+	}
+
+	memcpy(m_tmpMessage,mes+found,ln2);
+	m_tmpMessage[ln2] = 0;
+	m_tmpMessage[ln2+1] = 0;
+
+
+	return ln2;
+}
+
 
 BOOL CMiniCompiler::Pass2SystemFunctionMessage(int func, LPSTR str)
 {
@@ -847,7 +1139,7 @@ BOOL CMiniCompiler::Pass2SystemFunctionMessage(int func, LPSTR str)
 	return TRUE;
 }
 
-BOOL CMiniCompiler::Pass2SystemFunctionLoad(int func, int n, LPSTR filename)
+BOOL CMiniCompiler::Pass2SystemFunctionLoad(int func, int n, LPSTR filename,FILE* jsonFlag,int tab)
 {
 	AddStr(filename);
 
@@ -859,6 +1151,17 @@ BOOL CMiniCompiler::Pass2SystemFunctionLoad(int func, int n, LPSTR filename)
 
 	m_objectSize = 5;
 	m_pass2OkFlag = TRUE;
+
+	if (jsonFlag)
+	{
+		char mes[1024];
+		LPSTR functionName = GetFunctionName(func);
+		if (n == 0)
+		{
+			wsprintf(mes,"{ \"type\" : \"%s\" , \"Param\" : {\"layer\" : %d , \"filename\" : \"%s\"} },",functionName,n,filename);
+			OutputData(jsonFlag,mes,tab);
+		}
+	}
 
 	return TRUE;
 }
@@ -884,10 +1187,11 @@ BOOL CMiniCompiler::Pass2SystemFunction(int func, int n, int* pData,FILE* jsonFl
 	if (jsonFlag != NULL)
 	{
 		char mes[1024];
-		LPSTR functionName = "dummy";
+		LPSTR functionName = GetFunctionName(func);
 		if (n == 0)
 		{
-			wsprintf(mes,"{ \"type\" : \"%s\" , \"Param\" : null },",functionName);
+//			wsprintf(mes,"{ \"type\" : \"%s\" , \"Param\" : null },",functionName);
+			wsprintf(mes,"{ \"type\" : \"%s\" },",functionName);
 			OutputData(jsonFlag,mes,tab);
 		}
 		else
@@ -910,14 +1214,6 @@ BOOL CMiniCompiler::Pass2SystemFunction(int func, int n, int* pData,FILE* jsonFl
 	return TRUE;
 }
 
-/*
-CODE_SYSTEMFUNCTION_FILMENDENABLE
-CODE_SYSTEMFUNCTION_FILMTYPETIME
-CODE_SYSTEMFUNCTION_CONFIGMASK
-CODE_SYSTEMFUNCTION_CLEARALLEFFECT
-CODE_SYSTEMFUNCTION_RENAMELAYER
-CODE_SYSTEMFUNCTION_CUTIN
-*/
 
 
 BOOL CMiniCompiler::Pass2OpenChukakko(void)
@@ -1355,7 +1651,7 @@ BOOL CMiniCompiler::Pass2Select(int typ, int serial, LPSTR mes)
 }
 
 
-BOOL CMiniCompiler::Pass2Voice(LPSTR filename,int ch,int paraKosuu,int* pPara,int useDef)
+BOOL CMiniCompiler::Pass2Voice(LPSTR filename,int ch,int paraKosuu,int* pPara,int useDef,FILE* jsonFlag,int tab)
 {
 	m_objectSize = 4 + 1 + 1 + paraKosuu + 1;
 	
@@ -1383,10 +1679,55 @@ BOOL CMiniCompiler::Pass2Voice(LPSTR filename,int ch,int paraKosuu,int* pPara,in
 
 	m_objectCode[6+paraKosuu] = useDef;//default voice wo fukumu
 
+
+	if (jsonFlag != NULL)
+	{
+		char mes[1024];
+
+		int n = paraKosuu;
+		OutputData(jsonFlag,"{ \"type\" : \"voice\" , \"Param\" : ",tab);
+		OutputData(jsonFlag,"{",tab);
+
+
+		if (filename != NULL)
+		{
+			wsprintf(mes,"\"filename\" : \"%s\" ,",filename);
+		}
+		else
+		{
+			wsprintf(mes,"\"filename\" : null ,");
+		}
+		OutputData(jsonFlag,mes,tab);
+
+		wsprintf(mes,"\"useDef\" : %d ,",useDef);
+		OutputData(jsonFlag,mes,tab);
+
+
+
+		wsprintf(mes,"{ \"voiceParam\" : [%d",n+2);
+		for (int i=0;i<n+2;i++)
+		{
+			char nummes[256];
+			wsprintf(nummes,",%d",m_objectCode[4+i]);
+			strcat_s(mes,1024,nummes);
+		}
+		strcat_s(mes,1024,"] },");
+
+		OutputData(jsonFlag,mes,tab);
+
+
+
+		OutputData(jsonFlag,"},",tab);
+
+	}
+
+
+
+
 	return TRUE;
 }
 
-BOOL CMiniCompiler::Pass2VoiceFlag(int flagNumber)
+BOOL CMiniCompiler::Pass2VoiceFlag(int flagNumber,FILE* jsonFlag,int tab)
 {
 	m_objectSize = 6;
 	
@@ -1397,11 +1738,30 @@ BOOL CMiniCompiler::Pass2VoiceFlag(int flagNumber)
 	m_objectCode[4] = flagNumber;
 	m_objectCode[5] = 0;//Šg’£—p
 
+
+
+	if (jsonFlag != NULL)
+	{
+		char mes[1024];
+		LPSTR functionName = GetFunctionName(CODE_SYSTEMFUNCTION_SETVOICEFLAG);
+		int n = 2;
+		wsprintf(mes,"{ \"type\" : \"%s\" , \"Param\" : [%d",functionName,n);
+		for (int i=0;i<n;i++)
+		{
+			char nummes[256];
+			wsprintf(nummes,",%d",m_objectCode[4+i]);
+			strcat_s(mes,1024,nummes);
+		}
+		strcat_s(mes,1024,"] },");
+		OutputData(jsonFlag,mes,tab);
+	}
+
+
 	return TRUE;
 }
 
 
-BOOL CMiniCompiler::Pass2Sound(int seNum,int ch,int paraKosuu,int* pPara)
+BOOL CMiniCompiler::Pass2Sound(int seNum,int ch,int paraKosuu,int* pPara,FILE* jsonFlag ,int tab)
 {
 	m_objectSize = 4 + 1 + 1 + paraKosuu;
 	
@@ -1419,6 +1779,22 @@ BOOL CMiniCompiler::Pass2Sound(int seNum,int ch,int paraKosuu,int* pPara)
 	}
 
 
+	if (jsonFlag != NULL)
+	{
+		char mes[1024];
+		LPSTR functionName = GetFunctionName(CODE_SYSTEMFUNCTION_SOUND);
+		int n = paraKosuu+2;
+		wsprintf(mes,"{ \"type\" : \"%s\" , \"Param\" : [%d",functionName,n);
+		for (int i=0;i<n;i++)
+		{
+			char nummes[256];
+			wsprintf(nummes,",%d",m_objectCode[4+i]);
+			strcat_s(mes,1024,nummes);
+		}
+		strcat_s(mes,1024,"] },");
+		OutputData(jsonFlag,mes,tab);
+	}
+
 	return TRUE;
 }
 
@@ -1435,13 +1811,27 @@ BOOL CMiniCompiler::Pass2SimpleData(int subData)
 	return TRUE;
 }
 
-BOOL CMiniCompiler::Pass2Simple(int typ)
+BOOL CMiniCompiler::Pass2Simple(int typ,FILE* jsonFlag,int tab)
 {
 	m_objectSize = 3;
 	m_pass2OkFlag = TRUE;
 
 	m_objectCode[0] = 3;
 	m_objectCode[1] = IDENTIFY_CONTROL;
+
+
+	if (jsonFlag != NULL)
+	{
+		char mes[1024];
+		LPSTR functionName = GetFunctionName(typ);
+//		wsprintf(mes,"{ \"type\" : \"%s\" , \"Param\" : null },",functionName);
+		wsprintf(mes,"{ \"type\" : \"%s\" },",functionName);
+		OutputData(jsonFlag,mes,tab);
+	}
+
+
+
+
 
 	if (typ == COMMANDDATATYPE_NOP)
 	{
@@ -3017,6 +3407,22 @@ void CMiniCompiler::OutputData(FILE* file,LPSTR mes,int tab,BOOL crFlag)
 	{
 		fwrite("\x00d\x00a",sizeof(char),2,file);
 	}
+}
+
+
+
+
+LPSTR CMiniCompiler::GetFunctionName(int type)
+{
+	for (int i=0;i<m_functionToNameNumber;i++)
+	{
+		if (m_functionToNameTable[i].type == type)
+		{
+			return m_functionToNameTable[i].name;
+		}
+	}
+
+	return "Dummy";
 }
 
 

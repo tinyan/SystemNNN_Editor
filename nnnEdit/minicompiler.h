@@ -108,7 +108,7 @@ public:
 	BOOL Pass2Select(int typ, int serial,LPSTR mes);
 	BOOL Pass2Case(int n);
 
-	BOOL Pass2Simple(int typ);
+	BOOL Pass2Simple(int typ,FILE* jsonFlag = NULL,int tab = 0);
 
 	BOOL Pass2SimpleData(int subData);
 
@@ -122,19 +122,19 @@ public:
 	BOOL Pass2Debug(LPSTR mes);
 
 	//BOOL Pass2BGM(int* paraPtr);
-	BOOL Pass2Music(int n,int* paraPtr);
+	BOOL Pass2Music(int n,int* paraPtr,LPSTR filename = NULL,FILE* jsonFlag = NULL,int tab = 0);
 //	BOOL Pass2PrepareOverrap(void);
 //	BOOL Pass2Overrap(int typ ,int count);
 	BOOL Pass2SystemFunction(int func, int n=0, int* pData=NULL,FILE* jsonFlag = NULL,int tab = 0);
 	BOOL Pass2SystemFunctionMessage(int func, LPSTR str);
-	BOOL Pass2SystemFunctionLoad(int func, int n, LPSTR filename);
+	BOOL Pass2SystemFunctionLoad(int func, int n, LPSTR filename,FILE* jsonFlag = NULL,int tab = 0);
 
-	BOOL Pass2SystemCommand(int cmd, int n, int* pData);
-	BOOL Pass2SystemCommandMessage(int cmd, LPSTR mes,int id,int cutin);
+	BOOL Pass2SystemCommand(int cmd, int n, int* pData,FILE* jsonFlag = NULL,int tab = 0);
+	BOOL Pass2SystemCommandMessage(int cmd, LPSTR mes,int id,int cutin,FILE* jsonFlag = NULL,int tab = 0);
 
-	BOOL Pass2Voice(LPSTR filename,int ch,int paraKosuu,int* pPara,int defUse = 0);
-	BOOL Pass2Sound(int seNum,int ch,int paraKosuu,int* pPara);
-	BOOL Pass2VoiceFlag(int flagNumber);
+	BOOL Pass2Voice(LPSTR filename,int ch,int paraKosuu,int* pPara,int defUse = 0,FILE* jsonFlag = NULL,int tab = 0);
+	BOOL Pass2Sound(int seNum,int ch,int paraKosuu,int* pPara,FILE* jsonFlag = NULL,int tab = 0);
+	BOOL Pass2VoiceFlag(int flagNumber,FILE* jsonFlag = NULL,int tab = 0);
 
 	BOOL SkipComment(LPSTR* pStrSrc);
 	BOOL SkipSpace(LPSTR* pStrSrc);
@@ -248,6 +248,20 @@ public:
 
 	static char m_systemConst[][32];
 	void OutputData(FILE* file,LPSTR mes,int tab = 0,BOOL crFlag = TRUE);
+
+	LPSTR GetFunctionName(int type);
+	typedef struct _tagMYFUNCTIONTONAME
+	{
+		int type;
+		char name[64];
+	} MYFUNCTIONTONAME;
+
+	static MYFUNCTIONTONAME m_functionToNameTable[];
+	int m_functionToNameNumber;
+
+	int GetMessageGyo(LPSTR mes);
+	int GetMessage1Gyo(int n,LPSTR mes);
+	char m_tmpMessage[1024];
 
 private:
 //	BOOL m_loadFlag;
