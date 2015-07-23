@@ -35,6 +35,7 @@ class CNameList;
 class CKomaData;
 
 class CStartTitle;
+class CBalloon;
 class CMyInputDialog;
 class CMySearchDialog;
 
@@ -535,6 +536,8 @@ public:
 	int GetPresetButtonEnable(void){return m_presetButtonEnableFlag;}
 	CNameList* GetTermList(void);
 
+	void OnBalloonArea(int n,POINT pt,int subType,POINT screenPos);
+	void MainMouseMove(MSG msg);
 private:
 	HINSTANCE m_hInstance;
 
@@ -618,6 +621,7 @@ private:
 	CNameList* m_termList;
 
 	CStartTitle* m_startTitle;
+	CBalloon* m_balloon;
 
 	CPicture* m_overrapPic;
 	CPicture* m_overrapPic2;
@@ -772,6 +776,7 @@ private:
 	void SetNameAutoFlag(int n);
 	void SetCGVar(int n);
 	void SetTermFlag(int n);
+	void ChangeBalloonFlag(int n);
 
 
 	void SetEffectMenuMoveFlag(int flg);
@@ -956,6 +961,7 @@ private:
 	void ChangeAddDefaultVoice(void);
 	void SetDefaultName(void);
 	int m_termFlag;
+	int m_balloonFlag;
 
 };
 

@@ -96,6 +96,7 @@
 
 
 #include "starttitle.h"
+#include "balloon.h"
 
 
 #include "myview.h"
@@ -693,6 +694,7 @@ CMyApplication::CMyApplication(HINSTANCE hinstance) : CMyApplicationBase(hinstan
 		m_varControlList->LoadFile(TERMLIST_FILE_NAME);
 	}
 
+	m_balloonFlag = GetConfig("balloonFlag");
 
 	//check
 	if (1)
@@ -859,6 +861,9 @@ CMyApplication::CMyApplication(HINSTANCE hinstance) : CMyApplicationBase(hinstan
 	m_startTitle =  new CStartTitle(m_clientHWND,m_hInstance);
 	m_startTitle->Show();
 	m_startTitle->Start();
+
+	m_balloon = new CBalloon(m_frameHWND,m_hInstance);
+
 
 	m_file = new CMyFileOpen(m_frameHWND,m_hInstance,"nnn");
 	m_selectDialog = new CSelectDialog(m_frameHWND,m_hInstance);
@@ -1134,6 +1139,7 @@ void CMyApplication::End(void)
 //DebugLog("[2]");
 	
 	//delete doc
+	ENDDELETECLASS(m_balloon);
 	ENDDELETECLASS(m_startTitle);
 
 	int i;
@@ -1282,6 +1288,11 @@ int CMyApplication::OnTimer(int n)
 	if (m_shakinControl != NULL)
 	{
 		m_shakinControl->EndFrame();
+	}
+
+	if (m_balloon != NULL)
+	{
+		m_balloon->OnTimer();
 	}
 
 	return rt;
@@ -1980,6 +1991,12 @@ void CMyApplication::OnCommand(WPARAM wParam,LPARAM lParam)
 		break;
 	case ID_MENU_TERM_OFF:
 		SetTermFlag(0);
+		break;
+	case ID_BALLOON_ON:
+		ChangeBalloonFlag(1);
+		break;
+	case ID_BALLOON_OFF:
+		ChangeBalloonFlag(0);
 		break;
 
 	case ID_SETCGVAR_AUTO:
@@ -4524,6 +4541,12 @@ void CMyApplication::SetTermFlag(int n)
 	m_menuCheckControl->SetTermFlagCheck();
 }
 
+void CMyApplication::ChangeBalloonFlag(int n)
+{
+	m_balloonFlag = n;
+	SetConfig("balloonFlag",n);
+	m_menuCheckControl->SetBalloonCheck();
+}
 
 void CMyApplication::SetTargetMachine(int n)
 {
@@ -6246,6 +6269,60 @@ int CMyApplication::SearchFaceChara(LPSTR name)
 CNameList* CMyApplication::GetTermList(void)
 {
 	return m_termList;
+}
+
+
+void CMyApplication::OnBalloonArea(int n,POINT pt,int subType,POINT screenPos)
+{
+	if (n >= 0)
+	{
+		if (m_balloonFlag)
+		{
+			m_balloon->OnArea(n,pt,subType,screenPos);
+		}
+	}
+	else
+	{
+		m_balloon->OnArea(n,pt,subType,screenPos);
+	}
+}
+
+
+void CMyApplication::MainMouseMove(MSG msg)
+{
+
+	if (m_document[MAINSCREEN_WINDOW]->GetViewHWND() == msg.hwnd) return;
+	if (m_document[FILM_WINDOW]->GetViewHWND() == msg.hwnd) return;
+	if (m_document[LAYER_WINDOW]->GetViewHWND() == msg.hwnd) return;
+	if (m_document[ZAHYO_WINDOW]->GetViewHWND() == msg.hwnd) return;
+	if (m_document[GAMEMESSAGE_WINDOW]->GetViewHWND() == msg.hwnd) return;
+	if (m_document[EFFECT_WINDOW]->GetViewHWND() == msg.hwnd) return;
+	if (m_document[STORY_WINDOW]->GetViewHWND() == msg.hwnd) return;
+	if (m_document[CONTROL_WINDOW]->GetViewHWND() == msg.hwnd) return;
+	if (m_document[FILMCASE_WINDOW]->GetViewHWND() == msg.hwnd) return;
+	if (m_document[STORYBOOK_WINDOW]->GetViewHWND() == msg.hwnd) return;
+	if (m_document[VAR_WINDOW]->GetViewHWND() == msg.hwnd) return;
+	if (m_document[PROGRAM_WINDOW]->GetViewHWND() == msg.hwnd) return;
+	if (m_document[CONTE_WINDOW]->GetViewHWND() == msg.hwnd) return;
+	if (m_document[CONTEMESSAGE_WINDOW]->GetViewHWND() == msg.hwnd) return;
+
+	POINT pt;
+	pt.x = LOWORD(msg.lParam);
+	pt.y = HIWORD(msg.lParam);
+	POINT dmy;
+	dmy.x = 0;
+	dmy.y = 0;
+	OnBalloonArea(-1,pt,0,dmy);
+
+//	static int a = 0;
+//	if (a == 0)
+//	{
+//		a = 1;
+//	}
+//	char mes[256];
+//	sprintf_s(mes,256,"[ %d , %d]",(int)msg.hwnd , (int)m_frameHWND);
+//	OutputDebugString(mes);
+
 }
 
 /*_*/

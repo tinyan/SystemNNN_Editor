@@ -25,6 +25,10 @@
 
 #include "..\..\systemNNN\nnnUtilLib\myMessage.h"
 
+#include "case.h"
+#include "messageData.h"
+#include "myapplicationBase.h"
+
 #include "windowList.h"
 
 #include "effectParam.h"
@@ -2799,6 +2803,27 @@ void CMainScreenView::PrintLine3(int sx,int sy,int ex,int ey,int r,int g,int b)
 }
 
 
+BOOL CMainScreenView::MoveMouse(int x,int y,POINT screenPos)
+{
+	POINT pt;
+	pt.x = x + m_windowX;
+	pt.y = y + m_windowY; 
+
+
+
+	int subType = -1;
+	int type = MAINSCREEN_WINDOW;
+
+	if (subType == -1)
+	{
+		type = -1;
+	}
+
+	m_document->GetApp()->OnBalloonArea(type,pt,subType,screenPos);
+
+//	OutputDebugString("*moveMouse layer*\x00f\x00a");
+	return FALSE;
+}
 
 /*_*/
 

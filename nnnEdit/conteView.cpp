@@ -15,6 +15,10 @@
 //#include "..\nyanEffectLib\effect.h"
 #include "..\..\systemNNN\nyanEffectLib\effectStruct.h"
 
+#include "windowlist.h"
+#include "case.h"
+#include "messageData.h"
+#include "myapplicationBase.h"
 
 #include "bitmapnumber.h"
 
@@ -358,6 +362,27 @@ LRESULT CConteView::ViewWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
 }
 
 
+BOOL CConteView::MoveMouse(int x,int y,POINT screenPos)
+{
+	POINT pt;
+	pt.x = x + m_windowX;
+	pt.y = y + m_windowY; 
+
+
+
+	int subType = -1;
+	int type = CONTE_WINDOW;
+
+	if (subType == -1)
+	{
+		type = -1;
+	}
+
+	m_document->GetApp()->OnBalloonArea(type,pt,subType,screenPos);
+
+//	OutputDebugString("*moveMouse layer*\x00f\x00a");
+	return FALSE;
+}
 
 
 

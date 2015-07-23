@@ -32,6 +32,9 @@ public:
 	static int m_commandTextColorTable[];
 	void CheckChangeMarkColor(int n,int cmd);
 
+	BOOL MoveMouse(int x,int y,POINT screenPos);
+
+
 private:
 	void OnClickLButton(WPARAM wParam, LPARAM lParam);
 

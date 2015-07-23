@@ -1156,7 +1156,8 @@ BOOL CMiniCompiler::Pass2SystemFunctionLoad(int func, int n, LPSTR filename,FILE
 	{
 		char mes[1024];
 		LPSTR functionName = GetFunctionName(func);
-		if (n == 0)
+		//if (n == 0)
+		if (1)
 		{
 			wsprintf(mes,"{ \"type\" : \"%s\" , \"Param\" : {\"layer\" : %d , \"filename\" : \"%s\"} },",functionName,n,filename);
 			OutputData(jsonFlag,mes,tab);
@@ -1686,7 +1687,7 @@ BOOL CMiniCompiler::Pass2Voice(LPSTR filename,int ch,int paraKosuu,int* pPara,in
 
 		int n = paraKosuu;
 		OutputData(jsonFlag,"{ \"type\" : \"voice\" , \"Param\" : ",tab);
-		OutputData(jsonFlag,"{",tab);
+		OutputData(jsonFlag,"{",tab+1);
 
 
 		if (filename != NULL)
@@ -1697,23 +1698,24 @@ BOOL CMiniCompiler::Pass2Voice(LPSTR filename,int ch,int paraKosuu,int* pPara,in
 		{
 			wsprintf(mes,"\"filename\" : null ,");
 		}
-		OutputData(jsonFlag,mes,tab);
+		OutputData(jsonFlag,mes,tab+2);
 
 		wsprintf(mes,"\"useDef\" : %d ,",useDef);
-		OutputData(jsonFlag,mes,tab);
+		OutputData(jsonFlag,mes,tab+2);
 
 
 
-		wsprintf(mes,"{ \"voiceParam\" : [%d",n+2);
+		wsprintf(mes,"\"voiceParam\" : [%d",n+2);
 		for (int i=0;i<n+2;i++)
 		{
 			char nummes[256];
 			wsprintf(nummes,",%d",m_objectCode[4+i]);
 			strcat_s(mes,1024,nummes);
 		}
-		strcat_s(mes,1024,"] },");
+		strcat_s(mes,1024,"]");
 
-		OutputData(jsonFlag,mes,tab);
+		OutputData(jsonFlag,mes,tab+2);
+		OutputData(jsonFlag,"}",tab+1);
 
 
 

@@ -13,6 +13,12 @@
 #include "myBitmap.h"
 
 #include "case.h"
+
+#include "messageData.h"
+#include "myapplicationBase.h"
+#include "windowList.h"
+
+
 #include "controldoc.h"
 #include "controlview.h"
 
@@ -220,6 +226,40 @@ void CControlView::OnDownKey(void)
 	pDoc->OnControlButton(2);
 }
 
+BOOL CControlView::MoveMouse(int x,int y,POINT screenPos)
+{
+	POINT pt;
+	pt.x = x + m_windowX;
+	pt.y = y + m_windowY; 
+
+
+
+	int subType = -1;
+	int type = CONTROL_WINDOW;
+
+
+	for (int i=0;i<5;i++)
+	{
+		int xx = x - m_buttonTable[i*4+0];
+		int yy = y - m_buttonTable[i*4+1];
+		if ((xx>=0) && (xx<m_buttonTable[i*4+2]) && (yy>=0) && (yy<m_buttonTable[i*4+3]))
+		{
+			subType = i;
+			break;
+		}
+	}
+
+
+	if (subType == -1)
+	{
+		type = -1;
+	}
+
+	m_document->GetApp()->OnBalloonArea(type,pt,subType,screenPos);
+
+//	OutputDebugString("*moveMouse layer*\x00f\x00a");
+	return FALSE;
+}
 
 /*_*/
 

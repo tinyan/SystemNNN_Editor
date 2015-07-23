@@ -15,8 +15,17 @@
 #include "..\..\systemNNN\nnnUtilLib\wheelMouse.h"
 
 #include "myBitmap.h"
-
 #include "case.h"
+
+#include "messageData.h"
+#include "myapplicationBase.h"
+#include "windowList.h"
+
+
+#include "messageData.h"
+#include "myapplicationBase.h"
+#include "windowList.h"
+
 
 #include "..\..\systemNNN\nyanLib\include\commonmacro.h"
 //#include "mydirectx.h"
@@ -115,6 +124,12 @@ CVarView::CVarView(CMyDocument* pDocument,HWND clientHWND,HINSTANCE hinstance) :
 //	SetWindowLong(m_hWnd,GWL_STYLE,style);
 
 	m_popupMenu[0] = LoadMenu(m_hInstance,MAKEINTRESOURCE(IDR_POPUPMENU_VAR));
+
+	AddBalloonCheckButton(m_buttonSave);
+	AddBalloonCheckButton(m_buttonCut);
+	AddBalloonCheckButton(m_buttonCopy);
+	AddBalloonCheckButton(m_buttonPaste);
+	AddBalloonCheckButton(m_buttonSearch);
 
 
 
@@ -483,6 +498,43 @@ void CVarView::OnRightKey(void)
 {
 	CVarDoc* pDoc = (CVarDoc*)m_document;
 	pDoc->OnRightKey();
+}
+
+
+BOOL CVarView::MoveMouse(int x,int y,POINT screenPos)
+{
+	POINT pt;
+	pt.x = x + m_windowX;
+	pt.y = y + m_windowY; 
+
+	int type = VAR_WINDOW;
+	int subType = CheckOnBalloonButton(x,y);
+
+
+	if (subType == -1)
+	{
+		if ((y>=0) && (y<24))
+		{
+			if ((x>=m_modeButtonPrintX) && (x<m_modeButtonPrintX+32*(3+m_varBlockKosuu)))
+			{
+				int n = (x - m_modeButtonPrintX) / 32;
+				if (n<0) n = 0;
+				if (n>9) n = 9;
+
+				subType = 10 + n;
+			}
+		}
+	}
+
+	if (subType == -1)
+	{
+		type = -1;
+	}
+
+
+	m_document->GetApp()->OnBalloonArea(type,pt,subType,screenPos);
+
+	return FALSE;
 }
 
 /*_*/

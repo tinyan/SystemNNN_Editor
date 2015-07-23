@@ -17,6 +17,7 @@
 #include "..\..\systemNNN\nyanEffectLib\effectStruct.h"
 
 #include "..\..\systemNNN\nyanLib\include\effect.h"
+#include "windowlist.h"
 
 #include "bitmapnumber.h"
 
@@ -1376,6 +1377,45 @@ int CLayerView::OpenPopupEffectMenu(WPARAM wParam,LPARAM lParam)
 
 	ClientToScreen(m_hWnd, &pt);
 	return m_effectMenu->OpenMenu(pt);
+}
+
+BOOL CLayerView::MoveMouse(int x,int y,POINT screenPos)
+{
+	POINT pt;
+	pt.x = x + m_windowX;
+	pt.y = y + m_windowY; 
+
+
+
+	int subType = -1;
+	int type = LAYER_WINDOW;
+
+	if (m_buttonOpen != NULL)
+	{
+		if (m_buttonOpen->CheckOn(x,y)) subType = 0;
+	}
+	if (m_buttonSave != NULL)
+	{
+		if (m_buttonSave->CheckOn(x,y)) subType = 1;
+	}
+	if (m_buttonCopyPreEffect != NULL)
+	{
+		if (m_buttonCopyPreEffect->CheckOn(x,y)) subType = 2;
+	}
+	if (m_buttonCopyPreEffect2 != NULL)
+	{
+		if (m_buttonCopyPreEffect2->CheckOn(x,y)) subType = 3;
+	}
+
+	if (subType == -1)
+	{
+		type = -1;
+	}
+
+	m_document->GetApp()->OnBalloonArea(type,pt,subType,screenPos);
+
+//	OutputDebugString("*moveMouse layer*\x00f\x00a");
+	return FALSE;
 }
 
 /*_*/

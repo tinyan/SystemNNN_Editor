@@ -412,6 +412,7 @@ public:
 	virtual int GetPresetButtonEnable(void) = 0;
 	virtual CNameList* GetTermList(void) = 0;
 
+	virtual void OnBalloonArea(int n,POINT pt,int subType,POINT screenPos) {}
 
 protected:
 

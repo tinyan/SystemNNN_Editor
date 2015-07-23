@@ -87,5 +87,25 @@ void CMyButton::CalcuLButtonDown(WPARAM wParam,LPARAM lParam)
 
 }
 
+BOOL CMyButton::CheckOn(int xPos,int yPos)
+{
+//	if (m_mode == 2) return FALSE;
+	if (m_parentHWND == NULL) return FALSE;
 
 
+	int x = xPos - m_printX;
+	int y = yPos - m_printY;
+	if ((x>=0) && (y>=0) && (x<m_sizeX) && (y<m_sizeY))
+	{
+		return TRUE;
+	}
+
+	return FALSE;
+
+}
+
+
+int CMyButton::GetNumber(void)
+{
+	return m_number;
+}

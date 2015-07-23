@@ -26,6 +26,7 @@ public:
 
 	static int m_messageColorTable[];
 
+	BOOL MoveMouse(int x,int y,POINT screenPos);
 
 //	void OnEnterKey(void);
 //	void OnDeleteKey(void);
@@ -91,6 +92,9 @@ private:
 
 	int m_editorMessageGyo;
 	int m_widthGuideLine;
+
+	int GetMessageButtonParam(int x,int y);
+
 };
 
 

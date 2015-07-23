@@ -19,6 +19,11 @@
 
 #include "case.h"
 
+#include "messageData.h"
+#include "myapplicationBase.h"
+#include "windowList.h"
+
+
 #include "filmdata.h"
 
 #include "filmcasedoc.h"
@@ -141,6 +146,28 @@ CFilmCaseView::CFilmCaseView(CMyDocument* pDocument,HWND clientHWND,HINSTANCE hi
 //	m_buttonRenameLayer = new CMyButton(15,m_hWnd,m_renameLayerBitmap->GetHBitmap(),440,0);
 
 	m_popupMenu[0] = LoadMenu(m_hInstance,MAKEINTRESOURCE(IDR_POPUPMENU_FILMCASE));
+
+
+
+
+	AddBalloonCheckButton(m_buttonNew);
+	AddBalloonCheckButton(m_buttonOpen);
+	AddBalloonCheckButton(m_buttonSave);
+	
+	AddBalloonCheckButton(m_buttonCut);
+	AddBalloonCheckButton(m_buttonCopy);
+	AddBalloonCheckButton(m_buttonPaste);
+	AddBalloonCheckButton(m_buttonDelete);
+	AddBalloonCheckButton(m_buttonUndo);
+	AddBalloonCheckButton(m_buttonSearch);
+	AddBalloonCheckButton(m_buttonNoClearEffect);
+	AddBalloonCheckButton(m_buttonSpecialType);
+	AddBalloonCheckButton(m_buttonConfigMask);
+	AddBalloonCheckButton(m_buttonTaikenLevel);
+	AddBalloonCheckButton(m_buttonCutin);
+	AddBalloonCheckButton(m_buttonSkipFilm);
+
+
 
 
 	ReCalcuScrollPara();
@@ -724,6 +751,27 @@ BOOL CFilmCaseView::CheckOnFilmPic(int x,int y)
 	if (x>=32) return FALSE;
 
 	return TRUE;
+}
+
+
+BOOL CFilmCaseView::MoveMouse(int x,int y,POINT screenPos)
+{
+	POINT pt;
+	pt.x = x + m_windowX;
+	pt.y = y + m_windowY; 
+
+	int type = FILMCASE_WINDOW;
+	int subType = CheckOnBalloonButton(x,y);
+
+	if (subType == -1)
+	{
+		type = -1;
+	}
+
+
+	m_document->GetApp()->OnBalloonArea(type,pt,subType,screenPos);
+
+	return FALSE;
 }
 
 /*

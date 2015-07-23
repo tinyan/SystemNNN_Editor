@@ -427,6 +427,11 @@ BEGIN
                 MENUITEM "有効",                          ID_PRESETBUTTON_ENABLE
                 MENUITEM "無効",                          ID_PRESETBUTTON_DISABLE
             END
+            POPUP "追加バルーンヘルプ"
+            BEGIN
+                MENUITEM "オン",                          ID_BALLOON_ON
+                MENUITEM "オフ",                          ID_BALLOON_OFF
+            END
         END
         POPUP "台本追加設定"
         BEGIN

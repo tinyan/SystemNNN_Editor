@@ -25,6 +25,8 @@ public:
 	//calcu
 
 	void CalcuLButtonDown(WPARAM wParam, LPARAM lParam);
+	BOOL CheckOn(int x,int y);
+	int GetNumber(void);
 
 protected:
 	int m_number;

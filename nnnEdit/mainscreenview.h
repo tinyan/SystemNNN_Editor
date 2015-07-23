@@ -42,6 +42,8 @@ public:
 	static int m_arrowDeltaTable[10];
 	void SetMessageSetup(CMessageSetup* lpMessageSetup){m_messageSetup = lpMessageSetup;}
 
+	BOOL MoveMouse(int x,int y,POINT screenPos);
+
 private:
 	CMyDirectDraw* m_directX;
 	CMMX* m_mmx;

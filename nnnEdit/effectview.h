@@ -33,6 +33,9 @@ public:
 	void OnRightKey(void);
 	void OnUpKey(void);
 	void OnDownKey(void);
+
+	BOOL MoveMouse(int x,int y,POINT screenPos);
+
 private:
 	CPrintMessage* m_message;
 

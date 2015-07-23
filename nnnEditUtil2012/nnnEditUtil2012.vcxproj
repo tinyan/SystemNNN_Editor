@@ -91,6 +91,7 @@
   <ItemGroup>
     <ClCompile Include="..\nnnEdit\allEffectParam.cpp" />
     <ClCompile Include="..\nnnEdit\aviSave.cpp" />
+    <ClCompile Include="..\nnnEdit\balloon.cpp" />
     <ClCompile Include="..\nnnEdit\buttonPic.cpp" />
     <ClCompile Include="..\nnnEdit\case.cpp" />
     <ClCompile Include="..\nnnEdit\commanddata.cpp" />
@@ -123,6 +124,8 @@
   <ItemGroup>
     <ClInclude Include="..\nnnEdit\allEffectParam.h" />
     <ClInclude Include="..\nnnEdit\aviSave.h" />
+    <ClInclude Include="..\nnnEdit\balloon.h" />
+    <ClInclude Include="..\nnnEdit\balloonType.h" />
     <ClInclude Include="..\nnnEdit\buttonPic.h" />
     <ClInclude Include="..\nnnEdit\case.h" />
     <ClInclude Include="..\nnnEdit\commanddata.h" />

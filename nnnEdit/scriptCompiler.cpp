@@ -2120,6 +2120,11 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 				{
 					int ln = pMessage->GetDrawCount();
 					m_miniCompiler->Pass2SystemCommand(CODE_SYSTEMCOMMAND_DRAW,1,&ln,makeJsonFlag,messageTab+1);
+
+					if (makeJsonFlag != NULL)
+					{
+						pMessage->OutputData(makeJsonFlag,"{ \"type\" : \"_\" }",messageTab+1);
+					}
 				}
 				m_miniCompiler->AddNowCode();
 
@@ -2297,7 +2302,7 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 
 		if (makeJsonFlag != NULL)
 		{
-			pFilm->OutputData(makeJsonFlag,"{ \"type\" : \"_\" }",tab+1);
+			pFilm->OutputData(makeJsonFlag,"{ \"type\" : \"_\" }",tab+2);
 			pFilm->OutputData(makeJsonFlag,"]",tab+1);
 
 			if (k < kosuu-1)

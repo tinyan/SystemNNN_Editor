@@ -23,6 +23,7 @@ public:
 
 	LRESULT ViewWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam );
 
+	BOOL MoveMouse(int x,int y,POINT screenPos);
 
 //	void ReCalcuScrollPara(void);
 

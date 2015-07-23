@@ -15,6 +15,11 @@
 
 #include "case.h"
 
+#include "messageData.h"
+#include "myapplicationBase.h"
+#include "windowList.h"
+
+
 #include "storybookdoc.h"
 #include "storybookview.h"
 
@@ -62,6 +67,14 @@ CStoryBookView::CStoryBookView(CMyDocument* pDocument,HWND clientHWND,HINSTANCE 
 	m_buttonUndo = new CMyButton(4,m_hWnd,m_document->GetCommonBitmap(BITMAPNUMBER_UNDO),112,0);
 	
 	m_buttonSearch = new CMyButton(5,m_hWnd,m_document->GetCommonBitmap(BITMAPNUMBER_SEARCH),112+48,0);
+
+	AddBalloonCheckButton(m_buttonNew);
+	AddBalloonCheckButton(m_buttonOpen);
+	AddBalloonCheckButton(m_buttonSave);
+	AddBalloonCheckButton(m_buttonDelete);
+	AddBalloonCheckButton(m_buttonUndo);
+	AddBalloonCheckButton(m_buttonSearch);
+
 	ReCalcuScrollPara();
 }
 
@@ -283,6 +296,24 @@ LRESULT CStoryBookView::ViewWndProc(HWND hWnd, UINT message, WPARAM wParam, LPAR
 }
 
 
+BOOL CStoryBookView::MoveMouse(int x,int y,POINT screenPos)
+{
+	POINT pt;
+	pt.x = x + m_windowX;
+	pt.y = y + m_windowY; 
+
+	int type = STORYBOOK_WINDOW;
+	int subType = CheckOnBalloonButton(x,y);
+
+	if (subType == -1)
+	{
+		type = -1;
+	}
+
+	m_document->GetApp()->OnBalloonArea(type,pt,subType,screenPos);
+
+	return FALSE;
+}
 
 /*_*/
 

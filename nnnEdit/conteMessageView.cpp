@@ -17,6 +17,10 @@
 #include "bitmapnumber.h"
 
 #include "case.h"
+#include "windowlist.h"
+//#include "case.h"
+#include "messageData.h"
+#include "myapplicationBase.h"
 
 #include "ConteMessagedoc.h"
 #include "ConteMessageView.h"
@@ -268,6 +272,27 @@ void CConteMessageView::OnPaint(HWND hwnd, HDC hdc, RECT rc)
 }
 
 
+BOOL CConteMessageView::MoveMouse(int x,int y,POINT screenPos)
+{
+	POINT pt;
+	pt.x = x + m_windowX;
+	pt.y = y + m_windowY; 
+
+
+
+	int subType = -1;
+	int type = CONTEMESSAGE_WINDOW;
+
+	if (subType == -1)
+	{
+		type = -1;
+	}
+
+	m_document->GetApp()->OnBalloonArea(type,pt,subType,screenPos);
+
+//	OutputDebugString("*moveMouse layer*\x00f\x00a");
+	return FALSE;
+}
 
 /*_*/
 

@@ -103,6 +103,7 @@ public:
 	virtual void ScrollToSelect(void){}
 
 	virtual void OnFunctionKey(int n);
+
 protected:
 	CMyApplicationBase* m_app;
 

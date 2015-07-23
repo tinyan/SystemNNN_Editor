@@ -245,6 +245,11 @@ LRESULT CMyFrameWindow::FrameWndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
 		message = m_wheelMouse->TranslateMessage(message);
 	}
 
+	if (message == WM_LBUTTONDOWN)
+	{
+	//	OutputDebugString("L");
+	}
+
 	if (message == WM_MOUSEWHEEL)
 	{
 		//OutputDebugString("wheel");

@@ -11,7 +11,10 @@
 #include "..\..\systemNNN\nyanLib\include\commonmacro.h"
 //#include "mydirectx.h"
 
+#include "windowlist.h"
 #include "case.h"
+#include "messageData.h"
+#include "myapplicationBase.h"
 
 #include "programdoc.h"
 #include "programview.h"
@@ -206,6 +209,28 @@ LRESULT CProgramView::ViewWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM
 }
 
 
+BOOL CProgramView::MoveMouse(int x,int y,POINT screenPos)
+{
+	POINT pt;
+	pt.x = x + m_windowX;
+	pt.y = y + m_windowY; 
+
+
+
+	int subType = -1;
+	int type = PROGRAM_WINDOW;
+
+
+	if (subType == -1)
+	{
+		type = -1;
+	}
+
+	m_document->GetApp()->OnBalloonArea(type,pt,subType,screenPos);
+
+//	OutputDebugString("*moveMouse layer*\x00f\x00a");
+	return FALSE;
+}
 
 /*_*/
 

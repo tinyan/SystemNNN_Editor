@@ -22,6 +22,7 @@ public:
 	static int m_switchXY2[];
 	static int m_presetZahyo[][32];
 //	BOOL m_switchFlag[16];
+	BOOL MoveMouse(int x,int y,POINT screenPos);
 
 private:
 	HBITMAP m_hFontBitmap;

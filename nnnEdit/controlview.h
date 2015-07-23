@@ -26,6 +26,7 @@ public:
 	virtual void OnRightKey(void);
 	virtual void OnUpKey(void);
 	virtual void OnDownKey(void);
+	BOOL MoveMouse(int x,int y,POINT screenPos);
 
 private:
 	HBITMAP m_hBitmap;

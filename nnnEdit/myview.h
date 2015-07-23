@@ -9,6 +9,7 @@
 
 class CMyDocument;
 class CMyToolBar;
+class CMyButton;
 
 class CMyView
 {
@@ -94,6 +95,12 @@ public:
 	virtual void OnFunctionKey(int n);
 	int OpenPopupMenu(WPARAM wParam, LPARAM lParam, int nPos1 = 0, int nPos2 = -1, int n = 0);
 
+	virtual BOOL MoveMouse(int x,int y,POINT screenPos);
+	void EraseBalloon(void);
+
+	CMyButton* m_buttonForCheck[64];
+	int m_buttonForCheckNumber;
+
 protected:
 	CMyDocument* m_document;
 	HWND m_clientHWND;
@@ -156,6 +163,9 @@ protected:
 	char m_windowName[64];
 	void SetMyViewWindowName(LPSTR name);
 
+	int CheckOnBalloonButton(int x,int y);
+	void AddBalloonCheckButton(CMyButton* button);
+	void SetBalloonCheckButton(int n,CMyButton* button);
 private:
 
 };

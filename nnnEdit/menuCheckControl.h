@@ -51,7 +51,7 @@ public:
 	void SetPresetZahyoCheck(void);
 	void SetAddDefaultVoiceCheck(void);
 	void SetTermFlagCheck(void);
-
+	void SetBalloonCheck(void);
 
 	static int m_buildMenuTable[];
 	static int m_deleteMenuTable[];
@@ -86,6 +86,7 @@ public:
 	static int m_presetZahyoTable[];
 	static int m_addDefaultVoiceTable[];
 	static int m_termFlagTable[];
+	static int m_balloonFlagTable[];
 
 private:
 	CMyApplicationBase* m_app;

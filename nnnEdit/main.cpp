@@ -246,6 +246,12 @@ OutputDebugString("End CreateWindow()\n");
 
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
+
+			if (msg.message == WM_MOUSEMOVE)
+			{
+			//	OutputDebugString("M");
+				m_app->MainMouseMove(msg);
+			}
 		}
 		else
 		{

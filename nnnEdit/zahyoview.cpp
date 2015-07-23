@@ -17,6 +17,10 @@
 
 #include "case.h"
 
+#include "messageData.h"
+#include "myapplicationBase.h"
+#include "windowList.h"
+
 #include "mydocument.h"
 
 //#include "myPopupMenu.h"
@@ -660,5 +664,47 @@ void CZahyoView::CheckAndCopyZahyo(int n)
 			//to
 		}
 	}
+}
+
+BOOL CZahyoView::MoveMouse(int x,int y,POINT screenPos)
+{
+	POINT pt;
+	pt.x = x + m_windowX;
+	pt.y = y + m_windowY; 
+
+	int type = ZAHYO_WINDOW;
+
+	int subType = -1;
+	for (int i=5;i<=7;i++)
+	{
+		int startX = m_switchXY2[i*8+0];
+		int startY = m_switchXY2[i*8+1];
+		int sizeX = m_switchXY2[i*8+2];
+		int sizeY = m_switchXY2[i*8+3];
+		int dx = x - startX;
+		int dy = y - startY;
+		if ((dx>=0) && (dx<sizeX) && (dy>=0) && (dy<sizeY))
+		{
+			subType = i;
+			break;
+		}
+	}
+
+
+	int n = GetOnPresetButton(x,y);
+	if ((n>=0) && (n<7))
+	{
+		subType = 10+n;
+	}
+
+
+	if (subType == -1)
+	{
+		type = -1;
+	}
+
+	m_document->GetApp()->OnBalloonArea(type,pt,subType,screenPos);
+
+	return FALSE;
 }
 

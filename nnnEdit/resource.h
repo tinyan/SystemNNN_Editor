@@ -924,13 +924,18 @@
 #define ID_40848                        40848
 #define ID_MENU_BUILD_XML               40849
 #define ID_MENU_BUILD_JSON              40850
+#define ID_40851                        40851
+#define ID_40852                        40852
+#define ID_40853                        40853
+#define ID_BALLOON_ON                   40854
+#define ID_BALLOON_OFF                  40855
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        229
-#define _APS_NEXT_COMMAND_VALUE         40851
+#define _APS_NEXT_COMMAND_VALUE         40856
 #define _APS_NEXT_CONTROL_VALUE         1095
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

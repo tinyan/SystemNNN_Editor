@@ -12,6 +12,11 @@
 
 #include "..\..\systemNNN\nnnUtilLib\wheelMouse.h"
 #include "case.h"
+
+#include "messageData.h"
+#include "myapplicationBase.h"
+#include "windowList.h"
+
 //#include "..\nyanEffectLib\effect.h"
 #include "..\..\systemNNN\nyanEffectLib\effectStruct.h"
 
@@ -146,6 +151,27 @@ CGameMessageView::CGameMessageView(CMyDocument* pDocument,HWND clientHWND,HINSTA
 
 	m_musicFadeBitmap = new CMyBitmap("nnndir\\setup\\bmp\\common_bgm.bmp");
 	m_buttonMusicFade = new CMyButton(13,m_hWnd,m_musicFadeBitmap->GetHBitmap(),472,0,24,24);
+
+
+
+
+
+
+	AddBalloonCheckButton(m_buttonNew);
+	AddBalloonCheckButton(m_buttonCut);
+	AddBalloonCheckButton(m_buttonCopy);
+	AddBalloonCheckButton(m_buttonPaste);
+	AddBalloonCheckButton(m_buttonDelete);
+	AddBalloonCheckButton(m_buttonUndo);
+	AddBalloonCheckButton(m_buttonCommentTop);
+	AddBalloonCheckButton(m_buttonCommentBottom);
+	AddBalloonCheckButton(m_buttonExpStatus);
+	AddBalloonCheckButton(m_buttonMessageFontSizeType);
+	AddBalloonCheckButton(m_buttonFace);
+	AddBalloonCheckButton(m_buttonMustFace);
+	AddBalloonCheckButton(m_buttonMusicFade);
+	AddBalloonCheckButton(m_buttonFixFace);
+
 
 
 	ReCalcuScrollPara();
@@ -974,7 +1000,7 @@ void CGameMessageView::OnPaint(HWND hWnd,WPARAM wParam, LPARAM lParam)
 					}
 
 				}
-				TextOut(hdc,x+m_seButtonPrintX+24*8,y,se,strlen(se));
+				TextOut(hdc,x+m_seButtonPrintX+24*8+4,y,se,strlen(se));
 
 				rc.top += 24;
 
@@ -1199,6 +1225,53 @@ void CGameMessageView::OnLButtonDown(HWND hWnd,WPARAM wParam, LPARAM lParam)
 	}
 }
 
+int CGameMessageView::GetMessageButtonParam(int x,int y)
+{
+
+	y -= 24;
+	if (y<0) return -1;
+
+	y %= (24+18*m_editorMessageGyo);
+
+	if (CheckInButton(x,y,m_modeButtonPrintX,m_modeButtonPrintY))
+	{
+		return 0;
+	}
+
+	int dx = x - m_voiceButtonPrintX;
+	int dy = y - m_voiceButtonPrintY;
+//	if ((dx>=0) && (dx<32*2) && (dy>=0) && (dy<24)) return 1;
+	if ((dx>=0) &&(dy>=0) && (dy<24))
+	{
+		if (dx<48)
+		{
+			return dx / 24 + 1;
+		}
+
+		if ((dx>=48+8) && (dx<48+8+48))
+		{
+			return (dx-48-8) / 24 + 3;
+		}
+	}
+
+	dx = x - m_seButtonPrintX;
+	dy = y - m_seButtonPrintY;
+	if ((dx>=0) && (dx<24*8+4) && (dy>=0) && (dy<24))
+	{
+		if (dx<24*4)
+		{
+			return dx / 24 + 5;
+		}
+
+		if (dx>=24*4+4)
+		{
+			return (dx-24*4-4) / 24 + 9;
+		}
+	}
+
+	return -1;
+
+}
 
 int CGameMessageView::GetAreaNumber(int x, int y)
 {
@@ -1221,9 +1294,9 @@ int CGameMessageView::GetAreaNumber(int x, int y)
 
 	dx = x - m_seButtonPrintX;
 	dy = y - m_seButtonPrintY;
-	if ((dx>=0) && (dx<32*8+4) && (dy>=0) && (dy<24))
+	if ((dx>=0) && (dx<24*8+4) && (dy>=0) && (dy<24))
 	{
-		if ((dx<32*4) || (dx>=32*4+4)) return 2;
+		if ((dx<24*4) || (dx>=24*4+4)) return 2;
 	}
 
 //	if (CheckInButton(x,y,m_voiceButtonPrintX,m_voiceButtonPrintY)) return 1;
@@ -1336,6 +1409,39 @@ void CGameMessageView::PutAddButtonPic(HDC hdc,HDC src,int putX,int putY,int add
 
 
 	SelectObject(src,old);
+}
+
+
+BOOL CGameMessageView::MoveMouse(int x,int y,POINT screenPos)
+{
+	POINT pt;
+	pt.x = x + m_windowX;
+	pt.y = y + m_windowY; 
+
+	int type = GAMEMESSAGE_WINDOW;
+	int subType = CheckOnBalloonButton(x,y);
+
+	if (subType == -1)
+	{
+		//search2
+		subType = GetMessageButtonParam(x,y);
+		if (subType != -1)
+		{
+			subType += 16;
+		}
+	}
+
+
+
+	if (subType == -1)
+	{
+		type = -1;
+	}
+
+
+	m_document->GetApp()->OnBalloonArea(type,pt,subType,screenPos);
+
+	return FALSE;
 }
 
 /*_*/

@@ -12,6 +12,11 @@
 //#include "mydirectx.h"
 
 #include "case.h"
+
+#include "messageData.h"
+#include "myapplicationBase.h"
+#include "windowList.h"
+
 //#include "..\nyanEffectLib\effect.h"
 #include "..\..\systemNNN\nyanEffectLib\effectStruct.h"
 
@@ -534,6 +539,25 @@ void CEffectView::OnDownKey(void)
 {
 	CEffectDoc* pDoc = (CEffectDoc*)m_document;
 	pDoc->OnDownKey();
+}
+
+BOOL CEffectView::MoveMouse(int x,int y,POINT screenPos)
+{
+	POINT pt;
+	pt.x = x + m_windowX;
+	pt.y = y + m_windowY; 
+
+	int type = EFFECT_WINDOW;
+	int subType = -1;//CheckOnBalloonButton(x,y);
+
+	if (subType == -1)
+	{
+		type = -1;
+	}
+
+	m_document->GetApp()->OnBalloonArea(type,pt,subType,screenPos);
+
+	return FALSE;
 }
 
 /*

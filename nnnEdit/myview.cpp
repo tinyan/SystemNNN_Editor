@@ -14,6 +14,8 @@
 
 #include "case.h"
 //#include "..\cyclib\effect.h"
+#include "myapplicationBase.h"
+#include "mybutton.h"
 
 #include "mydocument.h"
 //#include "mytoolbar.h"
@@ -44,6 +46,13 @@ CMyView::CMyView(CMyDocument* pDocument, HWND clientHWND,HINSTANCE hinstance)
 
 	m_scrollFlag[0] = FALSE;
 	m_scrollFlag[1] = FALSE;
+
+	m_buttonForCheckNumber = 0;
+	for (int i=0;i<64;i++)
+	{
+		m_buttonForCheck[i] = NULL;
+	}
+
 
 	int screenSizeX = CMyGraphics::GetScreenSizeX();
 	int screenSizeY = CMyGraphics::GetScreenSizeY();
@@ -206,6 +215,22 @@ LRESULT CALLBACK CMyView::staticViewWndProc(HWND hWnd, UINT message, WPARAM wPar
 //				break;
 //			}
 
+			if (message == WM_MOUSEMOVE)
+			{
+				CMyDocument* pDoc = pView->GetMyDocument();
+				if (pDoc != NULL)
+				{
+					int xPos = LOWORD(lParam); 
+					int yPos = HIWORD(lParam);
+					POINT pt0;
+					pt0.x = xPos;
+					pt0.y = yPos;
+
+					ClientToScreen(pView->m_hWnd,&pt0);
+					pView->MoveMouse(xPos,yPos,pt0);
+				}
+			}
+
 			if ((message == WM_LBUTTONDOWN) || (message == WM_RBUTTONDOWN))
 			{
 				CMyDocument* pDoc = pView->GetMyDocument();
@@ -217,6 +242,8 @@ LRESULT CALLBACK CMyView::staticViewWndProc(HWND hWnd, UINT message, WPARAM wPar
 //					{
 //						pApp->PreClickMouse(pView->m_number);
 //					}
+
+					pView->EraseBalloon();
 				}
 			}
 
@@ -322,6 +349,7 @@ LRESULT CALLBACK CMyView::staticViewWndProc(HWND hWnd, UINT message, WPARAM wPar
 			return pView->ViewWndProc(hWnd,message,wParam,lParam);
 		}
 	}
+	
 
 	return DefMDIChildProc(hWnd,message,wParam,lParam);
 //	return DefWindowProc(hWnd,message,wParam,lParam);
@@ -370,6 +398,20 @@ void CMyView::WindowIsMoved(int x, int y)
 	m_windowY = y;
 
 	m_document->WindowIsMoved(x,y);
+
+	CMyDocument* pDoc = GetMyDocument();
+	if (pDoc != NULL)
+	{
+		POINT dmy;
+		dmy.x = 0;
+		dmy.y = 0;
+		POINT dmy2;
+		dmy2.x = 0;
+		dmy2.y = 0;
+
+		pDoc->GetApp()->OnBalloonArea(-2,dmy,0,dmy2);
+	}
+
 }
 
 
@@ -964,5 +1006,80 @@ void CMyView::OnFunctionKey(int n)
 {
 	m_document->OnFunctionKey(n);
 }
+
+
+BOOL CMyView::MoveMouse(int x,int y,POINT screenPos)
+{
+	return FALSE;
+}
+
+void CMyView::EraseBalloon(void)
+{
+	CMyDocument* pDoc = GetMyDocument();
+	if (pDoc != NULL)
+	{
+		POINT dmy;
+		dmy.x = 0;
+		dmy.y = 0;
+		POINT dmy2;
+		dmy2.x = 0;
+		dmy2.y = 0;
+
+		pDoc->GetApp()->OnBalloonArea(-1,dmy,0,dmy2);
+	}
+}
+
+int CMyView::CheckOnBalloonButton(int x,int y)
+{
+
+	for (int i=0;i<m_buttonForCheckNumber;i++)
+	{
+		/*
+		FILE* f = NULL;
+		fopen_s(&f,"log.txt","ab+");
+		char mes[256];
+		sprintf_s(mes,256,"[%d:max(%d) mode=%s]",i,m_buttonForCheckNumber,m_windowName);
+		fwrite(mes,sizeof(char),strlen(mes),f);
+		fclose(f);
+		*/
+
+		CMyButton* button = m_buttonForCheck[i];
+		if (button != NULL)
+		{
+			if (button->CheckOn(x,y)) return i;
+		}
+	}
+
+	return -1;
+}
+
+void CMyView::AddBalloonCheckButton(CMyButton* button)
+{
+	int n = button->GetNumber();
+	SetBalloonCheckButton(n,button);
+}
+
+void CMyView::SetBalloonCheckButton(int n,CMyButton* button)
+{
+	if ((n>=0) && (n<64))
+	{
+		m_buttonForCheck[n] = button;
+		if (n+1 > m_buttonForCheckNumber)
+		{
+/*
+		FILE* f = NULL;
+		fopen_s(&f,"log.txt","ab+");
+		char mes[256];
+		sprintf_s(mes,256,"[exp button %d:max(%d)]",n+1,m_buttonForCheckNumber);
+		fwrite(mes,sizeof(char),strlen(mes),f);
+		fclose(f);
+*/
+			m_buttonForCheckNumber = n + 1;
+		}
+	}
+}
+
+
+
 /*_*/
 

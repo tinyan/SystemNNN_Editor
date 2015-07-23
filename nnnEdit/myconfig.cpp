@@ -245,6 +245,8 @@ CMyConfig::MYCONFIGVALUETYPE CMyConfig::m_initDataValue[]=
 
 	{"termFlag",0},
 
+	{"balloonFlag",0},
+
 	{"",0},
 };
 

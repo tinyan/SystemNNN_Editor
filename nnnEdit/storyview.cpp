@@ -16,6 +16,10 @@
 
 #include "case.h"
 
+#include "messageData.h"
+#include "myapplicationBase.h"
+#include "windowList.h"
+
 #include "storydoc.h"
 #include "storyview.h"
 
@@ -136,6 +140,18 @@ CStoryView::CStoryView(CMyDocument* pDocument,HWND clientHWND,HINSTANCE hinstanc
 	m_buttonBack = new CMyButton(8,m_hWnd,m_document->GetCommonBitmap(BITMAPNUMBER_BACK),88+96+8+8+32,0);
 	m_buttonJump = new CMyButton(9,m_hWnd,m_document->GetCommonBitmap(BITMAPNUMBER_JUMP),88+96+8+8+32+24,0);
 	m_buttonFoward = new CMyButton(10,m_hWnd,m_document->GetCommonBitmap(BITMAPNUMBER_FOWARD),88+96+8+8+32+24+24,0);
+
+	AddBalloonCheckButton(m_buttonNew);
+	AddBalloonCheckButton(m_buttonCut);
+	AddBalloonCheckButton(m_buttonCopy);
+	AddBalloonCheckButton(m_buttonPaste);
+	AddBalloonCheckButton(m_buttonDelete);
+	AddBalloonCheckButton(m_buttonUndo);
+	AddBalloonCheckButton(m_buttonEdit);
+//	AddBalloonCheckButton(m_buttonChange);
+	AddBalloonCheckButton(m_buttonBack);
+	AddBalloonCheckButton(m_buttonJump);
+	AddBalloonCheckButton(m_buttonFoward);
 
 	m_dib = new CMyDIB(m_hWnd,32,24);
 
@@ -642,6 +658,26 @@ void CStoryView::CheckChangeMarkColor(int n,int cmd)
 			return;
 		}
 	}
+}
+
+BOOL CStoryView::MoveMouse(int x,int y,POINT screenPos)
+{
+	POINT pt;
+	pt.x = x + m_windowX;
+	pt.y = y + m_windowY; 
+
+	int type = STORY_WINDOW;
+	int subType = CheckOnBalloonButton(x,y);
+
+	if (subType == -1)
+	{
+		type = -1;
+	}
+
+
+	m_document->GetApp()->OnBalloonArea(type,pt,subType,screenPos);
+
+	return FALSE;
 }
 
 

@@ -16,6 +16,10 @@
 
 #include "case.h"
 
+#include "messageData.h"
+#include "myapplicationBase.h"
+#include "windowList.h"
+
 #include "mydocument.h"
 
 #include "myBitmap.h"
@@ -185,6 +189,36 @@ CFilmView::CFilmView(CMyDocument* pDocument,HWND clientHWND,HINSTANCE hinstance)
 	m_buttonVarControl = new CMyButton(24,m_hWnd,m_varControlBitmap->GetHBitmap(),868,0);
 
 	m_popupMenu[0] = LoadMenu(m_hInstance,MAKEINTRESOURCE(IDR_POPUPMENU_KOMA));
+
+
+
+	AddBalloonCheckButton(m_buttonNew);
+	AddBalloonCheckButton(m_buttonCut);
+	AddBalloonCheckButton(m_buttonCopy);
+	AddBalloonCheckButton(m_buttonPaste);
+	AddBalloonCheckButton(m_buttonDelete);
+	AddBalloonCheckButton(m_buttonUndo);
+	AddBalloonCheckButton(m_buttonOverrapType);
+	AddBalloonCheckButton(m_buttonOverrap);
+	AddBalloonCheckButton(m_buttonSetCG);
+	AddBalloonCheckButton(m_buttonBGM);
+	AddBalloonCheckButton(m_buttonFrame);
+	AddBalloonCheckButton(m_buttonWindowOff);
+	AddBalloonCheckButton(m_buttonDemo);
+	AddBalloonCheckButton(m_buttonWindowNumber);
+	AddBalloonCheckButton(m_buttonCursorNumber);
+	AddBalloonCheckButton(m_buttonMouseNumber);
+	AddBalloonCheckButton(m_buttonAutoMessage);
+	AddBalloonCheckButton(m_buttonCannotClick);
+	AddBalloonCheckButton(m_buttonCannotSkip);
+	AddBalloonCheckButton(m_buttonOptionOff);
+	AddBalloonCheckButton(m_buttonCutin);
+	AddBalloonCheckButton(m_buttonPreload);
+	AddBalloonCheckButton(m_buttonExpStatus);
+	AddBalloonCheckButton(m_buttonVarControl);
+
+
+
 
 	ReCalcuScrollPara();
 
@@ -1165,6 +1199,25 @@ void CFilmView::PrintMiniSuuji(HDC hdc,int x,int y,int d)
 	}
 }
 
+BOOL CFilmView::MoveMouse(int x,int y,POINT screenPos)
+{
+	POINT pt;
+	pt.x = x + m_windowX;
+	pt.y = y + m_windowY; 
+
+	int type = FILM_WINDOW;
+	int subType = CheckOnBalloonButton(x,y);
+
+	if (subType == -1)
+	{
+		type = -1;
+	}
+
+
+	m_document->GetApp()->OnBalloonArea(type,pt,subType,screenPos);
+
+	return FALSE;
+}
 
 /*_*/
 

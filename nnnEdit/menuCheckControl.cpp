@@ -313,6 +313,13 @@ int CMenuCheckControl::m_termFlagTable[]=
 	-1,
 };
 
+int CMenuCheckControl::m_balloonFlagTable[]=
+{
+	ID_BALLOON_ON,0,1,
+	ID_BALLOON_OFF,0,0,
+	-1,
+};
+
 CMenuCheckControl::CMenuCheckControl(CMyApplicationBase* app)
 {
 	m_app = app;
@@ -367,6 +374,7 @@ void CMenuCheckControl::CheckAllMenu(void)
 	SetPresetZahyoCheck();
 	SetAddDefaultVoiceCheck();
 	SetTermFlagCheck();
+	SetBalloonCheck();
 }
 
 
@@ -662,6 +670,13 @@ void CMenuCheckControl::SetTermFlagCheck(void)
 	int checkData[1];
 	checkData[0] = m_app->GetConfig("termFlag");
 	SetMenuCheckRoutine(m_termFlagTable,checkData);
+}
+
+void CMenuCheckControl::SetBalloonCheck(void)
+{
+	int checkData[1];
+	checkData[0] = m_app->GetConfig("balloonFlag");
+	SetMenuCheckRoutine(m_balloonFlagTable,checkData);
 }
 
 

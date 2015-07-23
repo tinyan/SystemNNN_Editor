@@ -34,6 +34,7 @@ public:
 
 	void OnLeftKey(void);
 	void OnRightKey(void);
+	BOOL MoveMouse(int x,int y,POINT screenPos);
 
 private:
 	HBITMAP m_hBitmap;

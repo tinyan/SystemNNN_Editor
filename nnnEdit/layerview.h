@@ -57,6 +57,8 @@ public:
 	int OpenPopupLayerMenu(WPARAM wParam,LPARAM lParam);
 	int OpenPopupEffectMenu(WPARAM wParam,LPARAM lParam);
 
+	BOOL MoveMouse(int x,int y,POINT screenPos);
+
 	//virtual void OnDownKey(void);
 private:
 	void UpdateButtonArea(int layer, int nm);

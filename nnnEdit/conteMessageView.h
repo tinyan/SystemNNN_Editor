@@ -19,6 +19,8 @@ public:
 	void End(void);
 
 	LRESULT ViewWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam );
+	BOOL MoveMouse(int x,int y,POINT screenPos);
+
 private:
 	HFONT m_font;
 
