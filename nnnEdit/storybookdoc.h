@@ -30,7 +30,7 @@ public:
 	void OnOpenStory(int n = -1);
 	void OnSaveStory(int n = -1);
 	void OnDelete(int n = -1);
-	void OnUndo(int n = -1);
+//	void OnUndo(int n = -1);
 	void OnSearch(int n = -1);
 
 	void OnChangeName(int n);

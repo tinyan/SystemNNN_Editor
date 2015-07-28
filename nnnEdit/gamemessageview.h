@@ -27,6 +27,7 @@ public:
 	static int m_messageColorTable[];
 
 	BOOL MoveMouse(int x,int y,POINT screenPos);
+	BOOL OnControlKey(WPARAM wParam,LPARAM lParam);
 
 //	void OnEnterKey(void);
 //	void OnDeleteKey(void);

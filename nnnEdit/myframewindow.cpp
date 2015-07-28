@@ -422,6 +422,14 @@ LRESULT CMyFrameWindow::FrameWndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
 	case WM_MOVE:
 		m_app->OnMove(wParam,lParam);
 		break;
+
+//	case WM_CHAR:
+//		char mes[256];
+//		sprintf_s(mes,"[frame window key=%d]",wParam);
+//		OutputDebugString(mes);
+//		break;
+
+
 /*
 	case WM_ERASEBKGND:
 OutputDebugString("Erase,");

@@ -35,6 +35,8 @@ public:
 	void OnLeftKey(void);
 	void OnRightKey(void);
 	BOOL MoveMouse(int x,int y,POINT screenPos);
+	BOOL OnControlKey(WPARAM wParam,LPARAM lParam);
+
 
 private:
 	HBITMAP m_hBitmap;
@@ -51,6 +53,7 @@ private:
 
 	int m_varBlockKosuu;
 	int m_modeButtonPrintX;
+
 
 //	CVarInitData* m_varInitData;
 

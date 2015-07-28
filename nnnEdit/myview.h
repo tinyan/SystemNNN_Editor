@@ -100,6 +100,8 @@ public:
 
 	CMyButton* m_buttonForCheck[64];
 	int m_buttonForCheckNumber;
+	virtual BOOL OnControlKey(WPARAM wParam,LPARAM lParam);
+	
 
 protected:
 	CMyDocument* m_document;

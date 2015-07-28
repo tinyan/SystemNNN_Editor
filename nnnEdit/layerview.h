@@ -58,6 +58,7 @@ public:
 	int OpenPopupEffectMenu(WPARAM wParam,LPARAM lParam);
 
 	BOOL MoveMouse(int x,int y,POINT screenPos);
+	BOOL OnControlKey(WPARAM wParam,LPARAM lParam);
 
 	//virtual void OnDownKey(void);
 private:

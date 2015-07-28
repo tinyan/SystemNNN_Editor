@@ -26,7 +26,7 @@ public:
 	void OnSaveFilm(int n = -1);
 
 	void OnDelete(int n = -1);
-	void OnUndo(int n = -1);
+//	void OnUndo(int n = -1);
 	void OnSearch(int n = -1);
 
 	void OnChangeName(int n);

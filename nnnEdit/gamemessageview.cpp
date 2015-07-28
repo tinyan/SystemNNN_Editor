@@ -1444,6 +1444,59 @@ BOOL CGameMessageView::MoveMouse(int x,int y,POINT screenPos)
 	return FALSE;
 }
 
+BOOL CGameMessageView::OnControlKey(WPARAM wParam,LPARAM lParam)
+{
+	CGameMessageDoc* pDoc = (CGameMessageDoc*)m_document;
+
+	if (wParam == 6)
+	{
+		//F
+		//pDoc->OnSearchButton(FALSE);
+		//return TRUE;
+	}
+	if (wParam == 19)
+	{
+		//S
+//		pDoc->OnSaveButton();
+//		return TRUE;
+	}
+	if (wParam == 3)
+	{
+		//C
+		pDoc->OnCopy();
+		return TRUE;
+	}
+	if (wParam == 24)
+	{
+		//X
+		pDoc->OnCut();
+		return TRUE;
+	}
+	if (wParam == 22)
+	{
+		//V
+		pDoc->OnPaste();
+		return TRUE;
+	}
+	if (wParam == 14)
+	{
+		//N
+		pDoc->OnNewMessage(-1);
+		return TRUE;
+	}
+	if (wParam == 15)
+	{
+		//O
+	}
+	if (wParam == 26)
+	{
+		return pDoc->OnUndo(); 
+	}
+
+	return FALSE;
+
+}
+
 /*_*/
 
 

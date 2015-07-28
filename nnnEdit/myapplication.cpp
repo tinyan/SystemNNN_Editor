@@ -1650,6 +1650,25 @@ void CMyApplication::MoveAllWindow(void)
 
 
 
+void CMyApplication::OnControlKey(int windowNumber,WPARAM wParam,LPARAM lParam)
+{
+	if (wParam == 6)
+	{
+		m_searchOrReplace->SearchOrReplace(FALSE,FALSE);
+	}
+	if (wParam == 19)
+	{
+		if (Save())
+		{
+			CheckAndSetProject();
+		}
+	}
+	if (wParam == 26)
+	{
+		//undo 
+	}
+
+}
 
 void CMyApplication::OnCommand(WPARAM wParam,LPARAM lParam)
 {

@@ -537,6 +537,52 @@ BOOL CVarView::MoveMouse(int x,int y,POINT screenPos)
 	return FALSE;
 }
 
+BOOL CVarView::OnControlKey(WPARAM wParam,LPARAM lParam)
+{
+
+	CVarDoc* pDoc = (CVarDoc*)m_document;
+
+	if (wParam == 6)
+	{
+		pDoc->OnSearchButton(FALSE);
+		return TRUE;
+	}
+	if (wParam == 19)
+	{
+		pDoc->OnSaveButton();
+		return TRUE;
+	}
+	if (wParam == 3)
+	{
+		pDoc->OnCopyButton();
+		return TRUE;
+	}
+	if (wParam == 24)
+	{
+		pDoc->OnCutButton();
+		return TRUE;
+	}
+	if (wParam == 22)
+	{
+		pDoc->OnPasteButton();
+		return TRUE;
+	}
+	if (wParam == 14)
+	{
+		//N
+	}
+	if (wParam == 15)
+	{
+		//O
+	}
+	if (wParam == 26)
+	{
+		return pDoc->OnUndo(); 
+	}
+
+	return FALSE;
+}
+
 /*_*/
 
 

@@ -379,9 +379,7 @@ int CStoryDoc::SearchParent(int n,int level)
 
 
 
-void CStoryDoc::OnUndo(int n)
-{
-}
+
 
 void CStoryDoc::OnBackCommand(int n)
 {

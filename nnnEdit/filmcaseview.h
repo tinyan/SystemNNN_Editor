@@ -27,6 +27,7 @@ public:
 //	void OnRButtonDown(HWND hWnd, WPARAM wParam, LPARAM lParam);
 
 	BOOL MoveMouse(int x,int y,POINT screenPos);
+	BOOL OnControlKey(WPARAM wParam,LPARAM lParam);
 
 	static int m_filmColorTable[];
 private:

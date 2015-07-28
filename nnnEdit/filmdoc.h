@@ -25,7 +25,7 @@ public:
 	void OnCopyKoma(int n = -1);
 	void OnPasteKoma(int n = -1);
 	void OnDelete(int n = -1);
-	void OnUndo(int n = -1);
+	//void OnUndo(int n = -1);
 	void OnOverrap(int n = -1);
 
 	void OnOverrapType(int n = -1);

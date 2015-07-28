@@ -413,6 +413,7 @@ public:
 	virtual CNameList* GetTermList(void) = 0;
 
 	virtual void OnBalloonArea(int n,POINT pt,int subType,POINT screenPos) {}
+	virtual void OnControlKey(int windowNumber,WPARAM wParam,LPARAM lParam) {}
 
 protected:
 

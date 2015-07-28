@@ -33,7 +33,7 @@ public:
 	void OnCopyCommand(int n = -1);
 	void OnPasteCommand(int n = -1);
 	void OnDelete(int n = -1);
-	void OnUndo(int n = -1);
+//	void OnUndo(int n = -1);
 
 	void OnBackCommand(int n = -1);
 	void OnFowardCommand(int n = -1);

@@ -315,6 +315,61 @@ BOOL CStoryBookView::MoveMouse(int x,int y,POINT screenPos)
 	return FALSE;
 }
 
+
+BOOL CStoryBookView::OnControlKey(WPARAM wParam,LPARAM lParam)
+{
+	CStoryBookDoc* pDoc = (CStoryBookDoc*)m_document;
+	if (wParam == 6)
+	{
+		//F
+		pDoc->OnSearch();
+		return TRUE;
+	}
+	if (wParam == 19)
+	{
+		//S
+		pDoc->OnSaveStory();
+		return TRUE;
+	}
+	if (wParam == 3)
+	{
+		//C
+//		pDoc->OnCopyS();
+//		return TRUE;
+	}
+	if (wParam == 24)
+	{
+		//X
+//		pDoc->OnCut();
+//		return TRUE;
+	}
+	if (wParam == 22)
+	{
+		//V
+//		pDoc->OnPaste();
+//		return TRUE;
+	}
+	if (wParam == 14)
+	{
+		//N
+		pDoc->OnNewStory();
+		return TRUE;
+	}
+	if (wParam == 15)
+	{
+		pDoc->OnOpenStory();
+		return TRUE;
+		//O
+	}
+	if (wParam == 26)
+	{
+		return pDoc->OnUndo(); 
+	}
+
+	return FALSE;
+
+}
+
 /*_*/
 
 

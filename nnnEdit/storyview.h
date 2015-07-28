@@ -33,6 +33,7 @@ public:
 	void CheckChangeMarkColor(int n,int cmd);
 
 	BOOL MoveMouse(int x,int y,POINT screenPos);
+	BOOL OnControlKey(WPARAM wParam,LPARAM lParam);
 
 
 private:

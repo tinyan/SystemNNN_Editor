@@ -774,6 +774,62 @@ BOOL CFilmCaseView::MoveMouse(int x,int y,POINT screenPos)
 	return FALSE;
 }
 
+
+BOOL CFilmCaseView::OnControlKey(WPARAM wParam,LPARAM lParam)
+{
+	CFilmCaseDoc* pDoc = (CFilmCaseDoc*)m_document;
+
+	if (wParam == 6)
+	{
+		//F
+//		pDoc->OnSearch();
+		//return TRUE;
+	}
+	if (wParam == 19)
+	{
+		//S
+		pDoc->OnSaveFilm();
+		return TRUE;
+	}
+	if (wParam == 3)
+	{
+		//C
+		pDoc->OnCopy();
+		return TRUE;
+	}
+	if (wParam == 24)
+	{
+		//X
+		pDoc->OnCut();
+		return TRUE;
+	}
+	if (wParam == 22)
+	{
+		//V
+		pDoc->OnPaste();
+		return TRUE;
+	}
+	if (wParam == 14)
+	{
+		//N
+		pDoc->OnNewFilm();
+		return TRUE;
+	}
+	if (wParam == 15)
+	{
+		pDoc->OnOpenFilm();
+		return TRUE;
+		//O
+	}
+	if (wParam == 26)
+	{
+		return pDoc->OnUndo(); 
+	}
+
+	return FALSE;
+
+}
+
 /*
 void CFilmCaseView::ReCalcuScrollPara(void)
 {

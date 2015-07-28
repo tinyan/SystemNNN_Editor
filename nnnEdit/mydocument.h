@@ -104,6 +104,9 @@ public:
 
 	virtual void OnFunctionKey(int n);
 
+	int GetWindowNumber(void){return m_windowNumber;}
+	virtual BOOL OnUndo(int n = -1){return FALSE;}
+
 protected:
 	CMyApplicationBase* m_app;
 

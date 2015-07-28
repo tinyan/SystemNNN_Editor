@@ -419,9 +419,6 @@ void CFilmDoc::OnDelete(int n)
 }
 
 
-void CFilmDoc::OnUndo(int n)
-{
-}
 
 
 void CFilmDoc::OnOverrap(int n)

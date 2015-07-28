@@ -35,6 +35,7 @@ CMyView::CMyView(CMyDocument* pDocument, HWND clientHWND,HINSTANCE hinstance)
 {
 	m_windowName[0] = 0;
 
+
 	m_document = pDocument;
 //	m_clientHWND = m_document->GetClientHWND();
 	m_clientHWND = clientHWND;
@@ -268,6 +269,24 @@ LRESULT CALLBACK CMyView::staticViewWndProc(HWND hWnd, UINT message, WPARAM wPar
 
 			if (message == WM_CHAR)
 			{
+				//F:6 S:19 C:3 X:24 V:22
+				if ((wParam >=1) && (wParam <= 26))
+				{
+		char mes[256];
+		sprintf_s(mes,"[ key=%d]",wParam);
+		OutputDebugString(mes);
+
+					if (pView->OnControlKey(wParam,lParam) == FALSE)
+					{
+						CMyDocument* pDoc = pView->GetMyDocument();
+						int wn = pDoc->GetWindowNumber();
+						pDoc->GetApp()->OnControlKey(wn,wParam,lParam);
+
+
+					}
+
+
+				}
 				if (wParam == VK_RETURN)
 				{
 					pView->OnEnterKey();
@@ -1079,6 +1098,10 @@ void CMyView::SetBalloonCheckButton(int n,CMyButton* button)
 	}
 }
 
+BOOL CMyView::OnControlKey(WPARAM wParam,LPARAM lParam)
+{
+	return FALSE;
+}
 
 
 /*_*/

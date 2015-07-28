@@ -285,9 +285,7 @@ void CStoryBookDoc::OnDelete(int n)
 
 }
 
-void CStoryBookDoc::OnUndo(int n)
-{
-}
+
 
 void CStoryBookDoc::OnSearch(int n)
 {

@@ -467,6 +467,8 @@ void CMyScrollView::UpdateBlock(int n)
 	InvalidateRect(m_hWnd,&rc,TRUE);
 }
 
+
+
 /*_*/
 
 

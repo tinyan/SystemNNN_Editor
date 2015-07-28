@@ -538,6 +538,8 @@ public:
 
 	void OnBalloonArea(int n,POINT pt,int subType,POINT screenPos);
 	void MainMouseMove(MSG msg);
+	void OnControlKey(int windowNumber,WPARAM wParam,LPARAM lParam);
+
 private:
 	HINSTANCE m_hInstance;
 

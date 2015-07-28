@@ -315,10 +315,7 @@ void CFilmCaseDoc::OnDelete(int n)
 	m_app->FilmIsChanged();
 }
 
-void CFilmCaseDoc::OnUndo(int n)
-{
-	//nothing
-}
+
 
 void CFilmCaseDoc::OnSearch(int n)
 {
