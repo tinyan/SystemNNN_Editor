@@ -7,6 +7,7 @@
 
 
 #include "..\..\systemNNN\nyanLib\include\commonmacro.h"
+#include "..\..\systemNNN\nyanLib\include\myGraphics.h"
 
 #include "windowlist.h"
 
@@ -25,6 +26,7 @@
 
 
 #include "myapplicationBase.h"
+#include "myapplication.h"
 
 #include "komadata.h"
 #include "filmdata.h"
@@ -309,6 +311,9 @@ void CLayerDoc::ChangePictureName(int layer, LPSTR name, CKomaData* pKoma,BOOL s
 
 	//k¬ŠG‚ð‚Â‚­‚è‚È‚¨‚·‚©???
 
+	int zahyoPrintType = ((CMyApplication*)m_app)->GetZahyoPrintType();
+
+
 	CEffect* effect = m_app->GetEffect();
 
 
@@ -360,7 +365,24 @@ void CLayerDoc::ChangePictureName(int layer, LPSTR name, CKomaData* pKoma,BOOL s
 			lpPic->GetPicSize(&rc);
 			if (sameZahyoFlag == FALSE)
 			{
+			
+				
+				
+				
 				pKoma->SetEffectRect(&rc,layer);
+
+				if (zahyoPrintType)
+				{
+					int screenSizeX = CMyGraphics::GetScreenSizeX();
+					int screenSizeY = CMyGraphics::GetScreenSizeY();
+					int xxx = screenSizeX / 2 - rc.right / 2;
+					int yyy = screenSizeY / 2 - rc.bottom / 2;
+					rc.left = xxx;
+					rc.top = yyy;
+
+					pKoma->SetEffectRect(&rc,layer,7);
+				}
+
 			}
 			else
 			{

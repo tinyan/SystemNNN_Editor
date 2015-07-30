@@ -70,6 +70,9 @@ private:
 
 	CMyBitmap* m_bitmapSel;
 	CMyBitmap* m_bitmapDelta;
+	int AdjustCenterX(int d);
+	int AdjustCenterY(int d);
+
 };
 
 

@@ -414,6 +414,7 @@ public:
 
 	virtual void OnBalloonArea(int n,POINT pt,int subType,POINT screenPos) {}
 	virtual void OnControlKey(int windowNumber,WPARAM wParam,LPARAM lParam) {}
+	virtual int GetZahyoPrintType(void){return 0;}
 
 protected:
 

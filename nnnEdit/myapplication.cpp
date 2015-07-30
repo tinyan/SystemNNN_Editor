@@ -695,6 +695,7 @@ CMyApplication::CMyApplication(HINSTANCE hinstance) : CMyApplicationBase(hinstan
 	}
 
 	m_balloonFlag = GetConfig("balloonFlag");
+	m_zahyoPrintType = GetConfig("zahyoPrintType");
 
 	//check
 	if (1)
@@ -2016,6 +2017,12 @@ void CMyApplication::OnCommand(WPARAM wParam,LPARAM lParam)
 		break;
 	case ID_BALLOON_OFF:
 		ChangeBalloonFlag(0);
+		break;
+	case ID_ZAHYO_NORMAL:
+		ChangeZahyoPrintType(0);
+		break;
+	case ID_ZAHYO_CENTER:
+		ChangeZahyoPrintType(1);
 		break;
 
 	case ID_SETCGVAR_AUTO:
@@ -4565,6 +4572,13 @@ void CMyApplication::ChangeBalloonFlag(int n)
 	m_balloonFlag = n;
 	SetConfig("balloonFlag",n);
 	m_menuCheckControl->SetBalloonCheck();
+}
+
+void CMyApplication::ChangeZahyoPrintType(int n)
+{
+	m_zahyoPrintType = n;
+	SetConfig("zahyoPrintType",n);
+	m_menuCheckControl->SetZahyoTypeCheck();
 }
 
 void CMyApplication::SetTargetMachine(int n)

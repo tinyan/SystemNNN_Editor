@@ -46,6 +46,8 @@ private:
 	void CheckAndCopyZahyo(int n);
 	void CheckAndPresetZahyo(int n);
 
+	void AdjustCenter(RECT* lpRect);
+
 };
 
 

@@ -10,6 +10,7 @@
 #include "..\..\systemNNN\nyanLib\include\commonmacro.h"
 #include "..\..\systemNNN\nnnUtilLib\wheelmouse.h"
 //#include "mydirectx.h"
+#include "..\..\systemNNN\nyanLib\include\myGraphics.h"
 
 #include "case.h"
 
@@ -295,6 +296,8 @@ void CEffectView::PrintNormalMode(HWND hWnd,WPARAM wParam,LPARAM lParam)
 
 	CKomaData* pKoma = pDoc->GetNowSelectKoma();
 
+	int zahyoPrintType = m_document->GetApp()->GetZahyoPrintType();
+
 
 	HDC src = CreateCompatibleDC(hdc);
 	HGDIOBJ old = SelectObject(src,effectPic);
@@ -416,6 +419,22 @@ void CEffectView::PrintNormalMode(HWND hWnd,WPARAM wParam,LPARAM lParam)
 					if (i<kosuu)
 					{
 						int d = pKoma->GetEffectPara(layer,i);
+
+						if (zahyoPrintType)
+						{
+							int et = effectParam->GetParaEditType(i);
+							if ((et == 5) || (et == 15))
+							{
+								d = AdjustCenterX(d);
+							}
+							else if ((et == 6) || (et == 16))
+							{
+								d = AdjustCenterY(d);
+
+							}
+						}
+
+
 						if ((d<=-10000) || (d>=10000))
 						{
 							m_suuji->PrintSuuji(hdc,px2-16,py,d,5,src);
@@ -514,6 +533,18 @@ void CEffectView::PrintNormalMode(HWND hWnd,WPARAM wParam,LPARAM lParam)
 
 	DeleteDC(src);
 	EndPaint(hWnd,&ps);
+}
+
+int CEffectView::AdjustCenterX(int d)
+{
+	int centerX = CMyGraphics::GetScreenSizeX();
+	return d - centerX / 2;
+}
+
+int CEffectView::AdjustCenterY(int d)
+{
+	int centerY = CMyGraphics::GetScreenSizeY();
+	return d - centerY / 2;
 }
 
 

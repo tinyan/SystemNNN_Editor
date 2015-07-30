@@ -539,7 +539,7 @@ public:
 	void OnBalloonArea(int n,POINT pt,int subType,POINT screenPos);
 	void MainMouseMove(MSG msg);
 	void OnControlKey(int windowNumber,WPARAM wParam,LPARAM lParam);
-
+	int GetZahyoPrintType(void){return m_zahyoPrintType;}
 private:
 	HINSTANCE m_hInstance;
 
@@ -779,6 +779,7 @@ private:
 	void SetCGVar(int n);
 	void SetTermFlag(int n);
 	void ChangeBalloonFlag(int n);
+	void ChangeZahyoPrintType(int n);
 
 
 	void SetEffectMenuMoveFlag(int flg);
@@ -964,6 +965,7 @@ private:
 	void SetDefaultName(void);
 	int m_termFlag;
 	int m_balloonFlag;
+	int m_zahyoPrintType;
 
 };
 

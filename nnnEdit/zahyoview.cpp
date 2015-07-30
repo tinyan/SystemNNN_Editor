@@ -9,6 +9,7 @@
 
 #include "..\..\systemNNN\nyanLib\include\commonmacro.h"
 #include "..\..\systemNNN\nyanEffectLib\effectList.h"
+#include "..\..\systemNNN\nyanLib\include\myGraphics.h"
 
 //#include "..\nyanEffectLib\effect.h"
 #include "..\..\systemNNN\nyanEffectLib\effectStruct.h"
@@ -187,6 +188,8 @@ LRESULT CZahyoView::ViewWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
 	if (screenSize.cy < 1) screenSize.cy = 1;
 
 
+	int zahyoPrintType = 0;
+
 	switch (message)
 	{
 	case WM_CLOSE:
@@ -305,14 +308,19 @@ LRESULT CZahyoView::ViewWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
 							TextOut(hdc,4,4,filename,strlen(filename));
 						}
 
+						zahyoPrintType = m_document->GetApp()->GetZahyoPrintType();
 
-
+//						RECT srcPicRect;
+//						pDoc->GetZahyoRect(0,&srcPicRect);
 
 
 						if (m_hFontBitmap != NULL)
 						{
 							RECT rc;
 							pDoc->GetZahyoRect(2,&rc);
+
+
+
 							sprintf_s(mes,256,"%d X %d",rc.right,rc.bottom);
 							m_suuji->PrintMessage(hdc,8,30,mes,src);
 
@@ -324,6 +332,11 @@ LRESULT CZahyoView::ViewWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
 						//	int j;
 						//	m_suuji->PrintSuuji(hdc,8+16*7, 30,rc.right,4,src);
 						//	m_suuji->PrintSuuji(hdc,8+16*7, 58,rc.bottom,4,src);
+
+							if (zahyoPrintType)
+							{
+								AdjustCenter(&rc);
+							}
 
 							sprintf_s(mes,256,"%d , %d",rc.left,rc.top);
 							int x = m_switchXY2[6*8+0] + m_switchXY2[6*8+2];
@@ -338,6 +351,11 @@ LRESULT CZahyoView::ViewWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
 //							m_suuji->PrintSuuji(hdc,8+16*3, 208,rc.top,4,src);
 
 							pDoc->GetZahyoRect(3,&rc);
+							if (zahyoPrintType)
+							{
+								AdjustCenter(&rc);
+							}
+
 							sprintf_s(mes,256,"%d , %d",rc.left,rc.top);
 							x = m_switchXY2[7*8+0] + m_switchXY2[7*8+2];
 							y = m_switchXY2[7*8+1];
@@ -456,6 +474,25 @@ LRESULT CZahyoView::ViewWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
 	return DefMDIChildProc(hWnd,message,wParam,lParam);
 }
 
+void CZahyoView::AdjustCenter(RECT* lpRect)
+{
+
+	int screenSizeX = CMyGraphics::GetScreenSizeX();
+	int screenSizeY = CMyGraphics::GetScreenSizeY();
+	int picSizeX = lpRect->right;
+	int picSizeY = lpRect->bottom;
+	int cx = screenSizeX / 2;
+	int cy = screenSizeY / 2;
+	int px = lpRect->left + picSizeX / 2;
+	int py = lpRect->top + picSizeY / 2;
+	int dx = px - cx;
+	int dy = py - cy;
+	lpRect->left = dx;
+	lpRect->top = dy;
+
+
+}
+
 int CZahyoView::GetOnPresetButton(int x,int y)
 {
 	for (int j=0;j<1;j++)
@@ -559,7 +596,9 @@ void CZahyoView::CheckAndPresetZahyo(int n)
 {
 	CZahyoDoc* pDoc = (CZahyoDoc*)m_document;
 	CKomaData* pKoma = m_document->GetNowSelectKoma();
-		
+
+	int zahyoPrintType = m_document->GetApp()->GetZahyoPrintType();
+
 	BOOL f = FALSE;
 	int layer;
 	if (pKoma != NULL)
@@ -587,11 +626,25 @@ void CZahyoView::CheckAndPresetZahyo(int n)
 	{
 		int nowSelectSwitch = pDoc->GetSelectSwitch();
 		RECT rc;
-		POINT pt = pDoc->GetPresetZahyo(n);
+
 
 		if ((nowSelectSwitch == 5) || (nowSelectSwitch == 6))
 		{
 			pDoc->GetZahyoRect(2,&rc);
+			POINT pt = pDoc->GetPresetZahyo(n);
+
+			if (zahyoPrintType)
+			{
+				int screenSizeX = CMyGraphics::GetScreenSizeX();
+				int screenSizeY = CMyGraphics::GetScreenSizeY();
+				pt.x += screenSizeX / 2;
+				pt.y += screenSizeY / 2;
+				pt.x -= rc.right / 2;
+				pt.y -= rc.bottom / 2;
+
+			}
+
+
 			rc.left = pt.x;
 			rc.top = pt.y;
 			pKoma->SetEffectRect(&rc,layer,1 | 2);
@@ -600,9 +653,22 @@ void CZahyoView::CheckAndPresetZahyo(int n)
 			pDoc->UpdateMainWindow();
 			//from
 		}
+
 		if ((nowSelectSwitch == 5) || (nowSelectSwitch == 7))
 		{
 			pDoc->GetZahyoRect(3,&rc);
+			POINT pt = pDoc->GetPresetZahyo(n);
+			if (zahyoPrintType)
+			{
+				int screenSizeX = CMyGraphics::GetScreenSizeX();
+				int screenSizeY = CMyGraphics::GetScreenSizeY();
+				pt.x += screenSizeX / 2;
+				pt.y += screenSizeY / 2;
+				pt.x -= rc.right / 2;
+				pt.y -= rc.bottom / 2;
+
+			}
+
 			rc.left = pt.x;
 			rc.top = pt.y;
 			pKoma->SetEffectRect(&rc,layer,1 | 4);
@@ -619,6 +685,8 @@ void CZahyoView::CheckAndCopyZahyo(int n)
 	CZahyoDoc* pDoc = (CZahyoDoc*)m_document;
 	CKomaData* pKoma = m_document->GetNowSelectKoma();
 		
+	int zahyoPrintType = m_document->GetApp()->GetZahyoPrintType();
+
 	BOOL f = FALSE;
 	if (pKoma != NULL)
 	{
@@ -645,23 +713,43 @@ void CZahyoView::CheckAndCopyZahyo(int n)
 	{
 		int nowSelectSwitch = pDoc->GetSelectSwitch();
 		RECT rc;
+		POINT pt;
+		BOOL getFlag = FALSE;
+
 		if ((nowSelectSwitch == 5) || (nowSelectSwitch == 6))
 		{
 			pDoc->GetZahyoRect(2,&rc);
-			POINT pt;
 			pt.x = rc.left;
 			pt.y = rc.top;
-			pDoc->SetPresetZahyo(n,pt);
+			getFlag = TRUE;
+
 			//from
 		}
 		else if ((nowSelectSwitch == 5) || (nowSelectSwitch == 7))
 		{
 			pDoc->GetZahyoRect(2,&rc);
-			POINT pt;
 			pt.x = rc.left;
 			pt.y = rc.top;
-			pDoc->SetPresetZahyo(n,pt);
+			getFlag = TRUE;
 			//to
+		}
+
+		if (getFlag)
+		{
+			if (zahyoPrintType)
+			{
+				int screenSizeX = CMyGraphics::GetScreenSizeX();
+				int screenSizeY = CMyGraphics::GetScreenSizeY();
+
+				int xx = pt.x + rc.right / 2;
+				int yy = pt.y + rc.bottom / 2;
+				xx -= screenSizeX / 2;
+				yy -= screenSizeY / 2;
+				pt.x = xx;
+				pt.y = yy;
+			}
+
+			pDoc->SetPresetZahyo(n,pt);
 		}
 	}
 }

@@ -320,6 +320,13 @@ int CMenuCheckControl::m_balloonFlagTable[]=
 	-1,
 };
 
+int CMenuCheckControl::m_zahyoPrintTypeTable[]=
+{
+	ID_ZAHYO_NORMAL,0,0,
+	ID_ZAHYO_CENTER,0,1,
+	-1,
+};
+
 CMenuCheckControl::CMenuCheckControl(CMyApplicationBase* app)
 {
 	m_app = app;
@@ -375,6 +382,7 @@ void CMenuCheckControl::CheckAllMenu(void)
 	SetAddDefaultVoiceCheck();
 	SetTermFlagCheck();
 	SetBalloonCheck();
+	SetZahyoTypeCheck();
 }
 
 
@@ -677,6 +685,13 @@ void CMenuCheckControl::SetBalloonCheck(void)
 	int checkData[1];
 	checkData[0] = m_app->GetConfig("balloonFlag");
 	SetMenuCheckRoutine(m_balloonFlagTable,checkData);
+}
+
+void CMenuCheckControl::SetZahyoTypeCheck(void)
+{
+	int checkData[1];
+	checkData[0] = m_app->GetConfig("zahyoPrintType");
+	SetMenuCheckRoutine(m_zahyoPrintTypeTable,checkData);
 }
 
 

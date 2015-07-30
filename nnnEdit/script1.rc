@@ -413,6 +413,11 @@ BEGIN
                 MENUITEM "なし",                          ID_BACKUP_NNN_OFF
             END
             MENUITEM "PNGガンマ補正",                    ID_PNG_GAMMA
+            POPUP "座標表示"
+            BEGIN
+                MENUITEM "通常",                          ID_ZAHYO_NORMAL
+                MENUITEM "センター",                        ID_ZAHYO_CENTER
+            END
         END
         POPUP "操作設定"
         BEGIN

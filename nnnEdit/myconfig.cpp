@@ -247,6 +247,10 @@ CMyConfig::MYCONFIGVALUETYPE CMyConfig::m_initDataValue[]=
 
 	{"balloonFlag",0},
 
+	{"zahyoPrintType",0},
+	{"layerMax",32},
+
+
 	{"",0},
 };
 
@@ -258,7 +262,7 @@ CMyConfig::MYCONFIGWINDOWTYPE CMyConfig::m_initDataWindow[]=
 	{"mainScreen",1,247,28,800,600, -1},
 	{"film",1,660,535,432,120, -1},
 	{"conte", 1,568,72,168,424, -1},
-	{"layer",1,897,31,136,408, -1},
+	{"layer",1,897,31,136,792, -1},
 	{"zahyo",1,1042,32,240,240, -1},
 	{"gameMessage",1,537,702,485,216, -1},
 	{"effect",1,9,29,232,625, -1},
