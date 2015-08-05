@@ -52,6 +52,7 @@ private:
 	CMyButton* m_buttonCommentBottom;
 
 	CMyButton* m_buttonExpStatus;
+	CMyButton* m_buttonMessageEffect;
 
 	int m_modeButtonPrintX;
 	int m_modeButtonPrintY;
@@ -73,6 +74,8 @@ private:
 	CMyBitmap* m_addButtonBitmap;
 	HBITMAP m_addButtonHBitmap;
 	CMyBitmap* m_expStatusBitmap;
+	CMyBitmap* m_messageEffectBitmap;
+
 
 
 	CMyBitmap* m_messageFontSizeTypeBitmap;
@@ -90,6 +93,7 @@ private:
 
 	CMyBitmap* m_musicFadeBitmap;
 	CMyButton* m_buttonMusicFade;
+
 
 	int m_editorMessageGyo;
 	int m_widthGuideLine;

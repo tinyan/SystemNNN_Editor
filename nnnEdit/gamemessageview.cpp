@@ -152,7 +152,8 @@ CGameMessageView::CGameMessageView(CMyDocument* pDocument,HWND clientHWND,HINSTA
 	m_musicFadeBitmap = new CMyBitmap("nnndir\\setup\\bmp\\common_bgm.bmp");
 	m_buttonMusicFade = new CMyButton(13,m_hWnd,m_musicFadeBitmap->GetHBitmap(),472,0,24,24);
 
-
+	m_messageEffectBitmap = new CMyBitmap("nnndir\\setup\\bmp\\messageEffect.bmp");
+	m_buttonMessageEffect = new CMyButton(15,m_hWnd,m_messageEffectBitmap->GetHBitmap(),504,0,24,24);
 
 
 
@@ -171,6 +172,7 @@ CGameMessageView::CGameMessageView(CMyDocument* pDocument,HWND clientHWND,HINSTA
 	AddBalloonCheckButton(m_buttonMustFace);
 	AddBalloonCheckButton(m_buttonMusicFade);
 	AddBalloonCheckButton(m_buttonFixFace);
+	AddBalloonCheckButton(m_buttonMessageEffect);
 
 
 
@@ -196,6 +198,10 @@ void CGameMessageView::End(void)
 	ENDDELETECLASS(m_faceBitmap);
 	ENDDELETECLASS(m_buttonMessageFontSizeType);
 	ENDDELETECLASS(m_messageFontSizeTypeBitmap);
+
+	ENDDELETECLASS(m_buttonMessageEffect);
+	ENDDELETECLASS(m_messageEffectBitmap);
+
 	ENDDELETECLASS(m_buttonExpStatus);
 	ENDDELETECLASS(m_expStatusBitmap);
 	ENDDELETECLASS(m_addButtonBitmap);
@@ -257,6 +263,7 @@ LRESULT CGameMessageView::ViewWndProc(HWND hWnd, UINT message, WPARAM wParam, LP
 		if (m_buttonMustFace != NULL) m_buttonMustFace->CalcuLButtonDown(wParam,lParam);
 		if (m_buttonFixFace != NULL) m_buttonFixFace->CalcuLButtonDown(wParam,lParam);
 		if (m_buttonMusicFade != NULL) m_buttonMusicFade->CalcuLButtonDown(wParam,lParam);
+		if (m_buttonMessageEffect != NULL) m_buttonMessageEffect->CalcuLButtonDown(wParam,lParam);
 		//if (m_buttonCommentBottom != NULL) m_buttonCommentBottom->CalcuLButtonDown(wParam,lParam);
 
 		OnLButtonDown(hWnd,wParam,lParam);
@@ -472,6 +479,10 @@ LRESULT CGameMessageView::ViewWndProc(HWND hWnd, UINT message, WPARAM wParam, LP
 			case 14:
 				pDoc->OnClickFixFaceButton();
 				break;
+			case 15:
+				pDoc->OnClickMessageEffectButton();
+				break;
+
 			}
 			break;
 		}
@@ -607,6 +618,15 @@ void CGameMessageView::OnPaint(HWND hWnd,WPARAM wParam, LPARAM lParam)
 		if (pDoc->GetExpStatus()) md = 1;
 		m_buttonExpStatus->Print(hdc,src,md,&ps.rcPaint);
 	}
+
+	if (m_buttonMessageEffect != NULL)
+	{
+		int md = 0;
+		if (pDoc->GetMessageEffect()) md = 1;
+		m_buttonMessageEffect->Print(hdc,src,md,&ps.rcPaint);
+	}
+
+
 //OutputDebugString(">\r\n");
 
 

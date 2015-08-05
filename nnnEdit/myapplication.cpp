@@ -1664,6 +1664,28 @@ void CMyApplication::OnControlKey(int windowNumber,WPARAM wParam,LPARAM lParam)
 			CheckAndSetProject();
 		}
 	}
+	if (wParam == 14)
+	{
+		if (CheckSave())
+		{
+			NewScript();
+			MoveAllWindow();
+		}
+		//N
+	}
+	if (wParam == 15)
+	{
+		//O
+		if (CheckSave())
+		{
+			if (Load())
+			{
+				CheckAndSetProject();
+			}
+			MoveAllWindow();
+		}
+	}
+
 	if (wParam == 26)
 	{
 		//undo 

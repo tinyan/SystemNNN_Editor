@@ -92,6 +92,8 @@ CMessageData::CMessageData() : CCase()
 	m_voiceFileFlag = 0;
 	m_seFileFlag = 0;
 	m_expStatus = 0;
+	m_messageEffect = 0;
+
 	m_messageFontSizeType = 0;
 
 	m_voiceCharaNumber = 0;
@@ -408,6 +410,11 @@ BOOL CMessageData::Load(FILE* file)
 	int tmp[16+16];
 //	char name[64];
 
+	for (int i=16;i<32;i++)
+	{
+		tmp[i] = 0;
+	}
+
 	fread(head,sizeof(char),16,file);	//skip header
 	fread(tmp,sizeof(int),16,file);
 
@@ -438,6 +445,7 @@ BOOL CMessageData::Load(FILE* file)
 	m_autoMessageTime = 0;
 	m_autoMessageSpeed = 0;
 	m_expStatus = 0;
+	m_messageEffect = 0;
 
 	m_face = 0;
 	m_mustFace = 0;
@@ -480,6 +488,10 @@ BOOL CMessageData::Load(FILE* file)
 			m_musicFade = tmp[23];
 		}
 
+		if (m_kakuchoWorkKosuu > 8)
+		{
+			m_messageEffect = tmp[24];
+		}
 	}
 
 	m_kakuchoWorkKosuu = NOWKAKUCHOKOSUU;	//’Ç‰Á
@@ -748,6 +760,12 @@ BOOL CMessageData::Save(FILE* file)
 		tmp[23] = m_musicFade;
 	}
 
+	if (m_kakuchoWorkKosuu > 8)
+	{
+		tmp[24] = m_messageEffect;
+	}
+
+
  	int messageSize = strlen(m_messageBuffer);
 	if (messageSize <= 512)
 	{
@@ -897,6 +915,7 @@ void CMessageData::Init(LPVOID para)
 	m_voiceFileFlag = 0;
 	m_seFileFlag = 0;
 	m_expStatus = 0;
+	m_messageEffect = 0;
 
 	m_kakuchoWorkKosuu = NOWKAKUCHOKOSUU;
 	m_cannotClickFlag = 0;

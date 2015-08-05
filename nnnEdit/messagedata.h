@@ -199,6 +199,9 @@ public:
 	void SetExpStatus(int st){m_expStatus = st;}
 	int GetExpStatus(void){return m_expStatus;}
 
+	void SetMessageEffect(int st){m_messageEffect = st;}
+	int GetMessageEffect(void){return m_messageEffect;}
+
 	static int m_bitPattern[];
 
 	static char m_separator[];
@@ -298,6 +301,7 @@ private:
 	int m_messageColor;
 
 	int m_expStatus;
+	int m_messageEffect;
 
 	int GetMaxBit(int d);
 

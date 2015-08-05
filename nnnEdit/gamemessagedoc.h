@@ -44,6 +44,8 @@ public:
 	void OnClickCommentBottomButton(void);
 
 	void OnClickExpStatusButton(void);
+	void OnClickMessageEffectButton(void);
+
 
 	void OnChangeVoiceFileName(int n,int channel = 0);
 	void OnChangeVoicePlayer(int n,int channel = 0);
@@ -132,6 +134,7 @@ public:
 	int GetFixFace(int n = -1);
 
 	int GetMusicFadeVolume(int n = -1);
+	int GetMessageEffect(int n = -1);
 
 private:
 	HBITMAP m_hBitmapMessage;

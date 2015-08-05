@@ -2026,6 +2026,14 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 						}
 					}
 
+					int messageEffect = pMessage->GetMessageEffect();
+					if (messageEffect > 0)
+					{
+						int messageEffectPara[1];
+						messageEffectPara[0] = messageEffect;
+						m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_MESSAGEEFFECT,1,messageEffectPara,makeJsonFlag,messageTab+1);
+						m_miniCompiler->AddNowCode();
+					}
 
 
 
