@@ -69,6 +69,12 @@ public:
 
 	CCase* GetNowSelectCaseObject(void);
 	void OnSelectNumber(int n);
+	
+	void CheckAndGetUndo(CStoryData* pStory,int start,int end);
+	BOOL CheckExistUndo(void);
+	BOOL OnUndo(int n = -1);
+	void ClearUndo(void);
+	void CheckAndGetUndoAll(void);
 
 private:
 	int CommandToType(int cmd);

@@ -29,6 +29,7 @@
 #include "selectdialog.h"
 
 #include "myapplicationBase.h"
+#include "undoMemoryObject.h"
 
 //#include "configparamlist.h"
 
@@ -187,6 +188,15 @@ void CFilmDoc::OnNewKoma(int n)
 	int kosuu = pFilm->GetObjectKosuu();
 	if ((n<0) || (n>kosuu)) return;
 
+
+	if (m_app->GetUndoMode())
+	{
+		CUndoMemoryObject* undo = m_app->GetUndoObject();
+		undo->Clear(UNDO_TYPE_KOMA,UNDO_DATA_INSERT,n,n);
+	}
+
+
+
 	pFilm->CreateObjectData(n);
 
 	InsertMiniPic(n);
@@ -223,6 +233,18 @@ void CFilmDoc::OnCutKoma(int n)
 
 	if ((start<0) || (start>=kosuu)) return;
 	if ((end<0) || (end>=kosuu)) return;
+
+
+	if (m_app->GetUndoMode())
+	{
+		CUndoMemoryObject* undo = m_app->GetUndoObject();
+		undo->Clear(UNDO_TYPE_KOMA,UNDO_DATA_DELETE,start,end);
+		for (int i=start;i<=end;i++)
+		{
+			CKomaData* pKoma000 = (CKomaData*)(pFilm->GetObjectData(i));
+			pKoma000->Save(NULL,undo);
+		}
+	}
 
 
 	BOOL errorFlag = FALSE;
@@ -352,6 +374,16 @@ void CFilmDoc::OnPasteKoma(int n)
 
 	int insertNumber = n;
 
+	if (m_app->GetUndoMode())
+	{
+		CUndoMemoryObject* undo = m_app->GetUndoObject();
+		undo->Clear(UNDO_TYPE_KOMA,UNDO_DATA_INSERT,n,n+komaKosuu-1);
+	}
+
+
+
+
+
 	for (int i=0;i<komaKosuu;i++)
 	{
 		pFilm->CreateObjectData(insertNumber+i);
@@ -403,6 +435,18 @@ void CFilmDoc::OnDelete(int n)
 	int start = pFilm->GetSelectStart();
 	int end = pFilm->GetSelectEnd();
 
+	if (m_app->GetUndoMode())
+	{
+		CUndoMemoryObject* undo = m_app->GetUndoObject();
+		undo->Clear(UNDO_TYPE_KOMA,UNDO_DATA_DELETE,start,end);
+		for (int i=start;i<=end;i++)
+		{
+			CKomaData* pKoma000 = (CKomaData*)(pFilm->GetObjectData(i));
+			pKoma000->Save(NULL,undo);
+		}
+	}
+
+
 	for (int i=end;i>=start;i--)
 	{
 		pFilm->DeleteObjectData(i);
@@ -448,6 +492,9 @@ void CFilmDoc::OnOverrap(int n)
 //	int c = m_input->TextToSuuji();
 		if ((newData >= 0) || (newData<9999))
 		{
+
+			CheckAndGetUndo(pFilm,n,n);
+
 			pKoma->SetOverrapCount(newData);
 			UpdateMyWindow();
 		}
@@ -475,6 +522,8 @@ void CFilmDoc::OnOverrapType(int n)
 	if (c == -1) return;
 
 	c--;
+
+	CheckAndGetUndo(pFilm,n,n);
 
 	if (c == -1)
 	{
@@ -525,6 +574,8 @@ void CFilmDoc::OnSetCG(int n)
 		c = m_input->TextToSuuji();
 		if ((c<0) || (c>255)) return;
 	}
+
+	CheckAndGetUndo(pFilm,n,n);
 
 	if (c == 0) rt = 0;
 
@@ -587,6 +638,8 @@ void CFilmDoc::OnBGM(int n)
 
 	int bgm = pKoma->GetBGMNumber();
 	int rt = -1;
+
+	CheckAndGetUndo(pFilm,n,n);
 
 	if (bgm == 0)
 	{
@@ -816,6 +869,8 @@ void CFilmDoc::OnWindowOff(int n)
 	CKomaData* pKoma = pFilm->GetKoma(n);
 	if (pKoma == NULL) return;
 
+	CheckAndGetUndo(pFilm,n,n);
+
 	int d = pKoma->GetWindowOffFlag();
 	d++;
 	d %= 3;
@@ -849,6 +904,8 @@ void CFilmDoc::OnFrame(int n)
 	int c = m_input->TextToSuuji();
 	if (c < -1) return;
 
+	CheckAndGetUndo(pFilm,n,n);
+
 	pKoma->SetFrameTime(c);
 
 	UpdateMyWindow();
@@ -865,6 +922,8 @@ void CFilmDoc::OnDemo(int n)
 
 	CKomaData* pKoma = pFilm->GetKoma(n);
 	if (pKoma == NULL) return;
+
+	CheckAndGetUndo(pFilm,n,n);
 
 	int md = pKoma->GetDemoFlag();
 	md++;
@@ -892,6 +951,8 @@ void CFilmDoc::OnWindowNumber(int n)
 	{
 		if (nm2>=0)
 		{
+			CheckAndGetUndo(pFilm,n,n);
+
 			pKoma->SetWindowNumber(nm2);
 			UpdateMyWindow();
 		}
@@ -917,6 +978,8 @@ void CFilmDoc::OnCursorNumber(int n)
 	{
 		if (nm2>=0)
 		{
+			CheckAndGetUndo(pFilm,n,n);
+
 			pKoma->SetCursorNumber(nm2);
 			UpdateMyWindow();
 		}
@@ -941,6 +1004,8 @@ void CFilmDoc::OnMouseNumber(int n)
 	{
 		if (nm2>=0)
 		{
+			CheckAndGetUndo(pFilm,n,n);
+
 			pKoma->SetMouseNumber(nm2);
 			UpdateMyWindow();
 		}
@@ -965,6 +1030,8 @@ void CFilmDoc::OnAutoMessage(int n)
 	{
 		if ((nm2>=-1) && (nm2<=5))
 		{
+			CheckAndGetUndo(pFilm,n,n);
+
 			pKoma->SetAutoMessage(nm2);
 			UpdateMyWindow();
 		}
@@ -982,6 +1049,8 @@ void CFilmDoc::OnCannotClick(int n)
 
 	CKomaData* pKoma = pFilm->GetKoma(n);
 	if (pKoma == NULL) return;
+
+	CheckAndGetUndo(pFilm,n,n);
 
 	int nm = pKoma->GetCannotClick();
 	nm++;
@@ -1002,6 +1071,8 @@ void CFilmDoc::OnCannotSkip(int n)
 	CKomaData* pKoma = pFilm->GetKoma(n);
 	if (pKoma == NULL) return;
 
+	CheckAndGetUndo(pFilm,n,n);
+
 	int nm = pKoma->GetCannotSkip();
 	nm++;
 	if (nm >= 2) nm = -1;
@@ -1021,6 +1092,8 @@ void CFilmDoc::OnOptionOff(int n)
 	CKomaData* pKoma = pFilm->GetKoma(n);
 	if (pKoma == NULL) return;
 
+	CheckAndGetUndo(pFilm,n,n);
+
 	int nm = pKoma->GetOptionOff();
 	nm++;
 	if (nm >= 2) nm = -1;
@@ -1039,6 +1112,8 @@ void CFilmDoc::OnCutin(int n)
 
 	CKomaData* pKoma = pFilm->GetKoma(n);
 	if (pKoma == NULL) return;
+
+	CheckAndGetUndo(pFilm,n,n);
 
 	int nm = pKoma->GetCutinFlag();
 	nm++;
@@ -1060,6 +1135,8 @@ void CFilmDoc::OnPreload(int n)
 	CKomaData* pKoma = pFilm->GetKoma(n);
 	if (pKoma == NULL) return;
 
+	CheckAndGetUndo(pFilm,n,n);
+
 	int nm = pKoma->GetPreload();
 	nm++;
 	if (nm >= 2) nm = 0;
@@ -1080,6 +1157,7 @@ void CFilmDoc::OnExpStatus(int n)
 	CKomaData* pKoma = pFilm->GetKoma(n);
 	if (pKoma == NULL) return;
 
+	CheckAndGetUndo(pFilm,n,n);
 
 	int nm = pKoma->GetExpStatus();
 	int nm2 = nm;
@@ -1117,6 +1195,8 @@ void CFilmDoc::OnVarControl(int n)
 	LPSTR text = m_input->GetText("0",FALSE,"0:’Ç‰Á -1:î•ñ sŽw’è1-16");
 	if (text == NULL) return;
 	block = atoi(text);
+
+	CheckAndGetUndo(pFilm,n,n);
 
 	if (block == -1)
 	{
@@ -1275,6 +1355,9 @@ void CFilmDoc::OnChangeKomaName(int n)
 				LPSTR newText = m_input->GetText(oldText);
 				if (newText != NULL)
 				{
+
+					CheckAndGetUndo(pFilm,n,n);
+
 					pKoma->SetKomaName(newText);
 					m_app->KomaIsChanged();
 					m_app->FilmIsChanged();
@@ -1295,6 +1378,9 @@ void CFilmDoc::OnClickFilm(int n,WPARAM wParam)
 		int kosuu = pFilm->GetObjectKosuu();
 		if ((n>=0) && (n<=kosuu))
 		{
+			ClearUndo();
+//			CheckAndGetUndo(pFilm,n,n);
+
 			if (wParam & (MK_CONTROL | MK_SHIFT))
 			{
 				pFilm->SetSelectSubNumber(n);
@@ -1771,6 +1857,8 @@ CCase* CFilmDoc::GetNowSelectCaseObject(void)
 
 void CFilmDoc::OnSelectNumber(int n)
 {
+	ClearUndo();
+
 	m_app->KomaIsChanged();
 }
 
@@ -1811,6 +1899,118 @@ void CFilmDoc::OnSpaceKey(void)
 void CFilmDoc::OnEscapeKey(void)
 {
 	m_app->ChangeWindowIfCan(FILMCASE_WINDOW);
+}
+
+
+BOOL CFilmDoc::CheckExistUndo(void)
+{
+	CUndoMemoryObject* undo = m_app->GetUndoObject();
+	if (undo != NULL)
+	{
+		int undoType = undo->GetUndoType();
+		if (undoType == UNDO_TYPE_KOMA)
+		{
+			return TRUE;
+		}
+	}
+
+	return FALSE;
+}
+
+BOOL CFilmDoc::OnUndo(int n)
+{
+	BOOL f = FALSE;
+
+	if (m_app->GetUndoMode())
+	{
+		CFilmData* pFilm = m_app->GetNowSelectFilm();
+		if (pFilm == NULL) return FALSE;
+
+		CUndoMemoryObject* undo = m_app->GetUndoObject();
+		if (undo != NULL)
+		{
+			if (CheckExistUndo())
+			{
+				int dataType = undo->GetUndoDataType();
+				int startN = undo->GetUndoStartN();
+				int endN = undo->GetUndoEndN();
+				int numN = endN - startN + 1;
+				
+
+				if (dataType == UNDO_DATA_INSERT)
+				{
+					pFilm->DeleteObjectData(startN,numN);
+					undo->Clear();
+					f = TRUE;
+				}
+				else if (dataType == UNDO_DATA_DELETE)
+				{
+					for (int i=startN;i<=endN;i++)
+					{
+						pFilm->CreateObjectData(i);
+						CKomaData* pKoma = (CKomaData*)(pFilm->GetObjectData(i));
+						pKoma->Init();
+						pKoma->Load(NULL,undo);
+					}
+					undo->Clear();
+					f = TRUE;
+				}
+				else if (dataType == UNDO_DATA_MODIFY)
+				{
+					for (int i=startN;i<=endN;i++)
+					{
+						CKomaData* pKoma = (CKomaData*)(pFilm->GetObjectData(i));
+						pKoma->Init();
+						pKoma->Load(NULL,undo);
+					}
+					undo->Clear();
+					f = TRUE;
+				}
+			}
+		}
+	}
+
+
+
+
+	if (f)
+	{
+		((CFilmView*)m_view)->ReCalcuScrollPara();
+		m_app->SetModify();
+		m_app->KomaIsChanged();
+		m_view->MyInvalidateRect();
+	}
+
+
+	return f;
+}
+
+void CFilmDoc::CheckAndGetUndo(CFilmData* pFilm,int start,int end)
+{
+	if (pFilm == NULL) return;
+
+	if (m_app->GetUndoMode())
+	{
+		CUndoMemoryObject* undo = m_app->GetUndoObject();
+		undo->Clear(UNDO_TYPE_KOMA,UNDO_DATA_MODIFY,start,end);
+		for (int i=start;i<=end;i++)
+		{
+			CKomaData* pKoma = (CKomaData*)(pFilm->GetObjectData(i));
+			if (pKoma != NULL)
+			{
+				pKoma->Save(NULL,undo);
+			}
+		}
+	}
+}
+
+void CFilmDoc::ClearUndo(void)
+{
+	if (m_app->GetUndoMode())
+	{
+		CUndoMemoryObject* undo = m_app->GetUndoObject();
+		undo->Clear();
+	}
 }
 
 

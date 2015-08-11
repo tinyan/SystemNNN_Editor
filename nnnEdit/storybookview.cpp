@@ -232,7 +232,12 @@ LRESULT CStoryBookView::ViewWndProc(HWND hWnd, UINT message, WPARAM wParam, LPAR
 		if (m_buttonOpen != NULL) m_buttonOpen->Print(hdc,src,0,&ps.rcPaint);
 		if (m_buttonSave != NULL) m_buttonSave->Print(hdc,src,0,&ps.rcPaint);
 		if (m_buttonDelete != NULL) m_buttonDelete->Print(hdc,src,0,&ps.rcPaint);
-		if (m_buttonUndo != NULL) m_buttonUndo->Print(hdc,src,2,&ps.rcPaint);
+		if (m_buttonUndo != NULL)
+		{
+			int umd = 2;
+			if (pDoc->CheckExistUndo()) umd = 0;
+			m_buttonUndo->Print(hdc,src,umd,&ps.rcPaint);
+		}
 		if (m_buttonSearch != NULL) m_buttonSearch->Print(hdc,src,0,&ps.rcPaint);
 
 //		HGDIOBJ old;

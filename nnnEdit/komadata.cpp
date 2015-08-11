@@ -33,6 +33,8 @@
 #include "effectParam.h"
 #include "allEffectParam.h"
 
+#include "undoMemoryObject.h"
+
 
 #include "..\..\systemNNN\nyanLib\include\effect.h"
 
@@ -903,19 +905,22 @@ BOOL CKomaData::SaveEffect(FILE* file)
 
 
 
-BOOL CKomaData::Load(FILE* file)
+BOOL CKomaData::Load(FILE* file,CUndoMemoryObject* memory)
 {
 	char head[16];
-	fread(head,sizeof(char),16,file);
+//	fread(head,sizeof(char),16,file);
+	CaseRead(head,sizeof(char),16,file,memory);
 	int tmp[16];
 	int tmp2[16];
 	int tmp3[32];
 
-	fread(tmp,sizeof(int),16,file);
+//	fread(tmp,sizeof(int),16,file);
+	CaseRead(tmp,sizeof(int),16,file,memory);
 
 	if (tmp[13] & 2)
 	{
-		fread(tmp2,sizeof(int),16,file);
+//		fread(tmp2,sizeof(int),16,file);
+		CaseRead(tmp2,sizeof(int),16,file,memory);
 	}
 	else
 	{
@@ -963,7 +968,8 @@ BOOL CKomaData::Load(FILE* file)
 	
 	if (tmp2[10])
 	{
-		fread(m_varControl,sizeof(int),layerMax,file);
+//		fread(m_varControl,sizeof(int),layerMax,file);
+		CaseRead(m_varControl,sizeof(int),layerMax,file,memory);
 	}
 	else
 	{
@@ -984,7 +990,8 @@ BOOL CKomaData::Load(FILE* file)
 	}
 	if (tmp2[11] != 0)
 	{
-		fread(tmp3,sizeof(int),layerMax,file);
+//		fread(tmp3,sizeof(int),layerMax,file);
+		CaseRead(tmp3,sizeof(int),layerMax,file,memory);
 	}
 
 
@@ -997,7 +1004,8 @@ BOOL CKomaData::Load(FILE* file)
 
 
 
-	fread(m_paraKosuu,sizeof(int),layerMax,file);
+//	fread(m_paraKosuu,sizeof(int),layerMax,file);
+	CaseRead(m_paraKosuu,sizeof(int),layerMax,file,memory);
 	for (int i=layerMax;i<32;i++)
 	{
 		m_paraKosuu[i] = 0;
@@ -1005,7 +1013,8 @@ BOOL CKomaData::Load(FILE* file)
 
 	if (m_effectVersion >= 3)
 	{
-		fread(m_selectParam,sizeof(int),layerMax,file);
+//		fread(m_selectParam,sizeof(int),layerMax,file);
+		CaseRead(m_selectParam,sizeof(int),layerMax,file,memory);
 	}
 	for (int i=layerMax;i<32;i++)
 	{
@@ -1028,11 +1037,13 @@ BOOL CKomaData::Load(FILE* file)
 			if (m_effectVersion == 0)
 			{
 				ZeroMemory(&m_effectData[i],sizeof(EFFECT));
-				fread(&m_effectData[i],sizeof(OLDEFFECT),1,file);
+//				fread(&m_effectData[i],sizeof(OLDEFFECT),1,file);
+				CaseRead(&m_effectData[i],sizeof(OLDEFFECT),1,file,memory);
 			}
 			else
 			{
-				fread(&m_effectData[i],sizeof(EFFECT),1,file);
+//				fread(&m_effectData[i],sizeof(EFFECT),1,file);
+				CaseRead(&m_effectData[i],sizeof(EFFECT),1,file,memory);
 			}
 
 			if (m_effectVersion < 3)
@@ -1063,11 +1074,13 @@ BOOL CKomaData::Load(FILE* file)
 		{
 			if (m_effectVersion <= 1)
 			{
-				fread(&m_picFileName[i][0],sizeof(char),16,file);
+//				fread(&m_picFileName[i][0],sizeof(char),16,file);
+				CaseRead(&m_picFileName[i][0],sizeof(char),16,file,memory);
 			}
 			else
 			{
-				fread(&m_picFileName[i][0],sizeof(char),256,file);
+//				fread(&m_picFileName[i][0],sizeof(char),256,file);
+				CaseRead(&m_picFileName[i][0],sizeof(char),256,file,memory);
 			}
 		}
 		else
@@ -1106,7 +1119,8 @@ BOOL CKomaData::Load(FILE* file)
 	{
 		m_miniPicFlag = TRUE;
 		CreateMiniPicBuffer();
-		fread(m_miniPic,sizeof(int),32*24,file);
+//		fread(m_miniPic,sizeof(int),32*24,file);
+		CaseRead(m_miniPic,sizeof(int),32*24,file,memory);
 	}
 
 	//largePic
@@ -1114,14 +1128,16 @@ BOOL CKomaData::Load(FILE* file)
 	{
 		m_largePicFlag = TRUE;
 		CreateLargePicBuffer();
-		fread(m_largePic,sizeof(int),64*48,file);
+//		fread(m_largePic,sizeof(int),64*48,file);
+		CaseRead(m_largePic,sizeof(int),64*48,file,memory);
 	}
 
 	if (tmp[10] & 0x4)
 	{
 		m_veryLargePicFlag = TRUE;
 		CreateVeryLargePicBuffer();
-		fread(m_veryLargePic,sizeof(int),128*96,file);
+//		fread(m_veryLargePic,sizeof(int),128*96,file);
+		CaseRead(m_veryLargePic,sizeof(int),128*96,file,memory);
 	}
 
 
@@ -1129,13 +1145,15 @@ BOOL CKomaData::Load(FILE* file)
 	if (m_komaNameFlag)
 	{
 		CreateKomaNameBuffer();
-		fread(m_komaName,sizeof(char),64,file);
+//		fread(m_komaName,sizeof(char),64,file);
+		CaseRead(m_komaName,sizeof(char),64,file,memory);
 	}
 
 
 	if (tmp[13] & 1)//Šg’£‹ÈÝ’è
 	{
-		fread(m_exMusicParam,sizeof(int),16,file);
+//		fread(m_exMusicParam,sizeof(int),16,file);
+		CaseRead(m_exMusicParam,sizeof(int),16,file,memory);
 	}
 	else
 	{
@@ -1183,7 +1201,7 @@ BOOL CKomaData::Load(FILE* file)
 
 
 //	LoadArrayObject(m_objectKosuu,file);
-	LoadArrayObject(tmp[0],file);
+	LoadArrayObject(tmp[0],file,memory);
 
 
 
@@ -1296,9 +1314,10 @@ void CKomaData::AdjustEffect(int layer)
 
 
 
-BOOL CKomaData::Save(FILE* file)
+BOOL CKomaData::Save(FILE* file,CUndoMemoryObject* memory)
 {
-	fwrite("-KOMADATA      ",sizeof(char),16,file);
+//	fwrite("-KOMADATA      ",sizeof(char),16,file);
+	CaseWrite("-KOMADATA      ",sizeof(char),16,file,memory);
 
 	int tmp[16];
 	int tmp2[16];
@@ -1396,28 +1415,35 @@ BOOL CKomaData::Save(FILE* file)
 		}
 	}
 
-	fwrite(tmp,sizeof(int),16,file);
-	fwrite(tmp2,sizeof(int),16,file);
+//	fwrite(tmp,sizeof(int),16,file);
+//	fwrite(tmp2,sizeof(int),16,file);
+	CaseWrite(tmp,sizeof(int),16,file,memory);
+	CaseWrite(tmp2,sizeof(int),16,file,memory);
 
 
 	if (tmp2[10])
 	{
-		fwrite(m_varControl,sizeof(int),m_layerMax,file);
+//		fwrite(m_varControl,sizeof(int),m_layerMax,file);
+		CaseWrite(m_varControl,sizeof(int),m_layerMax,file,memory);
 	}
 
 	if (tmp2[11])
 	{
-		fwrite(tmp3,sizeof(int),m_layerMax,file);
+//		fwrite(tmp3,sizeof(int),m_layerMax,file);
+		CaseWrite(tmp3,sizeof(int),m_layerMax,file,memory);
 	}
 
-	fwrite(m_paraKosuu,sizeof(int),m_layerMax,file);
-	fwrite(m_selectParam,sizeof(int),m_layerMax,file);
+//	fwrite(m_paraKosuu,sizeof(int),m_layerMax,file);
+//	fwrite(m_selectParam,sizeof(int),m_layerMax,file);
+	CaseWrite(m_paraKosuu,sizeof(int),m_layerMax,file,memory);
+	CaseWrite(m_selectParam,sizeof(int),m_layerMax,file,memory);
 
 	for (i=0;i<m_layerMax;i++)
 	{
 		if (m_effectData[i].flag)
 		{
-			fwrite(&m_effectData[i],sizeof(EFFECT),1,file);
+//			fwrite(&m_effectData[i],sizeof(EFFECT),1,file);
+			CaseWrite(&m_effectData[i],sizeof(EFFECT),1,file,memory);
 		}
 	}
 
@@ -1427,7 +1453,8 @@ BOOL CKomaData::Save(FILE* file)
 		{
 			if (m_effectData[i].pic != -1)
 			{
-				fwrite(&m_picFileName[i][0],sizeof(char),256,file);
+//				fwrite(&m_picFileName[i][0],sizeof(char),256,file);
+				CaseWrite(&m_picFileName[i][0],sizeof(char),256,file,memory);
 			}
 		}
 	}
@@ -1439,29 +1466,34 @@ BOOL CKomaData::Save(FILE* file)
 	//miniPic
 	if (tmp[10] & 0x1)
 	{
-		fwrite(m_miniPic,sizeof(int),32*24,file);
+//		fwrite(m_miniPic,sizeof(int),32*24,file);
+		CaseWrite(m_miniPic,sizeof(int),32*24,file,memory);
 	}
 
 	//largePic
 	if (tmp[10] & 0x2)
 	{
-		fwrite(m_largePic,sizeof(int),64*48,file);
+//		fwrite(m_largePic,sizeof(int),64*48,file);
+		CaseWrite(m_largePic,sizeof(int),64*48,file,memory);
 	}
 
 	if (tmp[10] & 0x4)
 	{
-		fwrite(m_veryLargePic,sizeof(int),128*96,file);
+//		fwrite(m_veryLargePic,sizeof(int),128*96,file);
+		CaseWrite(m_veryLargePic,sizeof(int),128*96,file,memory);
 	}
 
 	if (tmp[11])
 	{
-		fwrite(m_komaName,sizeof(char),64,file);
+//		fwrite(m_komaName,sizeof(char),64,file);
+		CaseWrite(m_komaName,sizeof(char),64,file,memory);
 	}
 
-	fwrite(m_exMusicParam,sizeof(int),16,file);
+//	fwrite(m_exMusicParam,sizeof(int),16,file);
+	CaseWrite(m_exMusicParam,sizeof(int),16,file,memory);
 
 
-	SaveArrayObject(file);
+	SaveArrayObject(file,memory);
 /*`
 	for (i=0;i<m_objectKosuu;i++)
 	{

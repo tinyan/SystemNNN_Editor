@@ -46,6 +46,7 @@
 #include "..\..\systemNNN\nnnUtilLib\scriptDefine.h"
 
 #include "..\..\systemNNN\nnnUtilLib\shakin.h"
+#include "undoMemoryObject.h"
 
 #include "..\..\systemNNN\nyanPictureLib\pngLoader.h"
 
@@ -447,6 +448,9 @@ CMyApplication::CMyApplication(HINSTANCE hinstance) : CMyApplicationBase(hinstan
 
 	m_skipPrintFlag = GetConfig("printSkipFlag");
 	m_framePrintFlag = GetConfig("printFrameFlag");
+	m_undoEnable = GetConfig("undoEnable");
+	m_undoKakuninEnable = GetConfig("undoKakuninEnable");
+	m_undoAfterEnable = GetConfig("undoAfterEnable");
 
 	m_allEffectParam = new CAllEffectParam();
 	CKomaData::m_allEffectParam = m_allEffectParam;
@@ -734,6 +738,8 @@ CMyApplication::CMyApplication(HINSTANCE hinstance) : CMyApplicationBase(hinstan
 	}
 
 	m_scriptData = new CScriptData();
+
+	m_undoObject = NULL;
 
 
 
@@ -1208,6 +1214,7 @@ void CMyApplication::End(void)
 	ENDDELETECLASS(m_selectDialog);
 	ENDDELETECLASS(m_file);
 
+	ENDDELETECLASS(m_undoObject);
 	ENDDELETECLASS(m_scriptData);
 
 	ENDDELETECLASS(m_message);
@@ -2644,6 +2651,26 @@ void CMyApplication::OnCommand(WPARAM wParam,LPARAM lParam)
 		ExtUtil(wParam);
 		break;
 
+	case ID_UNDO_ENABLE:
+		ChangeUndoMode(1);
+		break;
+	case ID_UNDO_DISABLE:
+		ChangeUndoMode(0);
+		break;
+	case ID_UNDO_KAKUNIN_ARI:
+		ChangeUndoKakuninMode(1);
+		break;
+	case ID_UNDO_KAKUNIN_NASHI:
+		ChangeUndoKakuninMode(0);
+		break;
+	case ID_UNDO_AFTER_ARI:
+		ChangeUndoAfterMode(1);
+		break;
+	case ID_UNDO_AFTER_NASHI:
+		ChangeUndoAfterMode(0);
+		break;
+
+
 	case ID_ADDDEFAULTVOICE:
 		ChangeAddDefaultVoice();
 		break;
@@ -3032,6 +3059,9 @@ BOOL CMyApplication::LoadRoutine(FILE* file)
 	pDoc->ReCalcuScrollPara();
 	pDoc2->ReCalcuScrollPara();
 
+
+	ClearUndo();
+
 	UpdateMyWindow(-1);
 
 	return TRUE;
@@ -3135,6 +3165,8 @@ BOOL CMyApplication::Save(void)
 	m_modifyFlag = FALSE;
 
 	MessageBox(m_frameHWND,"Save終了しましたにゃ","確認",MB_OK);
+
+	ClearUndo();
 
 	SetFileNameOnly(m_file->GetFileNameOnly());
 	SetLastFileNameOnly(m_file->GetFileName());
@@ -6379,6 +6411,104 @@ void CMyApplication::MainMouseMove(MSG msg)
 //	OutputDebugString(mes);
 
 }
+
+void CMyApplication::ClearUndo(void)
+{
+	CUndoMemoryObject* undo = GetUndoObject();
+	if (undo != NULL)
+	{
+		undo->Clear();
+	}
+}
+
+void CMyApplication::ChangeUndoMode(int n)
+{
+	SetConfig("undoEnable",n);
+	m_undoEnable = n;
+	m_menuCheckControl->SetUndoModeCheck();
+
+	ClearUndo();
+
+}
+
+void CMyApplication::ChangeUndoKakuninMode(int n)
+{
+	SetConfig("undoKakuninEnable",n);
+	m_undoKakuninEnable = n;
+	m_menuCheckControl->SetUndoKakuninCheck();
+}
+
+void CMyApplication::ChangeUndoAfterMode(int n)
+{
+	SetConfig("undoAfterEnable",n);
+	m_undoAfterEnable = n;
+	m_menuCheckControl->SetUndoAfterCheck();
+}
+
+
+BOOL CMyApplication::CheckUndoMode(void)
+{
+	if (GetUndoMode())
+	{
+		if (GetUndoKakuninEnable() == FALSE) return TRUE;
+		//check
+
+		int rt = MessageBox(NULL,"UNDOしますか","確認",MB_YESNO | MB_ICONEXCLAMATION);
+		if (rt == IDYES)
+		{
+			return TRUE;
+		}
+	}
+
+	return FALSE;
+}
+
+CUndoMemoryObject* CMyApplication::GetUndoObject(void)
+{
+	if (m_undoObject == NULL)
+	{
+		m_undoObject = new CUndoMemoryObject();
+	}
+
+	return m_undoObject;
+}
+
+void CMyApplication::CheckAndGetKomaUndo(void)
+{
+	if (GetUndoMode())
+	{
+		CUndoMemoryObject* undo = GetUndoObject();
+		if (undo != NULL)
+		{
+			if (undo->GetUndoType() != UNDO_TYPE_KOMA)
+			{
+				CFilmData* pFilm = GetNowSelectFilm();
+
+				int komaStart = pFilm->GetSelectStart();
+				int komaEnd = pFilm->GetSelectEnd();
+				int kosuu = pFilm->GetObjectKosuu();
+				if ((komaStart>=0) && ( komaStart<kosuu) && (komaEnd >= 0) && (komaEnd < kosuu) && (komaStart <= komaEnd))
+				{
+					undo->Clear(UNDO_TYPE_KOMA,UNDO_DATA_MODIFY,komaStart,komaEnd);
+
+					for (int i=komaStart;i<=komaEnd;i++)
+					{
+						CKomaData* pKoma = (CKomaData*)(pFilm->GetObjectData(i));
+						if (pKoma != NULL)
+						{
+							pKoma->Save(NULL,undo);
+						}
+					}
+					KomaIsChanged();
+					//OutputDebugString("*** UNDO GET KOAM ***\x00d\x00a");
+				}
+			
+			}
+		}
+	}
+
+}
+
 
 /*_*/
 

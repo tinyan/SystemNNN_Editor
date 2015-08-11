@@ -9,6 +9,8 @@
 
 #include "case.h"
 
+#include "undoMemoryObject.h"
+
 #include "filmdata.h"
 #include "filmcasedata.h"
 #include "scriptdata.h"
@@ -84,9 +86,9 @@ int CFilmCaseData::GetNowSelectNumber(void)
 */
 
 
-BOOL CFilmCaseData::LoadAll(int n,FILE* file)
+BOOL CFilmCaseData::LoadAll(int n,FILE* file,CUndoMemoryObject* memory)
 {
-	LoadArrayObject(n,file);
+	LoadArrayObject(n,file,memory);
 	return TRUE;
 }
 
@@ -97,29 +99,33 @@ BOOL CFilmCaseData::ClearAllFilm(void)
 	return TRUE;
 }
 
-BOOL CFilmCaseData::Load(FILE* file)
+BOOL CFilmCaseData::Load(FILE* file,CUndoMemoryObject* memory)
 {
 	char tmpc[16];
-	fread(tmpc,sizeof(char),16,file);
+//	fread(tmpc,sizeof(char),16,file);
+	CaseRead(tmpc,sizeof(char),16,file,memory);
 
 	int tmp[16];
-	fread(tmp,sizeof(int),16,file);
+//	fread(tmp,sizeof(int),16,file);
+	CaseRead(tmp,sizeof(int),16,file,memory);
 
-	LoadArrayObject(tmp[0],file);
+	LoadArrayObject(tmp[0],file,memory);
 	return TRUE;
 }
 
 
-BOOL CFilmCaseData::Save(FILE* file)
+BOOL CFilmCaseData::Save(FILE* file,CUndoMemoryObject* memory)
 {
-	fwrite("[FILMCASEDATA] ",sizeof(char),16,file);
+//	fwrite("[FILMCASEDATA] ",sizeof(char),16,file);
+	CaseWrite("[FILMCASEDATA] ",sizeof(char),16,file,memory);
 
 	int tmp[16];
 	for (int i=0;i<16;i++) tmp[i] = 0;
 	tmp[0] = m_objectKosuu;
-	fwrite(tmp,sizeof(int),16,file);
+//	fwrite(tmp,sizeof(int),16,file);
+	CaseWrite(tmp,sizeof(int),16,file,memory);
 
-	SaveArrayObject(file);
+	SaveArrayObject(file,memory);
 	return TRUE;
 }
 

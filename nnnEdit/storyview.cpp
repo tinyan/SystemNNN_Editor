@@ -434,7 +434,13 @@ void CStoryView::OnPaint(HWND hWnd, WPARAM wParam,LPARAM lParam)
 			if (m_buttonPaste != NULL) m_buttonPaste->Print(hdc,src,2,&ps.rcPaint);
 			if (m_buttonDelete != NULL) m_buttonDelete->Print(hdc,src,0,&ps.rcPaint);
 
-			if (m_buttonUndo != NULL) m_buttonUndo->Print(hdc,src,2,&ps.rcPaint);
+			if (m_buttonUndo != NULL)
+			{
+				int umd = 2;
+				if (pDoc->CheckExistUndo()) umd = 0;
+				m_buttonUndo->Print(hdc,src,umd,&ps.rcPaint);
+
+			}
 
 			if (m_buttonBack != NULL) m_buttonBack->Print(hdc,src,2,&ps.rcPaint);
 			if (m_buttonJump != NULL) m_buttonJump->Print(hdc,src,2,&ps.rcPaint);

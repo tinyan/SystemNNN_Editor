@@ -13,6 +13,8 @@ class CEffect;
 class CCase;
 //class CMyApplication;
 class CScriptData;
+class CUndoMemoryObject;
+
 class CFilmData : public CCase
 {
 public:
@@ -40,8 +42,8 @@ public:
 	//åpè≥Ç‘ÇÒ
 	LPSTR GetMyName(void);
 	void SetMyName(LPSTR name);
-	BOOL Load(FILE* file);
-	BOOL Save(FILE* file);
+	BOOL Load(FILE* file,CUndoMemoryObject* memory = NULL);
+	BOOL Save(FILE* file,CUndoMemoryObject* memory = NULL);
 	CCase* NewObject(void);
 	void OutputScriptSource(FILE* file);
 	int Compile(CScriptData* lpScript);

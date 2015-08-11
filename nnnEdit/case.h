@@ -11,6 +11,8 @@
 class CMessageData;
 //class CMyApplication;
 class CScriptData;
+class CUndoMemoryObject;
+
 class CCase
 {
 public:
@@ -19,8 +21,8 @@ public:
 	void End(void);
 
 	virtual CCase* NewObject(void) = 0;
-	virtual BOOL Load(FILE* file) = 0;
-	virtual BOOL Save(FILE* file) = 0;
+	virtual BOOL Load(FILE* file,CUndoMemoryObject* memory = NULL) = 0;
+	virtual BOOL Save(FILE* file,CUndoMemoryObject* memory = NULL) = 0;
 	virtual LPSTR GetMyName(void) = 0;
 	virtual void SetMyName(LPSTR name) = 0;
 	virtual BOOL CopyOriginalData(CCase* lpFrom) = 0;
@@ -44,8 +46,8 @@ public:
 	BOOL CreateObjectData(int place = -1, int kosuu = 1);
 	BOOL DeleteObjectData(int place, int kosuu = 1);
 
-	BOOL LoadArrayObject(int n,FILE* file);
-	BOOL SaveArrayObject(FILE* file);
+	BOOL LoadArrayObject(int n,FILE* file,CUndoMemoryObject* memory = NULL);
+	BOOL SaveArrayObject(FILE* file,CUndoMemoryObject* memory = NULL);
 
 	void SetSelectNumber(int n);
 	void SetSelectSubNumber(int n);
@@ -65,6 +67,8 @@ public:
 	void OutputScriptSourceComment(FILE* file,LPSTR mes = NULL);
 
 	void OutputData(FILE* file,LPSTR mes,int tab = 0,BOOL crFlag = TRUE);
+	BOOL CaseRead(LPVOID ptr,size_t elementSize,size_t count,FILE* file,CUndoMemoryObject* memory = NULL);
+	BOOL CaseWrite(LPVOID ptr,size_t elementSize,size_t count,FILE* file,CUndoMemoryObject* memory = NULL);
 
 protected:
 

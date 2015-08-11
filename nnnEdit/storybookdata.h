@@ -6,6 +6,7 @@
 #define __NNNEDIT_STORYBOOKDATA__
 
 //#include "case.h"
+class CUndoMemoryObject;
 
 class CStoryBookData : public CCase
 {
@@ -14,12 +15,12 @@ public:
 	virtual ~CStoryBookData();
 	void End(void);
 
-	BOOL LoadAll(int n, FILE* file);
+	BOOL LoadAll(int n, FILE* file,CUndoMemoryObject* memory = NULL);
 	BOOL DeleteAll(void);
 
 	//åpè≥
-	BOOL Load(FILE* file);
-	BOOL Save(FILE* file);
+	BOOL Load(FILE* file,CUndoMemoryObject* memory = NULL);
+	BOOL Save(FILE* file,CUndoMemoryObject* memory = NULL);
 	LPSTR GetMyName(void);
 	void SetMyName(LPSTR name);
 	CCase* NewObject(void);

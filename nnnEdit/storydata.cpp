@@ -12,6 +12,7 @@
 
 #include "commanddata.h"
 #include "commanddataType.h"
+#include "undoMemoryObject.h"
 
 //#include "komadata.h"
 #include "storydata.h"
@@ -69,18 +70,21 @@ CCommandData* CStoryData::GetCommand(int n)
 }
 
 
-BOOL CStoryData::Load(FILE* file)
+BOOL CStoryData::Load(FILE* file,CUndoMemoryObject* memory)
 {
 	char head[16];
-	fread(head,sizeof(char),16,file);
-	fread(m_myname,sizeof(char),64,file);
+//	fread(head,sizeof(char),16,file);
+//	fread(m_myname,sizeof(char),64,file);
+	CaseRead(head,sizeof(char),16,file,memory);
+	CaseRead(m_myname,sizeof(char),64,file,memory);
 
 	int tmp[16];
-	fread(tmp,sizeof(int),16,file);
+//	fread(tmp,sizeof(int),16,file);
+	CaseRead(tmp,sizeof(int),16,file,memory);
 
 	m_version = tmp[1];
 
-	LoadArrayObject(tmp[0],file);
+	LoadArrayObject(tmp[0],file,memory);
 
 	if ((m_version < 1) || (m_adjustEnfIf))
 	{
@@ -211,10 +215,12 @@ BOOL CStoryData::Load(FILE* file)
 }
 
 
-BOOL CStoryData::Save(FILE* file)
+BOOL CStoryData::Save(FILE* file,CUndoMemoryObject* memory)
 {
-	fwrite("STORYDATA      ",sizeof(char),16,file);
-	fwrite(m_myname,sizeof(char),64,file);
+//	fwrite("STORYDATA      ",sizeof(char),16,file);
+//	fwrite(m_myname,sizeof(char),64,file);
+	CaseWrite("STORYDATA      ",sizeof(char),16,file,memory);
+	CaseWrite(m_myname,sizeof(char),64,file,memory);
 
 	int tmp[16];
 	for (int i=0;i<16;i++) tmp[i] = 0;
@@ -222,9 +228,10 @@ BOOL CStoryData::Save(FILE* file)
 	
 	tmp[1] = 1;	//version
 
-	fwrite(tmp,sizeof(int),16,file);
+//	fwrite(tmp,sizeof(int),16,file);
+	CaseWrite(tmp,sizeof(int),16,file,memory);
 
-	SaveArrayObject(file);
+	SaveArrayObject(file,memory);
 
 	return TRUE;
 }
@@ -369,12 +376,12 @@ void CStoryData::DeleteChildBlock(int n,int k)
 
 void CStoryData::DeleteWithChild(int n)
 {
-char mes[256];
-wsprintf(mes,"\n[DeleteWithChild:%d]",n);
-OutputDebugString(mes);
+//char mes[256];
+//wsprintf(mes,"\n[DeleteWithChild:%d]",n);
+//OutputDebugString(mes);
 
 	CCommandData* pCommand = (CCommandData*)(GetObjectData(n));
-	if (pCommand == NULL) return;	//error
+	if (pCommand == NULL) return ;	//error
 
 	int level = pCommand->GetLevel();
 	int kosuu = pCommand->GetSubKosuu();
@@ -390,8 +397,8 @@ OutputDebugString(mes);
 		}
 	}
 
-wsprintf(mes,"\n[Delete %d]",n);
-OutputDebugString(mes);
+//wsprintf(mes,"\n[Delete %d]",n);
+//OutputDebugString(mes);
 
 	DeleteObjectData(n);
 
@@ -416,23 +423,23 @@ OutputDebugString(mes);
 
 					if (type2 == COMMANDDATATYPE_ELSIF)
 					{
-wsprintf(mes,"\n[change elsif to to if %d]",n);
-OutputDebugString(mes);
+//wsprintf(mes,"\n[change elsif to to if %d]",n);
+//OutputDebugString(mes);
 
 						pCommand2->ChangeCommandType(COMMANDDATATYPE_IF);
 					}
 
 					if (type2 == COMMANDDATATYPE_ELSE)
 					{
-wsprintf(mes,"\n[change else to to if %d]",n);
-OutputDebugString(mes);
+//wsprintf(mes,"\n[change else to to if %d]",n);
+//OutputDebugString(mes);
 						pCommand2->ChangeCommandType(COMMANDDATATYPE_IF);
 					}
 
 					if (type2 == COMMANDDATATYPE_ENDIF)
 					{
-wsprintf(mes,"\n[delete endif %d]",n);
-OutputDebugString(mes);
+//wsprintf(mes,"\n[delete endif %d]",n);
+//OutputDebugString(mes);
 						DeleteObjectData(n);
 					}
 				}

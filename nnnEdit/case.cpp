@@ -8,6 +8,8 @@
 #include "..\..\systemNNN\nyanLib\include\commonmacro.h"
 
 #include "case.h"
+#include "undoMemoryObject.h"
+
 //#include "myApplication.h"
 
 
@@ -219,9 +221,39 @@ void CCase::Init(LPVOID para)
 {
 }
 
+BOOL CCase::CaseRead(LPVOID ptr,size_t elementSize,size_t count,FILE* file,CUndoMemoryObject* memory)
+{
+	if (memory ==NULL)
+	{
+		fread(ptr,elementSize,count,file);
+
+		return TRUE;
+	}
+	else
+	{
+		memory->Read(ptr,elementSize,count);
+		return TRUE;
+	}
+}
+
+BOOL CCase::CaseWrite(LPVOID ptr,size_t elementSize,size_t count,FILE* file,CUndoMemoryObject* memory)
+{
+	if (memory ==NULL)
+	{
+		fwrite(ptr,elementSize,count,file);
+
+		return TRUE;
+	}
+	else
+	{
+		memory->Write(ptr,elementSize,count);
+		return TRUE;
+	}
+}
 
 
-BOOL CCase::LoadArrayObject(int n, FILE* file)
+
+BOOL CCase::LoadArrayObject(int n, FILE* file,CUndoMemoryObject* memory)
 {
 	//nŒÂ‚È‚¯‚ê‚Îarrayì¬
 	if (n>m_objectKosuuMax)
@@ -239,7 +271,7 @@ BOOL CCase::LoadArrayObject(int n, FILE* file)
 			m_objectDataArray[i] = pCase;
 		}
 
-		pCase->Load(file);
+		pCase->Load(file,memory);
 	}
 
 	m_objectKosuu = n;
@@ -252,7 +284,7 @@ BOOL CCase::LoadArrayObject(int n, FILE* file)
 
 
 
-BOOL CCase::SaveArrayObject(FILE* file)
+BOOL CCase::SaveArrayObject(FILE* file,CUndoMemoryObject* memory)
 {
 	for (int i=0;i<m_objectKosuu;i++)
 	{
@@ -263,7 +295,7 @@ BOOL CCase::SaveArrayObject(FILE* file)
 		}
 		else
 		{
-			lpObj->Save(file);
+			lpObj->Save(file,memory);
 		}
 	}
 

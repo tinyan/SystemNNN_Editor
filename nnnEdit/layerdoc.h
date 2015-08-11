@@ -85,6 +85,8 @@ public:
 	void SetCopyPreEffectMode(int md){m_copyPreEffectMode = md;}
 
 	int GetVarControlLayerCheckPre(int layer);
+	void CheckAndGetUndo(void);
+
 
 private:
 	void SetWriteStatus(int layer,int st);

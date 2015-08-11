@@ -8,6 +8,7 @@
 
 class CCommandData;
 class CCase;
+class CUndoMemoryObject;
 
 class CStoryData : public CCase
 {
@@ -41,8 +42,8 @@ public:
 //åpè≥
 	LPSTR GetMyName(void);
 	void SetMyName(LPSTR name);
-	BOOL Load(FILE* file);
-	BOOL Save(FILE* file);
+	BOOL Load(FILE* file,CUndoMemoryObject* memory = NULL);
+	BOOL Save(FILE* file,CUndoMemoryObject* memory = NULL);
 	CCase* NewObject(void);
 	BOOL CopyOriginalData(CCase* lpFrom);
 	int Clean(void){return 0;}

@@ -29,9 +29,9 @@ void CStoryBookData::End(void)
 }
 
 
-BOOL CStoryBookData::LoadAll(int n,FILE* file)
+BOOL CStoryBookData::LoadAll(int n,FILE* file,CUndoMemoryObject* memory)
 {
-	LoadArrayObject(0,file);
+	LoadArrayObject(0,file,memory);
 	return TRUE;
 }
 
@@ -45,31 +45,36 @@ BOOL CStoryBookData::DeleteAll(void)
 
 
 
-BOOL CStoryBookData::Load(FILE* file)
+BOOL CStoryBookData::Load(FILE* file,CUndoMemoryObject* memory)
 {
 	char head[16];
-	fread(head,sizeof(char),16,file);
+
+	//fread(head,sizeof(char),16,file);
+	CaseRead(head,sizeof(char),16,file,memory);
 
 	int tmp[16];
-	fread(tmp,sizeof(int),16,file);
+//	fread(tmp,sizeof(int),16,file);
+	CaseRead(tmp,sizeof(int),16,file,memory);
 
-	LoadArrayObject(tmp[0],file);
+	LoadArrayObject(tmp[0],file,memory);
 
 	return TRUE;
 }
 
 
 
-BOOL CStoryBookData::Save(FILE* file)
+BOOL CStoryBookData::Save(FILE* file,CUndoMemoryObject* memory)
 {
-	fwrite("[STORYBOOKDATA]",sizeof(char),16,file);
+//	fwrite("[STORYBOOKDATA]",sizeof(char),16,file);
+	CaseWrite("[STORYBOOKDATA]",sizeof(char),16,file,memory);
 	
 	int tmp[16];
 	for (int i=0;i<16;i++) tmp[i] = 0;
 	tmp[0] = m_objectKosuu;
-	fwrite(tmp,sizeof(int),16,file);
+//	fwrite(tmp,sizeof(int),16,file);
+	CaseWrite(tmp,sizeof(int),16,file,memory);
 
-	SaveArrayObject(file);
+	SaveArrayObject(file,memory);
 
 	return TRUE;
 }

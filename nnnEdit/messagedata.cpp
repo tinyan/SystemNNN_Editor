@@ -8,6 +8,7 @@
 #include "..\..\systemNNN\nyanlib\include\commonmacro.h"
 
 #include "case.h"
+#include "undoMemoryObject.h"
 #include "messagedata.h"
 
 int CMessageData::m_defaultDrawTime = 10;
@@ -404,7 +405,7 @@ int CMessageData::CalcuNeedSeFileSize(int flg)
 }
 
 
-BOOL CMessageData::Load(FILE* file)
+BOOL CMessageData::Load(FILE* file,CUndoMemoryObject* memory)
 {
 	char head[16];
 	int tmp[16+16];
@@ -415,8 +416,10 @@ BOOL CMessageData::Load(FILE* file)
 		tmp[i] = 0;
 	}
 
-	fread(head,sizeof(char),16,file);	//skip header
-	fread(tmp,sizeof(int),16,file);
+//	fread(head,sizeof(char),16,file);	//skip header
+//	fread(tmp,sizeof(int),16,file);
+	CaseRead(head,sizeof(char),16,file,memory);	//skip header
+	CaseRead(tmp,sizeof(int),16,file,memory);
 
 
 	m_messageMode = tmp[0];
@@ -454,7 +457,8 @@ BOOL CMessageData::Load(FILE* file)
 	{
 		//read
 
-		fread(&tmp[16],sizeof(int),m_kakuchoWorkKosuu,file);
+//		fread(&tmp[16],sizeof(int),m_kakuchoWorkKosuu,file);
+		CaseRead(&tmp[16],sizeof(int),m_kakuchoWorkKosuu,file,memory);
 		m_cannotClickFlag = tmp[16];
 		if (m_kakuchoWorkKosuu > 2)
 		{
@@ -529,7 +533,8 @@ BOOL CMessageData::Load(FILE* file)
 
 
 	CheckAndExpandMessageWork(messageSize);
-	fread(m_messageBuffer,sizeof(char),messageSize,file);
+//	fread(m_messageBuffer,sizeof(char),messageSize,file);
+	CaseRead(m_messageBuffer,sizeof(char),messageSize,file,memory);
 
 
 	int voiceFileSize = CalcuNeedVoiceFileSize(m_voiceFileFlag);
@@ -547,7 +552,8 @@ BOOL CMessageData::Load(FILE* file)
 	{
 		if (flg & 1)
 		{
-			fread(m_voiceFileName+i*64,sizeof(char),64,file);
+			//fread(m_voiceFileName+i*64,sizeof(char),64,file);
+			CaseRead(m_voiceFileName+i*64,sizeof(char),64,file,memory);
 		}
 
 		if ((flg  == 0) || (flg == 1)) break;
@@ -569,7 +575,8 @@ BOOL CMessageData::Load(FILE* file)
 			{
 				if (flg0 & 1)
 				{
-					fread(&m_seNumber[i],sizeof(int),1,file);
+//					fread(&m_seNumber[i],sizeof(int),1,file);
+					CaseRead(&m_seNumber[i],sizeof(int),1,file,memory);
 					if (seChannel == 0) seChannel = i;
 				}
 				else
@@ -592,7 +599,8 @@ BOOL CMessageData::Load(FILE* file)
 	{
 		if (flg & 1)
 		{
-			fread(m_seFileName+i*64,sizeof(char),64,file);
+//			fread(m_seFileName+i*64,sizeof(char),64,file);
+			CaseRead(m_seFileName+i*64,sizeof(char),64,file,memory);
 		}
 
 		if ((flg  == 0) || (flg == 1)) break;
@@ -610,7 +618,8 @@ BOOL CMessageData::Load(FILE* file)
 		{
 			if (m_voiceControlFlag & m_bitPattern[i])
 			{
-				fread(m_voiceControlData+i*8,sizeof(int),8,file);
+//				fread(m_voiceControlData+i*8,sizeof(int),8,file);
+				CaseRead(m_voiceControlData+i*8,sizeof(int),8,file,memory);
 			}
 		}
 	}
@@ -624,7 +633,8 @@ BOOL CMessageData::Load(FILE* file)
 		{
 			if (m_seControlFlag & m_bitPattern[i])
 			{
-				fread(m_seControlData+i*8,sizeof(int),8,file);
+		//		fread(m_seControlData+i*8,sizeof(int),8,file);
+				CaseRead(m_seControlData+i*8,sizeof(int),8,file,memory);
 			}
 		}
 	}
@@ -694,9 +704,10 @@ void CMessageData::CreateVoiceControl(int n)
 
 }
 
-BOOL CMessageData::Save(FILE* file)
+BOOL CMessageData::Save(FILE* file,CUndoMemoryObject* memory)
 {
-	fwrite("--MESSAGEDATA  ",sizeof(char),16,file);
+//	fwrite("--MESSAGEDATA  ",sizeof(char),16,file);
+	CaseWrite("--MESSAGEDATA  ",sizeof(char),16,file,memory);
 	int tmp[16+16];
 	int i;
 	for (i=0;i<16+16;i++) tmp[i] = 0;
@@ -783,13 +794,16 @@ BOOL CMessageData::Save(FILE* file)
 	tmp[13] = m_voiceControlFlag;
 
 
-	fwrite(tmp,sizeof(int),16,file);
+//	fwrite(tmp,sizeof(int),16,file);
+	CaseWrite(tmp,sizeof(int),16,file,memory);
 	if (m_kakuchoWorkKosuu>0)
 	{
-		fwrite(&tmp[16],sizeof(int),m_kakuchoWorkKosuu,file);
+		//fwrite(&tmp[16],sizeof(int),m_kakuchoWorkKosuu,file);
+		CaseWrite(&tmp[16],sizeof(int),m_kakuchoWorkKosuu,file,memory);
 	}
 
-	fwrite(m_messageBuffer,sizeof(char),messageSize,file);
+//	fwrite(m_messageBuffer,sizeof(char),messageSize,file);
+	CaseWrite(m_messageBuffer,sizeof(char),messageSize,file,memory);
 
 
 
@@ -801,7 +815,8 @@ BOOL CMessageData::Save(FILE* file)
 	{
 		if (flg & 1)
 		{
-			fwrite(m_voiceFileName+i*64,sizeof(char),64,file);
+//			fwrite(m_voiceFileName+i*64,sizeof(char),64,file);
+			CaseWrite(m_voiceFileName+i*64,sizeof(char),64,file,memory);
 		}
 
 		if ((flg  == 0) || (flg == 1)) break;
@@ -823,7 +838,8 @@ BOOL CMessageData::Save(FILE* file)
 			{
 				if (flg0 & 1)
 				{
-					fwrite(&m_seNumber[i],sizeof(int),1,file);
+//					fwrite(&m_seNumber[i],sizeof(int),1,file);
+					CaseWrite(&m_seNumber[i],sizeof(int),1,file,memory);
 				}
 
 				if ((flg0  == 0) || (flg0 == 1)) break;
@@ -839,7 +855,8 @@ BOOL CMessageData::Save(FILE* file)
 	{
 		if (flg & 1)
 		{
-			fwrite(m_seFileName+i*64,sizeof(char),64,file);
+//			fwrite(m_seFileName+i*64,sizeof(char),64,file);
+			CaseWrite(m_seFileName+i*64,sizeof(char),64,file,memory);
 		}
 
 		if ((flg  == 0) || (flg == 1)) break;
@@ -854,7 +871,8 @@ BOOL CMessageData::Save(FILE* file)
 		{
 			if (m_voiceControlFlag & m_bitPattern[i])
 			{
-				fwrite(m_voiceControlData+i*8,sizeof(int),8,file);
+//				fwrite(m_voiceControlData+i*8,sizeof(int),8,file);
+				CaseWrite(m_voiceControlData+i*8,sizeof(int),8,file,memory);
 			}
 		}
 	}
@@ -865,7 +883,8 @@ BOOL CMessageData::Save(FILE* file)
 		{
 			if (m_seControlFlag & m_bitPattern[i])
 			{
-				fwrite(m_seControlData+i*8,sizeof(int),8,file);
+//				fwrite(m_seControlData+i*8,sizeof(int),8,file);
+				CaseWrite(m_seControlData+i*8,sizeof(int),8,file,memory);
 			}
 		}
 	}

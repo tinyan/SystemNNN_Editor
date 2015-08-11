@@ -22,6 +22,7 @@
 
 #include "komadata.h"
 
+#include "undoMemoryObject.h"
 
 
 
@@ -59,6 +60,16 @@ void CControlDoc::OnControlButton(int n)
 	if (pFilm != NULL) pKoma = (CKomaData*)(pFilm->GetNowSelectObject());
 
 	CEffect* effect = m_app->GetEffect();
+
+	if (m_app->GetUndoMode())
+	{
+		CUndoMemoryObject* undo = m_app->GetUndoObject();
+		if (undo != NULL)
+		{
+			undo->Clear();
+		}
+	}
+
 
 	switch (n)
 	{

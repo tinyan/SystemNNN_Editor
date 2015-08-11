@@ -265,7 +265,7 @@ LRESULT CGameMessageView::ViewWndProc(HWND hWnd, UINT message, WPARAM wParam, LP
 		if (m_buttonMusicFade != NULL) m_buttonMusicFade->CalcuLButtonDown(wParam,lParam);
 		if (m_buttonMessageEffect != NULL) m_buttonMessageEffect->CalcuLButtonDown(wParam,lParam);
 		//if (m_buttonCommentBottom != NULL) m_buttonCommentBottom->CalcuLButtonDown(wParam,lParam);
-
+		if (m_buttonUndo != NULL) m_buttonUndo->CalcuLButtonDown(wParam,lParam);
 		OnLButtonDown(hWnd,wParam,lParam);
 		break;
 
@@ -452,6 +452,9 @@ LRESULT CGameMessageView::ViewWndProc(HWND hWnd, UINT message, WPARAM wParam, LP
 			case 4:
 				pDoc->OnDelete(-1);
 				break;
+			case 5:
+				pDoc->OnUndo(-1);
+				break;
 			case 6:
 				pDoc->OnWindowOnOff(-1);
 				break;
@@ -597,7 +600,12 @@ void CGameMessageView::OnPaint(HWND hWnd,WPARAM wParam, LPARAM lParam)
 
 
 	if (m_buttonDelete != NULL) m_buttonDelete->Print(hdc,src,0,&ps.rcPaint);
-	if (m_buttonUndo != NULL) m_buttonUndo->Print(hdc,src,2,&ps.rcPaint);
+	if (m_buttonUndo != NULL)
+	{
+		int umd = 2;
+		if (pDoc->CheckExistUndo()) umd = 0;
+		m_buttonUndo->Print(hdc,src,umd,&ps.rcPaint);
+	}
 	
 	if (m_buttonCommentTop != NULL)
 	{

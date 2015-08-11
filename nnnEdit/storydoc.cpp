@@ -32,6 +32,7 @@
 #include "commanddata.h"
 #include "commanddatatype.h"
 
+#include "undoMemoryObject.h"
 #include "selectdialog.h"
 
 
@@ -133,9 +134,17 @@ void CStoryDoc::OnNewCommand(int n)
 	if (n == -1) n = pStory->GetNowSelectNumber();
 	if ((n<0) || (n>kosuu)) return;
 
-char mes[256];
-wsprintf(mes,"NewCommand :%d\x00d\x00a",n);
-m_app->DebugLog(mes);
+//char mes[256];
+//wsprintf(mes,"NewCommand :%d\x00d\x00a",n);
+//m_app->DebugLog(mes);
+
+	CheckAndGetUndoAll();
+//	if (m_app->GetUndoMode())
+//	{
+//		CUndoMemoryObject* undo = m_app->GetUndoObject();
+//		undo->Clear(UNDO_TYPE_COMMAND,UNDO_DATA_ALL,0,kosuu-1);
+//	}
+
 
 	CCommandData* pCommand = (CCommandData*)(pStory->GetObjectData(n));
 	if (pCommand != NULL)
@@ -177,6 +186,10 @@ m_app->DebugLog(mes);
 				}
 			}
 		}
+
+
+
+
 
 		pStory->CreateObjectData(n2);
 		CCommandData* pCommand2 = (CCommandData*)(pStory->GetCommand(n2));
@@ -252,9 +265,9 @@ void CStoryDoc::OnDelete(int n)
 
 	if ((n<0) || (n>=kosuu)) return;
 
-char mes[256];
-wsprintf(mes,"DeleteCommand :%d\x00d\x00a",n);
-m_app->DebugLog(mes);
+//char mes[256];
+//wsprintf(mes,"DeleteCommand :%d\x00d\x00a",n);
+//m_app->DebugLog(mes);
 
 	CCommandData* pCommand = (CCommandData*)(pStory->GetObjectData(n));
 	if (pCommand == NULL) return;
@@ -269,6 +282,15 @@ m_app->DebugLog(mes);
 	int typ = pCommand->GetCommandType();
 	if (typ == COMMANDDATATYPE_ENDIF) return;
 	int level = pCommand->GetLevel();
+
+
+	CheckAndGetUndoAll();
+//	if (m_app->GetUndoMode())
+//	{
+//		CUndoMemoryObject* undo = m_app->GetUndoObject();
+//		undo->Clear(UNDO_TYPE_COMMAND,UNDO_DATA_ALL,0,kosuu-1);
+//	}
+
 
 
 	//delete with child
@@ -414,6 +436,7 @@ void CStoryDoc::OnClickCommand(int n)
 	
 	if ((n>=0) && (n<=kosuu))
 	{
+		ClearUndo();
 		pStory->SetSelectNumber(n);
 		m_app->CommandIsChanged();
 	}
@@ -549,10 +572,16 @@ void CStoryDoc::OnChangeType(int n, int cmd)
 
 
 
-char mes[256];
-wsprintf(mes,"ChangeCommand :%d,%d\x00d\x00a",n,typ);
-m_app->DebugLog(mes);
+//char mes[256];
+//wsprintf(mes,"ChangeCommand :%d,%d\x00d\x00a",n,typ);
+//m_app->DebugLog(mes);
 
+	CheckAndGetUndoAll();
+//	if (m_app->GetUndoMode())
+//	{
+//		CUndoMemoryObject* undo = m_app->GetUndoObject();
+//		undo->Clear(UNDO_TYPE_COMMAND,UNDO_DATA_ALL,0,kosuu-1);
+//	}
 
 
 	int para = CommandToPara(cmd);
@@ -746,6 +775,8 @@ void CStoryDoc::OnChangeSelectStory(int n)
 	LPSTR text = pCommand->GetTextBuffer();
 	if (text == NULL) return;
 
+	ClearUndo();
+
 	int s = m_app->SearchStory(text);
 	if (s == -1)
 	{
@@ -776,6 +807,14 @@ void CStoryDoc::OnEditCommand(int n)
 
 	CCommandData* pCommand = (CCommandData*)(pStory->GetObjectData(n));
 	if (pCommand == NULL) return;
+
+
+	CheckAndGetUndoAll();
+//	if (m_app->GetUndoMode())
+//	{
+//		CUndoMemoryObject* undo = m_app->GetUndoObject();
+//		undo->Clear(UNDO_TYPE_COMMAND,UNDO_DATA_ALL,0,kosuu-1);
+//	}
 
 
 	LPSTR mes = pCommand->GetTextBuffer();
@@ -863,6 +902,14 @@ void CStoryDoc::OnSelectCommand(int n)
 	int commandType = pCommand->GetCommandType();
 	int typ = pCommand->GetTextType();
 	if (typ == 0) return;
+
+
+	CheckAndGetUndoAll();
+//	if (m_app->GetUndoMode())
+//	{
+//		CUndoMemoryObject* undo = m_app->GetUndoObject();
+//		undo->Clear(UNDO_TYPE_COMMAND,UNDO_DATA_ALL,0,kosuu-1);
+//	}
 
 	LPSTR newText = NULL;
 
@@ -1057,6 +1104,15 @@ void CStoryDoc::OnChangeMarkColor(int n,int color,int backColor,int blockFlag)
 	CCommandData* pStartCommand = (CCommandData*)(pStory->GetObjectData(n));
 	if (pStartCommand == NULL) return;
 
+
+	CheckAndGetUndoAll();
+//	if (m_app->GetUndoMode())
+//	{
+//		CUndoMemoryObject* undo = m_app->GetUndoObject();
+//		undo->Clear(UNDO_TYPE_COMMAND,UNDO_DATA_ALL,0,kosuu-1);
+//	}
+
+
 	int startLevel = pStartCommand->GetLevel();
 
 
@@ -1119,6 +1175,14 @@ void CStoryDoc::OnEnterKey(void)
 		OnNewCommand();
 		return;
 	}
+
+
+	CheckAndGetUndoAll();
+//	if (m_app->GetUndoMode())
+//	{
+//		CUndoMemoryObject* undo = m_app->GetUndoObject();
+//		undo->Clear(UNDO_TYPE_COMMAND,UNDO_DATA_ALL,0,kosuu-1);
+//	}
 
 	CCommandData* pCommand = pStory->GetCommand(n);
 	if (pCommand->GetCommandType() == COMMANDDATATYPE_NOP)
@@ -1227,6 +1291,7 @@ CCase* CStoryDoc::GetNowSelectCaseObject(void)
 
 void CStoryDoc::OnSelectNumber(int n)
 {
+	ClearUndo();
 	m_app->CommandIsChanged();
 //	m_app->ProgramIsChanged();
 }
@@ -1242,6 +1307,180 @@ BOOL CStoryDoc::CheckRightShiftKey(void)
 	if (GetAsyncKeyState(VK_RSHIFT) & 0x80000000) return TRUE;
 	return FALSE;
 }
+
+
+
+
+BOOL CStoryDoc::CheckExistUndo(void)
+{
+	CUndoMemoryObject* undo = m_app->GetUndoObject();
+	if (undo != NULL)
+	{
+		int undoType = undo->GetUndoType();
+		if (undoType == UNDO_TYPE_COMMAND)
+		{
+			return TRUE;
+		}
+	}
+
+	return FALSE;
+}
+
+BOOL CStoryDoc::OnUndo(int n)
+{
+	BOOL f = FALSE;
+
+	if (m_app->GetUndoMode())
+	{
+		CStoryData* pStory = m_app->GetNowSelectStory();
+		if (pStory == NULL) return FALSE;
+
+		CUndoMemoryObject* undo = m_app->GetUndoObject();
+		if (undo != NULL)
+		{
+			if (CheckExistUndo())
+			{
+				int dataType = undo->GetUndoDataType();
+				int startN = undo->GetUndoStartN();
+				int endN = undo->GetUndoEndN();
+				int numN = endN - startN + 1;
+				
+
+				if (dataType == UNDO_DATA_ALL)//only 
+				{
+					int kosuu = pStory->GetObjectKosuu();
+
+					int nowSelect = pStory->GetNowSelectNumber();
+
+					if (kosuu>0)
+					{
+						pStory->DeleteObjectData(0,kosuu);
+					}
+
+
+					for (int i=startN;i<=endN;i++)
+					{
+						pStory->CreateObjectData(i);
+						CCommandData* pCommand = (CCommandData*)(pStory->GetObjectData(i));
+						pCommand->Init();
+						pCommand->Load(NULL,undo);
+					}
+
+					if ((nowSelect >= 0) && (nowSelect<endN))
+					{
+						pStory->SetSelectNumber(nowSelect);
+					}
+
+
+					undo->Clear();
+					f = TRUE;
+				}
+
+				/*
+				if (dataType == UNDO_DATA_INSERT)
+				{
+					pStory->DeleteObjectData(startN,numN);
+					undo->Clear();
+					f = TRUE;
+				}
+				else if (dataType == UNDO_DATA_DELETE)
+				{
+					for (int i=startN;i<=endN;i++)
+					{
+						pStory->CreateObjectData(i);
+						CCommandData* pCommand = (CCommandData*)(pStory->GetObjectData(i));
+						pCommand->Init();
+						pCommand->Load(NULL,undo);
+					}
+					undo->Clear();
+					f = TRUE;
+				}
+				else if (dataType == UNDO_DATA_MODIFY)
+				{
+					for (int i=startN;i<=endN;i++)
+					{
+						CCommandData* pCommand = (CCommandData*)(pCommand->GetObjectData(i));
+						pCommand->Init();
+						pCommand->Load(NULL,undo);
+					}
+					undo->Clear();
+					f = TRUE;
+				}
+				*/
+
+			}
+		}
+	}
+
+
+
+
+	if (f)
+	{
+		((CStoryView*)m_view)->ReCalcuScrollPara();
+		m_app->SetModify();
+		m_app->CommandIsChanged();
+		m_view->MyInvalidateRect();
+	}
+
+
+	return f;
+}
+
+void CStoryDoc::CheckAndGetUndoAll(void)
+{
+	if (m_app->GetUndoMode())
+	{
+		CStoryData* pStory = GetNowSelectStory();
+		if (pStory == NULL) return;
+		int kosuu = pStory->GetObjectKosuu();
+		CUndoMemoryObject* undo = m_app->GetUndoObject();
+		if (kosuu>0)
+		{
+			undo->Clear(UNDO_TYPE_COMMAND,UNDO_DATA_ALL,0,kosuu-1);
+			for (int i=0;i<kosuu;i++)
+			{
+				CCommandData* pCommand = (CCommandData*)(pStory->GetObjectData(i));
+				if (pCommand != NULL)
+				{
+					pCommand->Save(NULL,undo);
+				}
+			}
+
+		}
+	}
+}
+
+//dontUse
+void CStoryDoc::CheckAndGetUndo(CStoryData* pStory,int start,int end)
+{
+	if (pStory == NULL) return;
+
+	if (m_app->GetUndoMode())
+	{
+		CUndoMemoryObject* undo = m_app->GetUndoObject();
+		undo->Clear(UNDO_TYPE_COMMAND,UNDO_DATA_MODIFY,start,end);
+		for (int i=start;i<=end;i++)
+		{
+			CCommandData* pCommand = (CCommandData*)(pStory->GetObjectData(i));
+			if (pCommand != NULL)
+			{
+				pCommand->Save(NULL,undo);
+			}
+		}
+	}
+}
+
+void CStoryDoc::ClearUndo(void)
+{
+	if (m_app->GetUndoMode())
+	{
+		CUndoMemoryObject* undo = m_app->GetUndoObject();
+		undo->Clear();
+	}
+}
+
+
 
 /*_*/
 

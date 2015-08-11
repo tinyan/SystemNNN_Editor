@@ -934,13 +934,29 @@
 #define ID_Menu40858                    40858
 #define ID_ZAHYO_NORMAL                 40859
 #define ID_ZAHYO_CENTER                 40860
+#define ID_40861                        40861
+#define ID_UNDO40862                    40862
+#define ID_UNDO40863                    40863
+#define ID_Menu40864                    40864
+#define ID_UNDO40865                    40865
+#define ID_40866                        40866
+#define ID_40867                        40867
+#define ID_UNDO40868                    40868
+#define ID_40869                        40869
+#define ID_40870                        40870
+#define ID_UNDO_ENABLE                  40871
+#define ID_UNDO_DISABLE                 40872
+#define ID_UNDO_KAKUNIN_ARI             40873
+#define ID_UNDO_KAKUNIN_NASHI           40874
+#define ID_UNDO_AFTER_ARI               40875
+#define ID_UNDO_AFTER_NASHI             40876
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        229
-#define _APS_NEXT_COMMAND_VALUE         40861
+#define _APS_NEXT_COMMAND_VALUE         40877
 #define _APS_NEXT_CONTROL_VALUE         1095
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

@@ -22,6 +22,7 @@
 #include "gamemessagedoc.h"
 
 #include "myapplicationBase.h"
+#include "undoMemoryObject.h"
 
 //#include "filmdata.h"
 #include "komadata.h"
@@ -133,6 +134,12 @@ void CGameMessageDoc::OnNewMessage(int n)
 	if (n == -1) n = pKoma->GetNowSelectNumber();
 	if ((n<0) || (n>kosuu)) return;
 
+	if (m_app->GetUndoMode())
+	{
+		CUndoMemoryObject* undo = m_app->GetUndoObject();
+		undo->Clear(UNDO_TYPE_MESSAGE,UNDO_DATA_INSERT,n,n);
+	}
+
 
 	pKoma->CreateObjectData(n);
 
@@ -168,6 +175,19 @@ void CGameMessageDoc::OnCut(int n)
 
 	if ((start<0) || (start>=kosuu)) return;
 	if ((end<0) || (end>=kosuu)) return;
+
+
+
+	if (m_app->GetUndoMode())
+	{
+		CUndoMemoryObject* undo = m_app->GetUndoObject();
+		undo->Clear(UNDO_TYPE_MESSAGE,UNDO_DATA_DELETE,start,end);
+		for (int i=start;i<=end;i++)
+		{
+			CMessageData* pMessage = (CMessageData*)(pKoma->GetObjectData(i));
+			pMessage->Save(NULL,undo);
+		}
+	}
 
 	BOOL errorFlag = FALSE;
 
@@ -302,6 +322,16 @@ void CGameMessageDoc::OnPaste(int n)
 
 	int insertNumber = n;
 
+
+	if (m_app->GetUndoMode())
+	{
+		CUndoMemoryObject* undo = m_app->GetUndoObject();
+		undo->Clear(UNDO_TYPE_MESSAGE,UNDO_DATA_INSERT,n,n+messageKosuu-1);
+	}
+
+
+
+
 	for (int i=0;i<messageKosuu;i++)
 	{
 		pKoma->CreateObjectData(insertNumber+i);
@@ -354,6 +384,19 @@ void CGameMessageDoc::OnDelete(int n)
 	int start = pKoma->GetSelectStart();
 	int end = pKoma->GetSelectEnd();
 
+	if (m_app->GetUndoMode())
+	{
+		CUndoMemoryObject* undo = m_app->GetUndoObject();
+		undo->Clear(UNDO_TYPE_MESSAGE,UNDO_DATA_DELETE,start,end);
+		for (int i=start;i<=end;i++)
+		{
+			CMessageData* pMessage = (CMessageData*)(pKoma->GetObjectData(i));
+			pMessage->Save(NULL,undo);
+		}
+	}
+
+
+
 	for (int i=end;i>=start;i--)
 	{
 		pKoma->DeleteObjectData(i);
@@ -371,6 +414,24 @@ void CGameMessageDoc::OnDelete(int n)
 	m_app->MessageIsChanged();
 }
 
+void CGameMessageDoc::CheckAndGetUndo(CKomaData* pKoma,int start,int end)
+{
+	if (pKoma == NULL) return;
+
+	if (m_app->GetUndoMode())
+	{
+		CUndoMemoryObject* undo = m_app->GetUndoObject();
+		undo->Clear(UNDO_TYPE_MESSAGE,UNDO_DATA_MODIFY,start,end);
+		for (int i=start;i<=end;i++)
+		{
+			CMessageData* pMessage = (CMessageData*)(pKoma->GetObjectData(i));
+			if (pMessage != NULL)
+			{
+				pMessage->Save(NULL,undo);
+			}
+		}
+	}
+}
 
 void CGameMessageDoc::OnWindowOnOff(int n)
 {
@@ -381,6 +442,9 @@ void CGameMessageDoc::OnWindowOnOff(int n)
 
 	if (n == -1) n = pKoma->GetNowSelectNumber();
 	if ((n<0) || (n>=kosuu)) return;
+
+	CheckAndGetUndo(pKoma,n,n);
+
 
 	BOOL b = pKoma->GetWindowOffFlag();
 	if (b == TRUE)
@@ -411,6 +475,9 @@ void CGameMessageDoc::OnSelectMessage(int n,WPARAM wParam)
 	int kosuu = pKoma->GetObjectKosuu();
 	if ((n<0) || (n>kosuu)) return;
 
+	ClearUndo();
+	//CheckAndGetUndo(pKoma,n,n);
+
 	if (wParam & (MK_CONTROL | MK_SHIFT))
 	{
 		pKoma->SetSelectSubNumber(n);
@@ -438,6 +505,7 @@ void CGameMessageDoc::OnChangeMessageType(int n, int typ)
 	CMessageData* pMessage = (CMessageData*)(pKoma->GetObjectData(n));
 	if (pMessage == NULL) return;
 
+	CheckAndGetUndo(pKoma,n,n);
 
 	pMessage->SetMessageMode(typ);
 
@@ -471,6 +539,9 @@ void CGameMessageDoc::OnClickModeButton(int n)
 
 	CMessageData* pMessage = (CMessageData*)(pKoma->GetObjectData(n));
 	if (pMessage == NULL) return;
+
+	CheckAndGetUndo(pKoma,n,n);
+
 
 	BOOL nextKomaFlag = FALSE;
 	BOOL komaChangeFlag = FALSE;
@@ -1439,6 +1510,8 @@ void CGameMessageDoc::OnVoiceVolume(int n,int channel)
 
 	if (pMessage->CheckVoiceFlag(channel) == FALSE) return;
 
+	CheckAndGetUndo(pKoma,n,n);
+
 	int vol = 0;
 	if (pMessage->CheckVoiceFlag(channel))
 	{
@@ -1472,6 +1545,9 @@ void CGameMessageDoc::OnVoiceEffect(int n,int channel)
 
 	if (pMessage->CheckVoiceFlag(channel) == FALSE) return;
 	if (pMessage->CheckVoiceLock(channel)) return;
+
+
+	CheckAndGetUndo(pKoma,n,n);
 
 //	if (channel < 1)
 	if ((channel & 1) == 0)
@@ -1682,6 +1758,9 @@ void CGameMessageDoc::OnChangeVoiceFileName(int n,int channel)
 
 	if (newText == NULL) return;
 
+
+	CheckAndGetUndo(pKoma,n,n);
+
 	pMessage->SetVoiceFlag(TRUE,channel);
 	//pMessage->SetVoicePlayerNumber(0,channel);
 	pMessage->SetVoiceNumber(0,channel);
@@ -1722,6 +1801,7 @@ void CGameMessageDoc::OnChangeSeNumber(int n,int seChannel)
 	if (pMessage == NULL) return;
 
 
+	CheckAndGetUndo(pKoma,n,n);
 
 
 	m_testSeChannel = seChannel;
@@ -1772,6 +1852,8 @@ void CGameMessageDoc::OnDeleteVoice(int n,int channel)
 
 	if (pMessage->CheckVoiceLock(channel)) return;
 
+	CheckAndGetUndo(pKoma,n,n);
+
 	pMessage->SetVoiceFlag(FALSE,channel);
 
 	m_app->SetModify();
@@ -1790,6 +1872,8 @@ void CGameMessageDoc::OnVoiceStop(int n,int channel)
 	if (pMessage->CheckVoiceLock(channel)) return;
 
 	if (pMessage->CheckVoiceFlag(channel)) return;
+
+	CheckAndGetUndo(pKoma,n,n);
 
 	pMessage->ClearAllVoiceEffect(channel);
 	pMessage->SetVoiceStop(channel,TRUE);
@@ -1812,6 +1896,7 @@ void CGameMessageDoc::OnVoiceLoop(int n,int channel)
 
 	if (pMessage->CheckVoiceFlag(channel) == FALSE) return;
 
+	CheckAndGetUndo(pKoma,n,n);
 
 	BOOL f = pMessage->CheckVoiceLoop(channel);
 	if (f == FALSE)
@@ -1844,6 +1929,8 @@ void CGameMessageDoc::OnVoiceContinue(int n,int channel)
 
 	if (pMessage->CheckVoiceFlag(channel)) return;
 
+	CheckAndGetUndo(pKoma,n,n);
+
 	pMessage->ClearAllVoiceEffect(channel);
 	pMessage->SetVoiceContinue(channel,TRUE);
 //	pMessage->SetVoiceChannel(channel);
@@ -1864,6 +1951,8 @@ void CGameMessageDoc::OnDeleteSe(int n,int channel)
 	CMessageData* pMessage = (CMessageData*)(pKoma->GetObjectData(n));
 	if (pMessage == NULL) return;
 
+	CheckAndGetUndo(pKoma,n,n);
+
 	pMessage->SetSEFlag(FALSE,channel);
 
 	m_app->SetModify();
@@ -1882,6 +1971,8 @@ void CGameMessageDoc::OnSeStop(int n,int channel)
 	if (pMessage == NULL) return;
 
 	if (pMessage->CheckSEFlag(channel)) return;
+
+	CheckAndGetUndo(pKoma,n,n);
 
 	pMessage->SetSeStop(TRUE,channel);
 	pMessage->SetSeChannel(channel);
@@ -1903,6 +1994,8 @@ void CGameMessageDoc::OnSeVolume(int n,int channel)
 	if (pMessage == NULL) return;
 
 	if (pMessage->CheckSEFlag(channel) == FALSE) return;
+
+	CheckAndGetUndo(pKoma,n,n);
 
 	int vol = pMessage->GetSeVolume(channel);
 	int oldVolume = vol;
@@ -1934,6 +2027,8 @@ void CGameMessageDoc::OnSeLoop(int n,int channel)
 	CMessageData* pMessage = (CMessageData*)(pKoma->GetObjectData(n));
 	if (pMessage == NULL) return;
 
+	CheckAndGetUndo(pKoma,n,n);
+
 	BOOL f = pMessage->CheckSeLoop(channel);
 	if (f == FALSE)
 	{
@@ -1963,6 +2058,8 @@ void CGameMessageDoc::OnSeEffect(int n,int channel)
 	if (pMessage == NULL) return;
 
 	if (pMessage->CheckSEFlag(channel) == FALSE) return;
+
+	CheckAndGetUndo(pKoma,n,n);
 
 	if (channel < 4)
 	{
@@ -2161,6 +2258,8 @@ void CGameMessageDoc::OnChangeID(int n)
 
 	if (newText == NULL) return;
 
+	CheckAndGetUndo(pKoma,n,n);
+
 	int d = 0;
 	int ln = strlen(newText);
 	for (int i=0;i<ln;i++)
@@ -2207,6 +2306,8 @@ void CGameMessageDoc::OnLockVoice(int n,int channel)
 	BOOL flg = pMessage->GetVoiceFlag();
 	if (flg == FALSE) return;
 
+	CheckAndGetUndo(pKoma,n,n);
+
 	pMessage->SetVoiceLock(TRUE,channel);
 	m_app->SetModify();
 	m_app->MessageIsChanged();
@@ -2227,6 +2328,8 @@ void CGameMessageDoc::OnUnlockVoice(int n,int channel)
 
 	BOOL flg = pMessage->GetVoiceFlag();
 	if (flg == FALSE) return;
+
+	CheckAndGetUndo(pKoma,n,n);
 
 	pMessage->SetVoiceLock(FALSE,channel);
 	m_app->SetModify();
@@ -2277,6 +2380,7 @@ void CGameMessageDoc::OnChangeMessageColor(int n,int col,BOOL globalFlag)
 		if ((ed<0) || (ed>=kosuu)) return;
 	}
 
+	CheckAndGetUndo(pKoma,st,ed);
 
 	for (int i=st;i<=ed;i++)
 	{
@@ -2456,6 +2560,7 @@ void CGameMessageDoc::OnClickExpStatusButton(void)
 	if (pMessage == NULL) return;
 
 
+	CheckAndGetUndo(pKoma,n,n);
 
 	int d = pMessage->GetExpStatus();
 	if (m_input->GetNumber(d,&d))
@@ -2481,6 +2586,7 @@ void CGameMessageDoc::OnClickMessageEffectButton(void)
 	CMessageData* pMessage = (CMessageData*)(pKoma->GetObjectData(n));
 	if (pMessage == NULL) return;
 
+	CheckAndGetUndo(pKoma,n,n);
 
 
 	int d = pMessage->GetMessageEffect();
@@ -2507,6 +2613,7 @@ void CGameMessageDoc::OnClickMessageFontSizeTypeButton(void)
 	CMessageData* pMessage = (CMessageData*)(pKoma->GetObjectData(n));
 	if (pMessage == NULL) return;
 
+	CheckAndGetUndo(pKoma,n,n);
 
 
 	int d = pMessage->GetMessageFontSizeType();
@@ -2535,6 +2642,7 @@ void CGameMessageDoc::OnClickFaceButton(void)
 	if (pMessage == NULL) return;
 
 
+	CheckAndGetUndo(pKoma,n,n);
 
 	int d = pMessage->GetFace();
 	if (m_input->GetNumber(d,&d,"非表示 = -1 , 表情種類 = 1-n"))
@@ -2561,6 +2669,7 @@ void CGameMessageDoc::OnClickMustFaceButton(void)
 	CMessageData* pMessage = (CMessageData*)(pKoma->GetObjectData(n));
 	if (pMessage == NULL) return;
 
+	CheckAndGetUndo(pKoma,n,n);
 
 
 	int d = pMessage->GetMustFace();
@@ -2589,6 +2698,7 @@ void CGameMessageDoc::OnClickFixFaceButton(void)
 	if (pMessage == NULL) return;
 
 
+	CheckAndGetUndo(pKoma,n,n);
 
 	int d = pMessage->GetMustFace();
 	if (m_input->GetNumber(d,&d,"キャラ固定 = 1:左 2:右 3:フリー"))
@@ -2614,6 +2724,8 @@ void CGameMessageDoc::OnSeFade(int n,int channel)
 	if (pMessage == NULL) return;
 
 	if (pMessage->GetSeMode(channel) == 0) return;
+
+	CheckAndGetUndo(pKoma,n,n);
 
 	int d = pMessage->GetSEFadeInOut(channel);
 	if (d != 0)
@@ -2651,6 +2763,8 @@ void CGameMessageDoc::OnSeVolumeOnly(int n,int channel)
 	CMessageData* pMessage = (CMessageData*)(pKoma->GetObjectData(n));
 	if (pMessage == NULL) return;
 
+	CheckAndGetUndo(pKoma,n,n);
+
 	int vol = 0;
 	if (pMessage->GetSEVolumeOnly(channel))
 	{
@@ -2680,6 +2794,7 @@ void CGameMessageDoc::OnVoiceFade(int n,int channel)
 	if (pMessage == NULL) return;
 
 
+	CheckAndGetUndo(pKoma,n,n);
 
 
 
@@ -2726,6 +2841,7 @@ void CGameMessageDoc::OnClickMusicFadeButton(void)
 	CMessageData* pMessage = (CMessageData*)(pKoma->GetObjectData(n));
 	if (pMessage == NULL) return;
 
+	CheckAndGetUndo(pKoma,n,n);
 
 	int vol = pMessage->GetMusicVolume();
 	if (m_input->GetNumber(vol,&vol,"ボリューム 元にもどす=101"))
@@ -2778,6 +2894,8 @@ void CGameMessageDoc::OnVoiceVolumeOnly(int n,int channel)
 	CMessageData* pMessage = (CMessageData*)(pKoma->GetObjectData(n));
 	if (pMessage == NULL) return;
 
+	CheckAndGetUndo(pKoma,n,n);
+
 	int vol = 0;
 	if (pMessage->GetVoiceVolumeOnly(channel))
 	{
@@ -2817,6 +2935,8 @@ CCase* CGameMessageDoc::GetNowSelectCaseObject(void)
 
 void CGameMessageDoc::OnSelectNumber(int n)
 {
+	ClearUndo();
+
 	m_app->MessageIsChanged();
 //	m_app->ConteIsChanged();
 }
@@ -2866,6 +2986,98 @@ int CGameMessageDoc::GetMessageWidthGuideLine(void)
 	return m_app->GetMessageWidthGuideLine();
 }
 
+
+BOOL CGameMessageDoc::CheckExistUndo(void)
+{
+	CUndoMemoryObject* undo = m_app->GetUndoObject();
+	if (undo != NULL)
+	{
+		int undoType = undo->GetUndoType();
+		if (undoType == UNDO_TYPE_MESSAGE)
+		{
+			return TRUE;
+		}
+	}
+
+	return FALSE;
+}
+
+BOOL CGameMessageDoc::OnUndo(int n)
+{
+	BOOL f = FALSE;
+
+	if (m_app->GetUndoMode())
+	{
+		CKomaData* pKoma = m_app->GetNowSelectKoma();
+		if (pKoma == NULL) return FALSE;
+
+		CUndoMemoryObject* undo = m_app->GetUndoObject();
+		if (undo != NULL)
+		{
+			if (CheckExistUndo())
+			{
+				int dataType = undo->GetUndoDataType();
+				int startN = undo->GetUndoStartN();
+				int endN = undo->GetUndoEndN();
+				int numN = endN - startN + 1;
+				
+
+				if (dataType == UNDO_DATA_INSERT)
+				{
+					pKoma->DeleteObjectData(startN,numN);
+					undo->Clear();
+					f = TRUE;
+				}
+				else if (dataType == UNDO_DATA_DELETE)
+				{
+					for (int i=startN;i<=endN;i++)
+					{
+						pKoma->CreateObjectData(i);
+						CMessageData* pMessage = (CMessageData*)(pKoma->GetObjectData(i));
+						pMessage->Init();
+						pMessage->Load(NULL,undo);
+					}
+					undo->Clear();
+					f = TRUE;
+				}
+				else if (dataType == UNDO_DATA_MODIFY)
+				{
+					for (int i=startN;i<=endN;i++)
+					{
+						CMessageData* pMessage = (CMessageData*)(pKoma->GetObjectData(i));
+						pMessage->Init();
+						pMessage->Load(NULL,undo);
+					}
+					undo->Clear();
+					f = TRUE;
+				}
+			}
+		}
+	}
+
+
+
+
+	if (f)
+	{
+		((CGameMessageView*)m_view)->ReCalcuScrollPara();
+		m_app->SetModify();
+		m_app->MessageIsChanged();
+		m_view->MyInvalidateRect();
+	}
+
+
+	return f;
+}
+
+void CGameMessageDoc::ClearUndo(void)
+{
+	if (m_app->GetUndoMode())
+	{
+		CUndoMemoryObject* undo = m_app->GetUndoObject();
+		undo->Clear();
+	}
+}
 
 
 

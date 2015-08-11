@@ -327,6 +327,28 @@ int CMenuCheckControl::m_zahyoPrintTypeTable[]=
 	-1,
 };
 
+
+int CMenuCheckControl::m_undoEnableTable[]=
+{
+	ID_UNDO_ENABLE,0,1,
+	ID_UNDO_DISABLE,0,0,
+	-1
+};
+
+int CMenuCheckControl::m_undoKakuninTable[] = 
+{
+	ID_UNDO_KAKUNIN_ARI,0,1,
+	ID_UNDO_KAKUNIN_NASHI,0,0,
+	-1
+};
+
+int CMenuCheckControl::m_undoAfterTable[] = 
+{
+	ID_UNDO_AFTER_ARI,0,1,
+	ID_UNDO_AFTER_NASHI,0,0,
+	-1
+};
+
 CMenuCheckControl::CMenuCheckControl(CMyApplicationBase* app)
 {
 	m_app = app;
@@ -383,6 +405,10 @@ void CMenuCheckControl::CheckAllMenu(void)
 	SetTermFlagCheck();
 	SetBalloonCheck();
 	SetZahyoTypeCheck();
+	SetUndoModeCheck();
+	SetUndoKakuninCheck();
+	SetUndoAfterCheck();
+
 }
 
 
@@ -692,6 +718,27 @@ void CMenuCheckControl::SetZahyoTypeCheck(void)
 	int checkData[1];
 	checkData[0] = m_app->GetConfig("zahyoPrintType");
 	SetMenuCheckRoutine(m_zahyoPrintTypeTable,checkData);
+}
+
+void CMenuCheckControl::SetUndoModeCheck(void)
+{
+	int checkData[1];
+	checkData[0] = m_app->GetConfig("undoEnable");
+	SetMenuCheckRoutine(m_undoEnableTable,checkData);
+}
+
+void CMenuCheckControl::SetUndoKakuninCheck(void)
+{
+	int checkData[1];
+	checkData[0] = m_app->GetConfig("undoKakuninEnable");
+	SetMenuCheckRoutine(m_undoKakuninTable,checkData);
+}
+
+void CMenuCheckControl::SetUndoAfterCheck(void)
+{
+	int checkData[1];
+	checkData[0] = m_app->GetConfig("undoAfterEnable");
+	SetMenuCheckRoutine(m_undoAfterTable,checkData);
 }
 
 

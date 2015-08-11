@@ -53,6 +53,9 @@ public:
 	void SetTermFlagCheck(void);
 	void SetBalloonCheck(void);
 	void SetZahyoTypeCheck(void);
+	void SetUndoModeCheck(void);
+	void SetUndoKakuninCheck(void);
+	void SetUndoAfterCheck(void);
 
 	static int m_buildMenuTable[];
 	static int m_deleteMenuTable[];
@@ -89,6 +92,9 @@ public:
 	static int m_termFlagTable[];
 	static int m_balloonFlagTable[];
 	static int m_zahyoPrintTypeTable[];
+	static int m_undoEnableTable[];
+	static int m_undoKakuninTable[];
+	static int m_undoAfterTable[];
 
 private:
 	CMyApplicationBase* m_app;

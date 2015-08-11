@@ -25,7 +25,7 @@ public:
 	void OnOpenFilm(int n = -1);
 	void OnSaveFilm(int n = -1);
 
-	void OnDelete(int n = -1);
+	void OnDelete(int n = -1,BOOL ignoreUndo = FALSE);
 //	void OnUndo(int n = -1);
 	void OnSearch(int n = -1);
 
@@ -77,7 +77,7 @@ public:
 	void OnSpaceKey(void);
 
 	void OnCut(int n = -1);
-	void OnCopy(int n = -1);
+	void OnCopy(int n = -1,BOOL ignoreUndo = FALSE);
 	void OnPaste(int n = -1);
 
 	void OnRenameLayer(int n = -1);
@@ -86,6 +86,12 @@ public:
 
 	void ExchangeFilm(int n1,int n2);
 	void MoveAndInsertFilm(int from,int to);
+
+	void CheckAndGetUndo(CFilmCaseData* pFilmCase,int start,int end);
+	BOOL CheckExistUndo(void);
+	BOOL OnUndo(int n = -1);
+	void ClearUndo(void);
+
 
 private:
 //	CFilmData** m_filmDataArray;

@@ -136,6 +136,13 @@ public:
 	int GetMusicFadeVolume(int n = -1);
 	int GetMessageEffect(int n = -1);
 
+	void CheckAndGetUndo(CKomaData* pKoma,int start,int end);
+
+	BOOL CheckExistUndo(void);
+	BOOL OnUndo(int n = -1);
+	void ClearUndo(void);
+
+
 private:
 	HBITMAP m_hBitmapMessage;
 

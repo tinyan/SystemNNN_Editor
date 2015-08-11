@@ -97,6 +97,8 @@ void CEffectDoc::ClickSelButton(int n)
 	if (n>=kosuuMax) return;
 	if (n<kosuuMin) return;
 
+	m_app->CheckAndGetKomaUndo();
+
 	if (n>=kosuu)
 	{
 		//new kosuu?
@@ -142,6 +144,7 @@ void CEffectDoc::ClickDeltaButton0(int delta,BOOL wheelFlag)
 	int n = pKoma->GetSelectParam(layer);
 	if ((n<0) || (n>=kosuu)) return;
 
+	m_app->CheckAndGetKomaUndo();
 
 	if ((wheelFlag == FALSE) && (delta == 0))
 	{
@@ -219,6 +222,8 @@ void CEffectDoc::ClickDeltaButton(int n, int delta,BOOL wheelFlag)
 {
 	if ((n<0) || (n>255)) return;
 
+	m_app->CheckAndGetKomaUndo();
+
 	CKomaData* pKoma = GetNowSelectKoma();
 	if (pKoma == NULL) return;
 //	int layer = GetNowSelectLayer();
@@ -273,6 +278,8 @@ void CEffectDoc::ChangeSelectParam(int selectParam)
 	int eff = pKoma->GetEffect(layer);
 	if (eff == -1) return;
 
+	m_app->CheckAndGetKomaUndo();
+
 	int kosuu = pKoma->GetEffectParaKosuu(layer);
 	
 	if ((selectParam >= 0) && (selectParam < kosuu))
@@ -287,6 +294,8 @@ void CEffectDoc::ChangeSelectParam(int selectParam)
 
 void CEffectDoc::OnLeftKey(void)
 {
+	m_app->CheckAndGetKomaUndo();
+
 	int delta = -1;
 	if (GetAsyncKeyState(VK_CONTROL)) delta *= 10;
 	if (GetAsyncKeyState(VK_SHIFT)) delta *= 100;
@@ -295,6 +304,8 @@ void CEffectDoc::OnLeftKey(void)
 
 void CEffectDoc::OnRightKey(void)
 {
+	m_app->CheckAndGetKomaUndo();
+
 	int delta = 1;
 	if (GetAsyncKeyState(VK_CONTROL)) delta *= 10;
 	if (GetAsyncKeyState(VK_SHIFT)) delta *= 100;
@@ -313,6 +324,8 @@ void CEffectDoc::OnDownKey(void)
 
 void CEffectDoc::OnUpDownKey(int delta)
 {
+	m_app->CheckAndGetKomaUndo();
+
 	CKomaData* pKoma = GetNowSelectKoma();
 	if (pKoma == NULL) return;
 

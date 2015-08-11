@@ -26,6 +26,9 @@
 #include "komadata.h"
 #include "filmdata.h"
 
+#include "undoMemoryObject.h"
+
+
 #include "case.h"
 #include "scriptdata.h"
 
@@ -169,17 +172,20 @@ int* CFilmData::GetMiniPic(void)
 
 
 
-BOOL CFilmData::Load(FILE* file)
+BOOL CFilmData::Load(FILE* file,CUndoMemoryObject* memory)
 {
 //	int hhh = 0;
 //	hhh++;
 
 	char head[16];
-	fread(head,sizeof(char),16,file);
-	fread(m_myname,sizeof(char),64,file);
+//	fread(head,sizeof(char),16,file);
+//	fread(m_myname,sizeof(char),64,file);
+	CaseRead(head,sizeof(char),16,file,memory);
+	CaseRead(m_myname,sizeof(char),64,file,memory);
 
 	int tmp[16];
-	fread(tmp,sizeof(int),16,file);
+//	fread(tmp,sizeof(int),16,file);
+	CaseRead(tmp,sizeof(int),16,file,memory);
 	m_clearEffectFlag = tmp[1];
 	m_miniPicFlag = tmp[2];
 	m_filmColor = tmp[3];
@@ -192,11 +198,12 @@ BOOL CFilmData::Load(FILE* file)
 
 	if (m_miniPicFlag)
 	{
-		fread(m_miniPic,sizeof(int),32*24,file);
+//		fread(m_miniPic,sizeof(int),32*24,file);
+		CaseRead(m_miniPic,sizeof(int),32*24,file,memory);
 	}
 
 //	SetModifyFlag(FALSE);
-	LoadArrayObject(tmp[0],file);
+	LoadArrayObject(tmp[0],file,memory);
 	if (m_miniPicFlag)
 	{
 		SetMiniPic();
@@ -208,10 +215,12 @@ BOOL CFilmData::Load(FILE* file)
 
 
 
-BOOL CFilmData::Save(FILE* file)
+BOOL CFilmData::Save(FILE* file,CUndoMemoryObject* memory)
 {
-	fwrite(m_fileHeaderName,sizeof(char),16,file);
-	fwrite(m_myname,sizeof(char),64,file);
+//	fwrite(m_fileHeaderName,sizeof(char),16,file);
+//	fwrite(m_myname,sizeof(char),64,file);
+	CaseWrite(m_fileHeaderName,sizeof(char),16,file,memory);
+	CaseWrite(m_myname,sizeof(char),64,file,memory);
 
 	int tmp[16];
 	for (int i=0;i<16;i++) tmp[i] = 0;
@@ -236,11 +245,13 @@ BOOL CFilmData::Save(FILE* file)
 	}
 	m_miniPicFlag = 1;
 
-	fwrite(tmp,sizeof(int),16,file);
+//	fwrite(tmp,sizeof(int),16,file);
+	CaseWrite(tmp,sizeof(int),16,file,memory);
 
-	fwrite(m_miniPic,sizeof(int),32*24,file);
+//	fwrite(m_miniPic,sizeof(int),32*24,file);
+	CaseWrite(m_miniPic,sizeof(int),32*24,file,memory);
 
-	SaveArrayObject(file);
+	SaveArrayObject(file,memory);
 
 //	SetModifyFlag(FALSE);
 

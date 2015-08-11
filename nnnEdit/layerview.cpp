@@ -719,8 +719,10 @@ LRESULT CLayerView::ViewWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
 //		if (pKoma == NULL)
 		if (pDoc->CheckKomaSelected() == FALSE)
 		{
+			int layerMax = CKomaData::m_layerMax;
+
 			HGDIOBJ old = SelectObject(hdc,GetStockObject(BLACK_BRUSH));
-			PatBlt(hdc,0,24,32*2+24*3,24*16,PATCOPY);
+			PatBlt(hdc,0,24,32*2+24*3,24*layerMax,PATCOPY);
 			SelectObject(hdc,old);
 			EndPaint(hWnd,&ps);
 			return 0;

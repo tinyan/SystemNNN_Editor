@@ -106,6 +106,11 @@ public:
 	void OnSpaceKey(void);
 	void OnEscapeKey(void);
 
+	void CheckAndGetUndo(CFilmData* pFilm,int start,int end);
+	BOOL CheckExistUndo(void);
+	BOOL OnUndo(int n = -1);
+	void ClearUndo(void);
+
 private:
 
 	void AddMiniPicBuffer(int n, int place = -1);

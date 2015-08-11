@@ -6,6 +6,8 @@
 #define __TINYAN_NNNEDIT_MESSAGEDATA__
 
 class CCase;
+class CUndoMemoryObject;
+
 class CMessageData : public CCase
 {
 public:
@@ -162,8 +164,8 @@ public:
 //åpè≥
 	LPSTR GetMyName(void);
 	void SetMyName(LPSTR name);
-	BOOL Load(FILE* file);
-	BOOL Save(FILE* file);
+	BOOL Load(FILE* file,CUndoMemoryObject* memory = NULL);
+	BOOL Save(FILE* file,CUndoMemoryObject* memory = NULL);
 	CCase* NewObject(void);
 
 	void Init(LPVOID para = NULL);

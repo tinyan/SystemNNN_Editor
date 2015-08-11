@@ -24,6 +24,7 @@
 
 #include "myinputdialog.h"
 
+#include "undoMemoryObject.h"
 
 //#include "configparalist.h"
 
@@ -99,6 +100,13 @@ void CFilmCaseDoc::OnNewFilm(int n)
 		if ((k<0) || (k>=kosuu)) k = kosuu;
 	}
 
+	if (m_app->GetUndoMode())
+	{
+		CUndoMemoryObject* undo = m_app->GetUndoObject();
+		undo->Clear(UNDO_TYPE_FILM,UNDO_DATA_INSERT,k,k);
+	}
+
+
 	m_filmCaseData->CreateObjectData(k);
 
 	CFilmData* pFilm = (CFilmData*)(m_filmCaseData->GetObjectData(k));
@@ -118,9 +126,17 @@ void CFilmCaseDoc::OnOpenFilm(int n)
 	int kosuu = m_filmCaseData->GetObjectKosuu();
 	if ((n<0) || (n>kosuu)) return;
 
+
 	FILE* file = m_file->OpenLoad("nnndir\\film\\*.flm");
 	if (file != NULL)
 	{
+
+		if (m_app->GetUndoMode())
+		{
+			CUndoMemoryObject* undo = m_app->GetUndoObject();
+			undo->Clear(UNDO_TYPE_FILM,UNDO_DATA_INSERT,n,n);
+		}
+
 		if (m_filmCaseData->CreateObjectData(n))
 		{
 			CFilmData* pFilm = (CFilmData*)(m_filmCaseData->GetObjectData(n));
@@ -172,6 +188,7 @@ void CFilmCaseDoc::OnSaveFilm(int n)
 	int kosuu = m_filmCaseData->GetObjectKosuu();
 	if ((n<0) || (n>=kosuu)) return;
 
+	ClearUndo();
 
 	FILE* file = m_file->OpenSave("nnndir\\film\\*.flm");
 	if (file != NULL)
@@ -191,12 +208,24 @@ void CFilmCaseDoc::OnSaveFilm(int n)
 
 void CFilmCaseDoc::OnCut(int n)
 {
-	OnCopy(n);
-	OnDelete(n);
+	if (m_app->GetUndoMode())
+	{
+		int kosuu = GetFilmKosuu();
+		if (n == -1) n = GetNowSelectNumber();
+		if ((n<0) || (n>=kosuu)) return;
+	
+		CUndoMemoryObject* undo = m_app->GetUndoObject();
+		undo->Clear(UNDO_TYPE_FILM,UNDO_DATA_DELETE,n,n);
+		CFilmData* pFilm = (CFilmData*)(m_filmCaseData->GetObjectData(n));
+		pFilm->Save(NULL,undo);
+	}
+
+	OnCopy(n,TRUE);
+	OnDelete(n,TRUE);
 }
 
 
-void CFilmCaseDoc::OnCopy(int n)
+void CFilmCaseDoc::OnCopy(int n,BOOL ignoreUndo)
 {
 	int kosuu = GetFilmKosuu();
 	if (n == -1) n = GetNowSelectNumber();
@@ -207,6 +236,7 @@ void CFilmCaseDoc::OnCopy(int n)
 	FILE* file = CMyFile::Open("nnndir\\tmp\\film.flm","wb");
 	if (file != NULL)
 	{
+
 		CFilmData* pFilm = (CFilmData*)(m_filmCaseData->GetObjectData(n));
 		if (pFilm != NULL)
 		{
@@ -239,6 +269,16 @@ void CFilmCaseDoc::OnPaste(int n)
 
 	FILE* file = CMyFile::Open("nnndir\\tmp\\film.flm","rb");
 	if (file == NULL) return;
+
+
+	if (m_app->GetUndoMode())
+	{
+		CUndoMemoryObject* undo = m_app->GetUndoObject();
+		undo->Clear(UNDO_TYPE_FILM,UNDO_DATA_INSERT,n,n);
+	}
+
+
+
 
 	m_filmCaseData->CreateObjectData(n);
 
@@ -286,7 +326,7 @@ void CFilmCaseDoc::OnPaste(int n)
 
 
 
-void CFilmCaseDoc::OnDelete(int n)
+void CFilmCaseDoc::OnDelete(int n,BOOL ignoreUndo)
 {
 	n = m_filmCaseData->GetNowSelectNumber();
 	int kosuu = m_filmCaseData->GetObjectKosuu();
@@ -298,6 +338,19 @@ void CFilmCaseDoc::OnDelete(int n)
 		int rt = MessageBox(m_frameHWND,"本当に削除しますか","削除の確認",MB_YESNO | MB_ICONQUESTION | MB_DEFBUTTON2);
 		if (rt != IDYES) return;
 	}
+
+	if (!ignoreUndo)
+	{
+		if (m_app->GetUndoMode())
+		{
+			CUndoMemoryObject* undo = m_app->GetUndoObject();
+			undo->Clear(UNDO_TYPE_FILM,UNDO_DATA_DELETE,n,n);
+			CFilmData* pFilm = (CFilmData*)(m_filmCaseData->GetObjectData(n));
+			pFilm->Save(NULL,undo);
+		}
+	}
+
+
 
 //varから名前の削除
 	CFilmData* film = (CFilmData*)m_filmCaseData->GetObjectData(n);
@@ -358,6 +411,8 @@ void CFilmCaseDoc::OnChangeColor(int n,int col)
 	CFilmData* pFilm = (CFilmData*)(m_filmCaseData->GetObjectData(n));
 	if (pFilm == NULL) return;
 
+	CheckAndGetUndo(m_filmCaseData,n,n);
+
 	pFilm->SetFilmColor(col);
 	m_app->SetModify();
 	m_app->FilmIsChanged();
@@ -414,6 +469,8 @@ void CFilmCaseDoc::OnChangeName(int n)
 ///			m_app->DeleteFilmVarName(pFilm->GetMyName());
 ///			m_app->AddFilmVarName(newName);
 
+			CheckAndGetUndo(m_filmCaseData,n,n);
+
 			pFilm->SetMyName(newName);
 		}
 		else
@@ -453,6 +510,8 @@ void CFilmCaseDoc::OnSelectFilm(int n)
 	int old = m_filmCaseData->GetNowSelectNumber();
 	if (n == old) return;
 
+	ClearUndo();
+
 	m_filmCaseData->SetSelectNumber(n);
 	m_app->FilmIsChanged();
 }
@@ -461,6 +520,13 @@ void CFilmCaseDoc::OnNoClearEffect(void)
 {
 	CFilmData* pFilm = m_app->GetNowSelectFilm();
 	if (pFilm == NULL) return;
+
+	int n = m_filmCaseData->GetNowSelectNumber();
+	int kosuu = m_filmCaseData->GetObjectKosuu();
+	if ((n>=0) || (n<kosuu))
+	{
+		CheckAndGetUndo(m_filmCaseData,n,n);
+	}
 
 	BOOL no = pFilm->GetNoClearEffect();
 	if (no)
@@ -488,6 +554,8 @@ void CFilmCaseDoc::OnSpecialType(int n)
 	{
 		if (newData != typeTime)
 		{
+			CheckAndGetUndo(m_filmCaseData,n,n);
+
 			typeTime = newData;
 			pFilm->SetFilmSpecialTypeTime(typeTime);
 
@@ -508,6 +576,8 @@ void CFilmCaseDoc::OnConfigMask(int n)
 	{
 		if (newData != configMask)
 		{
+			CheckAndGetUndo(m_filmCaseData,n,n);
+
 			pFilm->SetConfigMask(newData);
 	
 			m_app->SetModify();
@@ -520,6 +590,8 @@ void CFilmCaseDoc::OnTaikenLevel(int n)
 {
 	CFilmData* pFilm = m_app->GetNowSelectFilm();
 	if (pFilm == NULL) return;
+
+	CheckAndGetUndo(m_filmCaseData,n,n);
 
 	int taikenLevel = pFilm->GetTaikenLevel();
 	taikenLevel++;
@@ -534,6 +606,8 @@ void CFilmCaseDoc::OnCutin(int n)
 	CFilmData* pFilm = m_app->GetNowSelectFilm();
 	if (pFilm == NULL) return;
 
+	CheckAndGetUndo(m_filmCaseData,n,n);
+
 	int cutinFlag = pFilm->GetCutinFlag();
 	cutinFlag++;
 	cutinFlag %= 2;
@@ -546,6 +620,8 @@ void CFilmCaseDoc::OnSkipFilm(int n)
 {
 	CFilmData* pFilm = m_app->GetNowSelectFilm();
 	if (pFilm == NULL) return;
+
+	CheckAndGetUndo(m_filmCaseData,n,n);
 
 	int skipFilmFlag = pFilm->GetSkipToFilmEndEnable();
 	skipFilmFlag++;
@@ -568,6 +644,8 @@ void CFilmCaseDoc::OnRenameLayer(int n)
 	{
 		if (newData != renameLayer)
 		{
+			CheckAndGetUndo(m_filmCaseData,n,n);
+
 			renameLayer = newData;
 			pFilm->SetRenameLayer(renameLayer);
 
@@ -585,6 +663,7 @@ int CFilmCaseDoc::GetNowSelectNumber(void)
 
 void CFilmCaseDoc::SetSelectNumber(int n)
 {
+	ClearUndo();
 	m_filmCaseData->SetSelectNumber(n);
 }
 
@@ -755,6 +834,7 @@ CCase* CFilmCaseDoc::GetNowSelectCaseObject(void)
 
 void CFilmCaseDoc::OnSelectNumber(int n)
 {
+	ClearUndo();
 	m_app->FilmIsChanged();
 }
 
@@ -795,6 +875,8 @@ void CFilmCaseDoc::ExchangeFilm(int n1,int n2)
 {
 	if (n1 == n2) return;
 
+	ClearUndo();
+
 	int kosuu = GetFilmKosuu();
 	if (n2>=kosuu)
 	{
@@ -821,6 +903,117 @@ void CFilmCaseDoc::MoveAndInsertFilm(int from,int to)
 	m_app->FilmIsChanged();
 	m_app->SetModify();
 	UpdateMyWindow();
+}
+
+BOOL CFilmCaseDoc::CheckExistUndo(void)
+{
+	CUndoMemoryObject* undo = m_app->GetUndoObject();
+	if (undo != NULL)
+	{
+		int undoType = undo->GetUndoType();
+		if (undoType == UNDO_TYPE_FILM)
+		{
+			return TRUE;
+		}
+	}
+
+	return FALSE;
+}
+
+BOOL CFilmCaseDoc::OnUndo(int n)
+{
+	BOOL f = FALSE;
+
+	if (m_app->GetUndoMode())
+	{
+		CFilmCaseData* pFilmCase = m_app->GetFilmCaseData();
+		if (pFilmCase == NULL) return FALSE;
+
+		CUndoMemoryObject* undo = m_app->GetUndoObject();
+		if (undo != NULL)
+		{
+			if (CheckExistUndo())
+			{
+				int dataType = undo->GetUndoDataType();
+				int startN = undo->GetUndoStartN();
+				int endN = undo->GetUndoEndN();
+				int numN = endN - startN + 1;
+				
+
+				if (dataType == UNDO_DATA_INSERT)
+				{
+					pFilmCase->DeleteObjectData(startN,numN);
+					undo->Clear();
+					f = TRUE;
+				}
+				else if (dataType == UNDO_DATA_DELETE)
+				{
+					for (int i=startN;i<=endN;i++)
+					{
+						pFilmCase->CreateObjectData(i);
+						CFilmData* pFilm = (CFilmData*)(pFilmCase->GetObjectData(i));
+						pFilm->Init();
+						pFilm->Load(NULL,undo);
+					}
+					undo->Clear();
+					f = TRUE;
+				}
+				else if (dataType == UNDO_DATA_MODIFY)
+				{
+					for (int i=startN;i<=endN;i++)
+					{
+						CFilmData* pFilm = (CFilmData*)(pFilmCase->GetObjectData(i));
+						pFilm->Init();
+						pFilm->Load(NULL,undo);
+					}
+					undo->Clear();
+					f = TRUE;
+				}
+			}
+		}
+	}
+
+
+
+
+	if (f)
+	{
+		((CFilmCaseView*)m_view)->ReCalcuScrollPara();
+		m_app->SetModify();
+		m_app->FilmIsChanged();
+		m_view->MyInvalidateRect();
+	}
+
+
+	return f;
+}
+
+void CFilmCaseDoc::CheckAndGetUndo(CFilmCaseData* pFilmCase,int start,int end)
+{
+	if (pFilmCase == NULL) return;
+
+	if (m_app->GetUndoMode())
+	{
+		CUndoMemoryObject* undo = m_app->GetUndoObject();
+		undo->Clear(UNDO_TYPE_FILM,UNDO_DATA_MODIFY,start,end);
+		for (int i=start;i<=end;i++)
+		{
+			CFilmData* pFilm = (CFilmData*)(pFilmCase->GetObjectData(i));
+			if (pFilm != NULL)
+			{
+				pFilm->Save(NULL,undo);
+			}
+		}
+	}
+}
+
+void CFilmCaseDoc::ClearUndo(void)
+{
+	if (m_app->GetUndoMode())
+	{
+		CUndoMemoryObject* undo = m_app->GetUndoObject();
+		undo->Clear();
+	}
 }
 
 

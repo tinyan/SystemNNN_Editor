@@ -57,6 +57,12 @@ public:
 	void OnEnterKey(void);
 	void OnInsertKey(void);
 	void OnSpaceKey(void);
+
+	void CheckAndGetUndo(CStoryBookData* pStoryBook,int start,int end);
+	BOOL CheckExistUndo(void);
+	BOOL OnUndo(int n = -1);
+	void ClearUndo(void);
+
 private:
 //	int m_storyKosuu;
 //	int m_storyKosuuMax;

@@ -250,6 +250,10 @@ CMyConfig::MYCONFIGVALUETYPE CMyConfig::m_initDataValue[]=
 	{"zahyoPrintType",0},
 	{"layerMax",32},
 
+	{"undoEnable",0},
+	{"undoKakuninEnable",1},
+	{"undoAfterEnable",1},
+
 
 	{"",0},
 };

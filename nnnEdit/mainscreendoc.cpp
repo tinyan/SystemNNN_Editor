@@ -442,6 +442,8 @@ int CMainScreenDoc::GetEffectParamDescPrintMode(void)
 
 void CMainScreenDoc::OnClickEffectMenu(int n)
 {
+	m_app->CheckAndGetKomaUndo();
+
 	if (n == 6)
 	{
 		m_effectMenuPrintMode = 1-m_effectMenuPrintMode;
@@ -550,6 +552,8 @@ int CMainScreenDoc::GetEditFrameCount(void)
 
 void CMainScreenDoc::OnClickEffectType(void)
 {
+	m_app->CheckAndGetKomaUndo();
+
 	int d = GetEditFrameType();
 	m_editFrameType = 1-d;
 	m_app->SetConfig("editFrameType",m_editFrameType);
@@ -561,6 +565,8 @@ void CMainScreenDoc::OnClickEffectType(void)
 
 void CMainScreenDoc::OnClickEffectGaze(int d)
 {
+	m_app->CheckAndGetKomaUndo();
+
 	if (d<0) d = 0;
 	int type = GetEditFrameType();
 	if (type != 0)

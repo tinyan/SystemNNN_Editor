@@ -24,6 +24,7 @@
 #include "myfileopen.h"
 #include "myinputdialog.h"
 
+#include "undoMemoryObject.h"
 //#include "configparalist.h"
 
 
@@ -151,6 +152,14 @@ void CStoryBookDoc::OnNewStory(int n)
 		}
 	}
 
+	if (m_app->GetUndoMode())
+	{
+		CUndoMemoryObject* undo = m_app->GetUndoObject();
+		undo->Clear(UNDO_TYPE_STORY,UNDO_DATA_INSERT,k,k);
+	}
+
+
+
 
 	m_storyBookData->CreateObjectData(k);
 	
@@ -184,11 +193,18 @@ void CStoryBookDoc::OnOpenStory(int n)
 	}
 
 
+	if (m_app->GetUndoMode())
+	{
+		CUndoMemoryObject* undo = m_app->GetUndoObject();
+		undo->Clear(UNDO_TYPE_STORY,UNDO_DATA_INSERT,kk,kk);
+	}
 
 
 	FILE* file = m_file->OpenLoad("nnndir\\story\\*.sty");
 	if (file != NULL)
 	{
+
+
 		if (m_storyBookData->CreateObjectData(n))
 		{
 			CStoryData* pStory = (CStoryData*)(m_storyBookData->GetObjectData(n));
@@ -238,6 +254,7 @@ void CStoryBookDoc::OnSaveStory(int n)
 	int kosuu = m_storyBookData->GetObjectKosuu();
 	if ((n<0) || (n>=kosuu)) return;
 
+	ClearUndo();
 
 	FILE* file = m_file->OpenSave("nnndir\\story\\*.sty");
 	if (file != NULL)
@@ -276,6 +293,18 @@ void CStoryBookDoc::OnDelete(int n)
 		int rt = MessageBox(m_frameHWND,"–{“–‚Éíœ‚µ‚Ü‚·‚©","íœ‚ÌŠm”F",MB_YESNO | MB_ICONQUESTION | MB_DEFBUTTON2);
 		if (rt != IDYES) return;
 	}
+
+
+	if (m_app->GetUndoMode())
+	{
+		CUndoMemoryObject* undo = m_app->GetUndoObject();
+		undo->Clear(UNDO_TYPE_STORY,UNDO_DATA_DELETE,n,n);
+		pStory->Save(NULL,undo);
+	}
+
+
+
+
 
 	m_storyBookData->DeleteObjectData(n);
 
@@ -339,6 +368,8 @@ void CStoryBookDoc::OnChangeName(int n)
 		return;
 	}
 
+	CheckAndGetUndo(m_storyBookData,n,n);
+
 
 	LPSTR newName = m_inputDialog->GetText(pStory->GetMyName());
 
@@ -393,6 +424,7 @@ void CStoryBookDoc::OnChangeName(int n)
 
 void CStoryBookDoc::OnSelectStory(int n)
 {
+	ClearUndo();
 	m_storyBookData->SetSelectNumber(n);
 	m_app->StoryIsChanged();
 
@@ -400,6 +432,7 @@ void CStoryBookDoc::OnSelectStory(int n)
 
 void CStoryBookDoc::OnSelectNumber(int n)
 {
+	ClearUndo();
 	m_app->StoryIsChanged();
 }
 
@@ -551,6 +584,119 @@ void CStoryBookDoc::OnInsertKey(void)
 void CStoryBookDoc::OnSpaceKey(void)
 {
 	m_app->ChangeWindowIfCan(STORY_WINDOW);
+}
+
+
+
+BOOL CStoryBookDoc::CheckExistUndo(void)
+{
+	CUndoMemoryObject* undo = m_app->GetUndoObject();
+	if (undo != NULL)
+	{
+		int undoType = undo->GetUndoType();
+		if (undoType == UNDO_TYPE_STORY)
+		{
+			return TRUE;
+		}
+	}
+
+	return FALSE;
+}
+
+BOOL CStoryBookDoc::OnUndo(int n)
+{
+	BOOL f = FALSE;
+
+	if (m_app->GetUndoMode())
+	{
+		CStoryBookData* pStoryBook = m_app->GetStoryBookData();
+		if (pStoryBook == NULL) return FALSE;
+
+		CUndoMemoryObject* undo = m_app->GetUndoObject();
+		if (undo != NULL)
+		{
+			if (CheckExistUndo())
+			{
+				int dataType = undo->GetUndoDataType();
+				int startN = undo->GetUndoStartN();
+				int endN = undo->GetUndoEndN();
+				int numN = endN - startN + 1;
+				
+
+				if (dataType == UNDO_DATA_INSERT)
+				{
+					pStoryBook->DeleteObjectData(startN,numN);
+					undo->Clear();
+					f = TRUE;
+				}
+				else if (dataType == UNDO_DATA_DELETE)
+				{
+					for (int i=startN;i<=endN;i++)
+					{
+						pStoryBook->CreateObjectData(i);
+						CStoryData* pStory = (CStoryData*)(pStoryBook->GetObjectData(i));
+						pStory->Init();
+						pStory->Load(NULL,undo);
+					}
+					undo->Clear();
+					f = TRUE;
+				}
+				else if (dataType == UNDO_DATA_MODIFY)
+				{
+					for (int i=startN;i<=endN;i++)
+					{
+						CStoryData* pStory = (CStoryData*)(pStoryBook->GetObjectData(i));
+						pStory->Init();
+						pStory->Load(NULL,undo);
+					}
+					undo->Clear();
+					f = TRUE;
+				}
+			}
+		}
+	}
+
+
+
+
+	if (f)
+	{
+		((CStoryBookView*)m_view)->ReCalcuScrollPara();
+		m_app->SetModify();
+		m_app->StoryIsChanged();
+		m_view->MyInvalidateRect();
+	}
+
+
+	return f;
+}
+
+void CStoryBookDoc::CheckAndGetUndo(CStoryBookData* pStoryBook,int start,int end)
+{
+	if (pStoryBook == NULL) return;
+
+	if (m_app->GetUndoMode())
+	{
+		CUndoMemoryObject* undo = m_app->GetUndoObject();
+		undo->Clear(UNDO_TYPE_STORY,UNDO_DATA_MODIFY,start,end);
+		for (int i=start;i<=end;i++)
+		{
+			CStoryData* pStory = (CStoryData*)(pStoryBook->GetObjectData(i));
+			if (pStory != NULL)
+			{
+				pStory->Save(NULL,undo);
+			}
+		}
+	}
+}
+
+void CStoryBookDoc::ClearUndo(void)
+{
+	if (m_app->GetUndoMode())
+	{
+		CUndoMemoryObject* undo = m_app->GetUndoObject();
+		undo->Clear();
+	}
 }
 
 /*_*/

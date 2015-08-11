@@ -272,9 +272,9 @@ LRESULT CALLBACK CMyView::staticViewWndProc(HWND hWnd, UINT message, WPARAM wPar
 				//F:6 S:19 C:3 X:24 V:22
 				if ((wParam >=1) && (wParam <= 26))
 				{
-		char mes[256];
-		sprintf_s(mes,"[ key=%d]",wParam);
-		OutputDebugString(mes);
+	//	char mes[256];
+	//	sprintf_s(mes,"[ key=%d]",wParam);
+	//	OutputDebugString(mes);
 
 					if (pView->OnControlKey(wParam,lParam) == FALSE)
 					{

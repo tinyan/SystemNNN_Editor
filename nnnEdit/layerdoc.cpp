@@ -39,6 +39,8 @@
 #include "myinputdialog.h"
 #include "selectdialog.h"
 
+#include "undoMemoryObject.h"
+
 #include "..\..\systemNNN\nyanLib\include\picture.h"
 
 #define NNNEDITCOMMAND_DELETEPIC 0
@@ -122,6 +124,8 @@ void CLayerDoc::OnClickPictureButton(int layer)
 	CKomaData* pKoma = m_app->GetNowSelectKoma();
 	if (pKoma == NULL) return;
 
+	CheckAndGetUndo();
+
 	int selectPictureLayer = pKoma->GetSelectLayer();
 
 	if (selectPictureLayer == layer)
@@ -146,6 +150,8 @@ void CLayerDoc::OnClickEffectButton(int layer)
 {
 	CKomaData* pKoma = m_app->GetNowSelectKoma();
 	if (pKoma == NULL) return;
+
+	CheckAndGetUndo();
 
 	int selectEffectLayer = pKoma->GetSelectEffectLayer();
 
@@ -208,6 +214,8 @@ void CLayerDoc::ClickWriteButton(int layer)
 
 void CLayerDoc::ClickEyeButton(int layer)
 {
+	CheckAndGetUndo();
+
 //	if (GetWriteStatus(layer) == 0)
 	if (1)
 	{
@@ -271,6 +279,8 @@ void CLayerDoc::PictureToMini(int n,int* src, int x, int y)
 
 void CLayerDoc::DeletePic(int layer)
 {
+	CheckAndGetUndo();
+
 	CFilmData* pFilm = GetNowSelectFilm();
 	if (pFilm == NULL) return;
 
@@ -306,6 +316,8 @@ void CLayerDoc::ChangePictureName(int layer, LPSTR name, CKomaData* pKoma,BOOL s
 {
 	if (pKoma == NULL) pKoma = GetNowSelectKoma();
 	if (pKoma == NULL) return;
+
+	CheckAndGetUndo();
 
 	pKoma->SetPicFileName(layer,name,sameZahyoFlag);
 
@@ -449,6 +461,9 @@ void CLayerDoc::ChangeEffect(int layer,int eff)
 	CKomaData* pKoma = GetNowSelectKoma();
 	if (pKoma == NULL) return;
 
+	CheckAndGetUndo();
+
+
 	int komaStart = pFilm->GetSelectStart();
 	int komaEnd = pFilm->GetSelectEnd();
 
@@ -479,6 +494,8 @@ void CLayerDoc::OnLoadLayerEffect(int layer)
 {
 	CKomaData* pKoma = GetNowSelectKoma();
 	if (pKoma == NULL) return;
+
+	CheckAndGetUndo();
 
 	FILE* file = m_file2->OpenLoad("*.lef","nnndir\\effect");
 	if (file != NULL)
@@ -512,6 +529,8 @@ void CLayerDoc::OnOpenEffect(int n)
 	CKomaData* pKoma = GetNowSelectKoma();
 	if (pKoma == NULL) return;
 
+	CheckAndGetUndo();
+
 //	if (n == -1) n = m_selectEffectLayer;
 //	if (n == -1) return;
 
@@ -532,6 +551,8 @@ void CLayerDoc::OnCopyPreEffect(int n)
 {
 	if (CheckCopyPreEffect())
 	{
+		CheckAndGetUndo();
+
 		m_app->CopyPreEffect();
 	}
 }
@@ -540,6 +561,8 @@ void CLayerDoc::OnCopyPreEffect2(int n)
 {
 	if (CheckCopyPreEffect())
 	{
+		CheckAndGetUndo();
+
 		m_app->CopyPreEffect(2);
 	}
 }
@@ -564,6 +587,8 @@ void CLayerDoc::OnSaveEffect(int n)
 {
 	CKomaData* pKoma = GetNowSelectKoma();
 	if (pKoma == NULL) return;
+
+	CheckAndGetUndo();
 
 //	if (n == -1) n = m_selectEffectLayer;
 //	if (n == -1) return;
@@ -742,6 +767,8 @@ void CLayerDoc::SelectPictureFile(int layer,int cmd,HWND hwnd)
 	CKomaData* pKoma = GetNowSelectKoma();
 	if (pKoma == NULL) return;
 
+	CheckAndGetUndo();
+
 	OPENFILENAME ofn;
 	ZeroMemory(&ofn,sizeof(OPENFILENAME));
 
@@ -906,6 +933,8 @@ void CLayerDoc::OnLeftKey(void)
 	CKomaData* pKoma = m_app->GetNowSelectKoma();
 	if (pKoma == NULL) return;
 
+	CheckAndGetUndo();
+
 	int selectPictureLayer = pKoma->GetSelectLayer();
 	if (selectPictureLayer != -1) return;
 
@@ -927,6 +956,8 @@ void CLayerDoc::OnRightKey(void)
 	CKomaData* pKoma = m_app->GetNowSelectKoma();
 	if (pKoma == NULL) return;
 
+	CheckAndGetUndo();
+
 	int selectEffectLayer = pKoma->GetSelectEffectLayer();
 	if (selectEffectLayer != -1) return;
 
@@ -947,6 +978,8 @@ void CLayerDoc::OnUpKey(void)
 {
 	CKomaData* pKoma = m_app->GetNowSelectKoma();
 	if (pKoma == NULL) return;
+
+	CheckAndGetUndo();
 
 	int layer = pKoma->GetSelectLayer();
 	int effectLayer = -1;
@@ -981,6 +1014,8 @@ void CLayerDoc::OnDownKey(void)
 {
 	CKomaData* pKoma = m_app->GetNowSelectKoma();
 	if (pKoma == NULL) return;
+
+	CheckAndGetUndo();
 
 	int layer = pKoma->GetSelectLayer();
 	int effectLayer = -1;
@@ -1056,6 +1091,8 @@ void CLayerDoc::OnEnterKey(void)
 		if (effectLayer == -1) return;
 	}
 
+	CheckAndGetUndo();
+
 	CLayerView* pView = (CLayerView*)m_view;
 
 	int x = 0;
@@ -1085,6 +1122,13 @@ void CLayerDoc::OnEnterKey(void)
 int CLayerDoc::GetCopyPreEffectMode(void)
 {
 	return m_copyPreEffectMode;
+}
+
+void CLayerDoc::CheckAndGetUndo()
+{
+	m_app->CheckAndGetKomaUndo();
+
+
 }
 
 /*_*/

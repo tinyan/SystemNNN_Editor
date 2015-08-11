@@ -446,7 +446,13 @@ LRESULT CFilmCaseView::ViewWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
 		}
 
 
-		if (m_buttonUndo != NULL) m_buttonUndo->Print(hdc,src,2,&ps.rcPaint);
+		if (m_buttonUndo != NULL)
+		{
+			int umd = 2;
+			if (pDoc->CheckExistUndo()) umd = 0;
+
+			m_buttonUndo->Print(hdc,src,umd,&ps.rcPaint);
+		}
 //		if (m_buttonSearch != NULL) m_buttonSearch->Print(hdc,src,0,&ps.rcPaint);
 
 		if (m_buttonNoClearEffect != NULL)

@@ -11,6 +11,8 @@
 #include "case.h"
 #include "commanddata.h"
 
+#include "undoMemoryObject.h"
+
 #include "commanddatatype.h"
 
 CNameList* CCommandData::m_functionList = NULL;
@@ -202,13 +204,16 @@ BOOL CCommandData::ChangeCommandType(int typ,int para)
 }
 
 
-BOOL CCommandData::Load(FILE* file)
+BOOL CCommandData::Load(FILE* file,CUndoMemoryObject* memory)
 {
 	char head[16];
-	fread(head,sizeof(char),16,file);	//skip header
-	fread(head,sizeof(char),16,file);	//skip name
+//	fread(head,sizeof(char),16,file);	//skip header
+//	fread(head,sizeof(char),16,file);	//skip name
+	CaseRead(head,sizeof(char),16,file,memory);	//skip header
+	CaseRead(head,sizeof(char),16,file,memory);	//skip name
 	int tmp[16];
-	fread(tmp,sizeof(int),16,file);
+//	fread(tmp,sizeof(int),16,file);
+	CaseRead(tmp,sizeof(int),16,file,memory);
 
 //	m_commandType = tmp[0];
 	ChangeCommandType(tmp[0],tmp[3]);
@@ -228,16 +233,19 @@ BOOL CCommandData::Load(FILE* file)
 
 	if (m_bufferSize != 0)
 	{
-		fread(m_buffer,sizeof(char),m_bufferSize,file);
+//		fread(m_buffer,sizeof(char),m_bufferSize,file);
+		CaseRead(m_buffer,sizeof(char),m_bufferSize,file,memory);
 	}
 
 	return TRUE;
 }
 
-BOOL CCommandData::Save(FILE* file)
+BOOL CCommandData::Save(FILE* file,CUndoMemoryObject* memory)
 {
-	fwrite("-COMMANDDATA   ",sizeof(char),16,file);
-	fwrite(&m_commandTypeName[m_commandType][0],sizeof(char),16,file);
+//	fwrite("-COMMANDDATA   ",sizeof(char),16,file);
+//	fwrite(&m_commandTypeName[m_commandType][0],sizeof(char),16,file);
+	CaseWrite("-COMMANDDATA   ",sizeof(char),16,file,memory);
+	CaseWrite(&m_commandTypeName[m_commandType][0],sizeof(char),16,file,memory);
 
 	int tmp[16];
 	for (int i=0;i<16;i++) tmp[i] = 0;
@@ -253,11 +261,13 @@ BOOL CCommandData::Save(FILE* file)
 	
 	tmp[9] = m_color | (m_backColor << 16);
 
-	fwrite(tmp,sizeof(int),16,file);
+//	fwrite(tmp,sizeof(int),16,file);
+	CaseWrite(tmp,sizeof(int),16,file,memory);
 
 	if (m_bufferSize != 0)
 	{
-		fwrite(m_buffer,sizeof(char),m_bufferSize,file);
+//		fwrite(m_buffer,sizeof(char),m_bufferSize,file);
+		CaseWrite(m_buffer,sizeof(char),m_bufferSize,file,memory);
 	}
 
 	//これは最下層オブジェクトなのでsaveArray必要なし

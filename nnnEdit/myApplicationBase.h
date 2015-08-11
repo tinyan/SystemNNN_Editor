@@ -416,6 +416,13 @@ public:
 	virtual void OnControlKey(int windowNumber,WPARAM wParam,LPARAM lParam) {}
 	virtual int GetZahyoPrintType(void){return 0;}
 
+	virtual int GetUndoMode(void)=0;
+	virtual int GetUndoKakuninEnable(void)=0;
+	virtual int GetUndoAfterUnable(void)=0;
+	virtual BOOL CheckUndoMode(void) = 0;
+	virtual CUndoMemoryObject* GetUndoObject(void) = 0;
+	virtual void CheckAndGetKomaUndo(void) = 0;
+
 protected:
 
 private:

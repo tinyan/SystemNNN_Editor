@@ -437,6 +437,22 @@ BEGIN
                 MENUITEM "オン",                          ID_BALLOON_ON
                 MENUITEM "オフ",                          ID_BALLOON_OFF
             END
+            POPUP "UNDO設定"
+            BEGIN
+                MENUITEM "有効",                          ID_UNDO_ENABLE
+                MENUITEM "無効",                          ID_UNDO_DISABLE
+                MENUITEM SEPARATOR
+                POPUP "確認"
+                BEGIN
+                    MENUITEM "有り",                          ID_UNDO_KAKUNIN_ARI
+                    MENUITEM "無し",                          ID_UNDO_KAKUNIN_NASHI
+                END
+                POPUP "動作後確認"
+                BEGIN
+                    MENUITEM "有り",                          ID_UNDO_AFTER_ARI
+                    MENUITEM "無し",                          ID_UNDO_AFTER_NASHI
+                END
+            END
         END
         POPUP "台本追加設定"
         BEGIN

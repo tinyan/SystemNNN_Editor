@@ -539,7 +539,13 @@ void CFilmView::OnPaint(HWND hWnd,WPARAM wParam,LPARAM lParam)
 		}
 
 		if (m_buttonDelete != NULL) m_buttonDelete->Print(hdc,src,0,&ps.rcPaint);
-		if (m_buttonUndo != NULL) m_buttonUndo->Print(hdc,src,2,&ps.rcPaint);
+
+		if (m_buttonUndo != NULL)
+		{
+			int umd = 2;
+			if (pDoc->CheckExistUndo()) umd = 0;
+			m_buttonUndo->Print(hdc,src,umd,&ps.rcPaint);
+		}
 
 	CKomaData* pNowKoma = (CKomaData*)(pFilm->GetNowSelectObject());
 

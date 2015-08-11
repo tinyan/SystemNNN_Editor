@@ -118,6 +118,7 @@
     <ClCompile Include="..\nnnEdit\storybookdata.cpp" />
     <ClCompile Include="..\nnnEdit\storydata.cpp" />
     <ClCompile Include="..\nnnEdit\suuji.cpp" />
+    <ClCompile Include="..\nnnEdit\undoMemoryObject.cpp" />
     <ClCompile Include="..\nnnEdit\varInitData.cpp" />
     <ClCompile Include="..\nnnEdit\volumeControl.cpp" />
   </ItemGroup>
@@ -152,6 +153,7 @@
     <ClInclude Include="..\nnnEdit\storybookdata.h" />
     <ClInclude Include="..\nnnEdit\storydata.h" />
     <ClInclude Include="..\nnnEdit\suuji.h" />
+    <ClInclude Include="..\nnnEdit\undoMemoryObject.h" />
     <ClInclude Include="..\nnnEdit\varInitData.h" />
     <ClInclude Include="..\nnnEdit\volumeControl.h" />
   </ItemGroup>

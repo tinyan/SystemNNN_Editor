@@ -9,6 +9,8 @@
 
 class CNameList;
 class CCase;
+class CUndoMemoryObject;
+
 class CCommandData : public CCase
 {
 public:
@@ -43,8 +45,8 @@ public:
 	int GetMessage1Gyo(int n);
 
 //åpè≥
-	BOOL Load(FILE* file);
-	BOOL Save(FILE* file);
+	BOOL Load(FILE* file,CUndoMemoryObject* memory = NULL);
+	BOOL Save(FILE* file,CUndoMemoryObject* memory = NULL);
 	LPSTR GetMyName(void);
 	void SetMyName(LPSTR name);
 	CCase* NewObject(void);

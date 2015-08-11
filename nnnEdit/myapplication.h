@@ -21,6 +21,7 @@ class CPicture;
 class CEffect;
 
 class CSelectDialog;
+class CUndoMemoryObject;
 
 class CStoryData;
 
@@ -540,6 +541,15 @@ public:
 	void MainMouseMove(MSG msg);
 	void OnControlKey(int windowNumber,WPARAM wParam,LPARAM lParam);
 	int GetZahyoPrintType(void){return m_zahyoPrintType;}
+	int GetUndoMode(void){return m_undoEnable;}
+	int GetUndoKakuninEnable(void){return m_undoKakuninEnable;}
+	int GetUndoAfterUnable(void){return m_undoAfterEnable;}
+	BOOL CheckUndoMode(void);
+	CUndoMemoryObject* GetUndoObject(void);
+
+	void ClearUndo(void);
+	void CheckAndGetKomaUndo(void);
+
 private:
 	HINSTANCE m_hInstance;
 
@@ -967,6 +977,14 @@ private:
 	int m_balloonFlag;
 	int m_zahyoPrintType;
 
+	void ChangeUndoMode(int n);
+	void ChangeUndoKakuninMode(int n);
+	void ChangeUndoAfterMode(int n);
+	int m_undoEnable;
+	int m_undoKakuninEnable;
+	int m_undoAfterEnable;
+
+	CUndoMemoryObject* m_undoObject;
 };
 
 

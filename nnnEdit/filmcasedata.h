@@ -11,6 +11,8 @@ class CFilmData;
 //class CMyApplication;
 class CCase;
 //#include "case.h"
+class CUndoMemoryObject;
+
 
 class CFilmCaseData : public CCase
 {
@@ -20,7 +22,7 @@ public:
 	~CFilmCaseData();
 	void End(void);
 
-	BOOL LoadAll(int n,FILE* file);
+	BOOL LoadAll(int n,FILE* file,CUndoMemoryObject* memory = NULL);
 	BOOL ClearAllFilm(void);
 
 //	int GetFilmKosuu(void);
@@ -36,8 +38,8 @@ public:
 //åpè≥
 	LPSTR GetMyName(void);
 	void SetMyName(LPSTR name);
-	BOOL Load(FILE* file);
-	BOOL Save(FILE* file);
+	BOOL Load(FILE* file,CUndoMemoryObject* memory = NULL);
+	BOOL Save(FILE* file,CUndoMemoryObject* memory = NULL);
 	CCase* NewObject(void);
 
 //	int Compile(CScriptData* lpScript);
