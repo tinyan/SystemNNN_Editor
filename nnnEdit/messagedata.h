@@ -203,6 +203,8 @@ public:
 
 	void SetMessageEffect(int st){m_messageEffect = st;}
 	int GetMessageEffect(void){return m_messageEffect;}
+	void SetMessageEffectTime(int st){m_messageEffectTime = st;}
+	int GetMessageEffectTime(void){return m_messageEffectTime;}
 
 	static int m_bitPattern[];
 
@@ -304,6 +306,7 @@ private:
 
 	int m_expStatus;
 	int m_messageEffect;
+	int m_messageEffectTime;
 
 	int GetMaxBit(int d);
 

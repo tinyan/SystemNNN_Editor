@@ -154,6 +154,8 @@ CGameMessageView::CGameMessageView(CMyDocument* pDocument,HWND clientHWND,HINSTA
 
 	m_messageEffectBitmap = new CMyBitmap("nnndir\\setup\\bmp\\messageEffect.bmp");
 	m_buttonMessageEffect = new CMyButton(15,m_hWnd,m_messageEffectBitmap->GetHBitmap(),504,0,24,24);
+	m_messageEffectTimeBitmap = new CMyBitmap("nnndir\\setup\\bmp\\messageEffectTime.bmp");
+	m_buttonMessageEffectTime = new CMyButton(16,m_hWnd,m_messageEffectTimeBitmap->GetHBitmap(),528,0,24,24);
 
 
 
@@ -173,6 +175,7 @@ CGameMessageView::CGameMessageView(CMyDocument* pDocument,HWND clientHWND,HINSTA
 	AddBalloonCheckButton(m_buttonMusicFade);
 	AddBalloonCheckButton(m_buttonFixFace);
 	AddBalloonCheckButton(m_buttonMessageEffect);
+	AddBalloonCheckButton(m_buttonMessageEffectTime);
 
 
 
@@ -201,6 +204,8 @@ void CGameMessageView::End(void)
 
 	ENDDELETECLASS(m_buttonMessageEffect);
 	ENDDELETECLASS(m_messageEffectBitmap);
+	ENDDELETECLASS(m_buttonMessageEffectTime);
+	ENDDELETECLASS(m_messageEffectTimeBitmap);
 
 	ENDDELETECLASS(m_buttonExpStatus);
 	ENDDELETECLASS(m_expStatusBitmap);
@@ -264,6 +269,7 @@ LRESULT CGameMessageView::ViewWndProc(HWND hWnd, UINT message, WPARAM wParam, LP
 		if (m_buttonFixFace != NULL) m_buttonFixFace->CalcuLButtonDown(wParam,lParam);
 		if (m_buttonMusicFade != NULL) m_buttonMusicFade->CalcuLButtonDown(wParam,lParam);
 		if (m_buttonMessageEffect != NULL) m_buttonMessageEffect->CalcuLButtonDown(wParam,lParam);
+		if (m_buttonMessageEffectTime != NULL) m_buttonMessageEffectTime->CalcuLButtonDown(wParam,lParam);
 		//if (m_buttonCommentBottom != NULL) m_buttonCommentBottom->CalcuLButtonDown(wParam,lParam);
 		if (m_buttonUndo != NULL) m_buttonUndo->CalcuLButtonDown(wParam,lParam);
 		OnLButtonDown(hWnd,wParam,lParam);
@@ -485,6 +491,9 @@ LRESULT CGameMessageView::ViewWndProc(HWND hWnd, UINT message, WPARAM wParam, LP
 			case 15:
 				pDoc->OnClickMessageEffectButton();
 				break;
+			case 16:
+				pDoc->OnClickMessageEffectTimeButton();
+				break;
 
 			}
 			break;
@@ -634,6 +643,12 @@ void CGameMessageView::OnPaint(HWND hWnd,WPARAM wParam, LPARAM lParam)
 		m_buttonMessageEffect->Print(hdc,src,md,&ps.rcPaint);
 	}
 
+	if (m_buttonMessageEffectTime != NULL)
+	{
+		int md = 0;
+		if (pDoc->GetMessageEffectTime()) md = 1;
+		m_buttonMessageEffectTime->Print(hdc,src,md,&ps.rcPaint);
+	}
 
 //OutputDebugString(">\r\n");
 
@@ -1455,7 +1470,7 @@ BOOL CGameMessageView::MoveMouse(int x,int y,POINT screenPos)
 		subType = GetMessageButtonParam(x,y);
 		if (subType != -1)
 		{
-			subType += 16;
+			subType += 17;
 		}
 	}
 

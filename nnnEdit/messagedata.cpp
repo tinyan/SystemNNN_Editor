@@ -94,6 +94,7 @@ CMessageData::CMessageData() : CCase()
 	m_seFileFlag = 0;
 	m_expStatus = 0;
 	m_messageEffect = 0;
+	m_messageEffectTime = 0;
 
 	m_messageFontSizeType = 0;
 
@@ -449,6 +450,7 @@ BOOL CMessageData::Load(FILE* file,CUndoMemoryObject* memory)
 	m_autoMessageSpeed = 0;
 	m_expStatus = 0;
 	m_messageEffect = 0;
+	m_messageEffectTime = 0;
 
 	m_face = 0;
 	m_mustFace = 0;
@@ -495,6 +497,11 @@ BOOL CMessageData::Load(FILE* file,CUndoMemoryObject* memory)
 		if (m_kakuchoWorkKosuu > 8)
 		{
 			m_messageEffect = tmp[24];
+		}
+
+		if (m_kakuchoWorkKosuu > 9)
+		{
+			m_messageEffectTime = tmp[25];
 		}
 	}
 
@@ -776,6 +783,10 @@ BOOL CMessageData::Save(FILE* file,CUndoMemoryObject* memory)
 		tmp[24] = m_messageEffect;
 	}
 
+	if (m_kakuchoWorkKosuu > 9)
+	{
+		tmp[25] = m_messageEffectTime;
+	}
 
  	int messageSize = strlen(m_messageBuffer);
 	if (messageSize <= 512)
@@ -935,6 +946,7 @@ void CMessageData::Init(LPVOID para)
 	m_seFileFlag = 0;
 	m_expStatus = 0;
 	m_messageEffect = 0;
+	m_messageEffectTime = 0;
 
 	m_kakuchoWorkKosuu = NOWKAKUCHOKOSUU;
 	m_cannotClickFlag = 0;

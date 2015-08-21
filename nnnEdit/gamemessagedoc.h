@@ -45,6 +45,7 @@ public:
 
 	void OnClickExpStatusButton(void);
 	void OnClickMessageEffectButton(void);
+	void OnClickMessageEffectTimeButton(void);
 
 
 	void OnChangeVoiceFileName(int n,int channel = 0);
@@ -135,6 +136,7 @@ public:
 
 	int GetMusicFadeVolume(int n = -1);
 	int GetMessageEffect(int n = -1);
+	int GetMessageEffectTime(int n = -1);
 
 	void CheckAndGetUndo(CKomaData* pKoma,int start,int end);
 

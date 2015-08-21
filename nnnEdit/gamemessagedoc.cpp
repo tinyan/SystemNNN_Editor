@@ -2479,6 +2479,21 @@ int CGameMessageDoc::GetMessageEffect(int n)
 	return pMessage->GetMessageEffect();
 }
 
+int CGameMessageDoc::GetMessageEffectTime(int n)
+{
+	CKomaData* pKoma = GetNowSelectKoma();
+	if (pKoma == NULL) return 0;	//error
+
+	if (n == -1) n = pKoma->GetNowSelectNumber();
+
+	int kosuu = pKoma->GetObjectKosuu();
+	if ((n<0) || (n>kosuu)) return 0;
+
+	CMessageData* pMessage = (CMessageData*)(pKoma->GetObjectData(n));
+	if (pMessage == NULL) return 0;
+
+	return pMessage->GetMessageEffectTime();
+}
 
 
 int CGameMessageDoc::GetMessageFontSizeType(int n)
@@ -2596,8 +2611,35 @@ void CGameMessageDoc::OnClickMessageEffectButton(void)
 	}
 
 	m_app->SetModify();
-	m_app->MessageIsChanged();}
+	m_app->MessageIsChanged();
+}
 
+void CGameMessageDoc::OnClickMessageEffectTimeButton(void)
+{
+	CKomaData* pKoma = GetNowSelectKoma();
+	if (pKoma == NULL) return;	//error
+
+	int n = -1;
+	if (n == -1) n = pKoma->GetNowSelectNumber();
+
+	int kosuu = pKoma->GetObjectKosuu();
+	if ((n<0) || (n>kosuu)) return;
+
+	CMessageData* pMessage = (CMessageData*)(pKoma->GetObjectData(n));
+	if (pMessage == NULL) return;
+
+	CheckAndGetUndo(pKoma,n,n);
+
+
+	int d = pMessage->GetMessageEffectTime();
+	if (m_input->GetNumber(d,&d))
+	{
+		pMessage->SetMessageEffectTime(d);
+	}
+
+	m_app->SetModify();
+	m_app->MessageIsChanged();
+}
 
 void CGameMessageDoc::OnClickMessageFontSizeTypeButton(void)
 {

@@ -53,6 +53,7 @@ private:
 
 	CMyButton* m_buttonExpStatus;
 	CMyButton* m_buttonMessageEffect;
+	CMyButton* m_buttonMessageEffectTime;
 
 	int m_modeButtonPrintX;
 	int m_modeButtonPrintY;
@@ -75,6 +76,7 @@ private:
 	HBITMAP m_addButtonHBitmap;
 	CMyBitmap* m_expStatusBitmap;
 	CMyBitmap* m_messageEffectBitmap;
+	CMyBitmap* m_messageEffectTimeBitmap;
 
 
 

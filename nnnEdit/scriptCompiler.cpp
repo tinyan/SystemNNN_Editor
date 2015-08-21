@@ -2033,6 +2033,16 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 						messageEffectPara[0] = messageEffect;
 						m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_MESSAGEEFFECT,1,messageEffectPara,makeJsonFlag,messageTab+1);
 						m_miniCompiler->AddNowCode();
+
+
+						int messageEffectTime = pMessage->GetMessageEffectTime();
+						if (messageEffectTime > 0)
+						{
+							int messageEffectTimePara[1];
+							messageEffectTimePara[0] = messageEffectTime;
+							m_miniCompiler->Pass2SystemFunction(CODE_SYSTEMFUNCTION_MESSAGEEFFECTTIME,1,messageEffectTimePara,makeJsonFlag,messageTab+1);
+							m_miniCompiler->AddNowCode();
+						}
 					}
 
 
