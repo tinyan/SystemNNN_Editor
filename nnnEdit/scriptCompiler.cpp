@@ -3169,6 +3169,29 @@ void CScriptCompiler::AllBuild(FILE* makeJsonFlag)
 	CopyFile("nnndir\\varinitdata.txt","spt\\varinitdata.xtx",FALSE);
 	CopyFile("nnndir\\termlist.txt","spt\\termlist.xtx",FALSE);
 
+	//shoplist ˆÃ†
+	if (1)
+	{
+		FILE* shopSrc = NULL;
+		fopen_s(&shopSrc,"nnndir\\shopitem.txt","rb");
+		if (shopSrc != NULL)
+		{
+			fclose(shopSrc);
+
+			CopyFile("nnndir\\shopitem.txt","nya\\shopitem.fxf",FALSE);
+
+			CNameList* tmpInit = new CNameList();
+			tmpInit->SaveAngouRoutine("nya\\shopitem.fxf");
+
+
+			delete tmpInit;
+		}
+	}
+
+
+
+
+
 	if (m_app->GetConfig("cutin"))
 	{
 		CopyFile("nnndir\\cutinChara.txt","spt\\cutinChara.xtx",FALSE);
