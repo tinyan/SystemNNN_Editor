@@ -35,6 +35,10 @@
 #include "..\..\systemNNN\nnnUtilLib\nameList.h"
 #include "..\..\systemNNN\nnnUtilLib\cutinControl.h"
 
+#include "..\..\systemNNN\nnnUtilLib\autoSaveSubData.h"
+#include "..\..\systemNNN\nnnUtilLib\okikaeData.h"
+
+
 #include "..\..\systemNNN\nnnUtilLib\cutinNameData.h"
 
 #include "..\..\systemNNN\nnnUtilLib\sceneList.h"
@@ -826,6 +830,10 @@ CMyApplication::CMyApplication(HINSTANCE hinstance) : CMyApplicationBase(hinstan
 		CMyFont::m_codeByte = 1;
 	}
 
+	m_okikaeData = new COkikaeData();
+	CMyMessage::m_okikaeData = m_okikaeData;
+
+	
 	m_font = new CMyFont(m_clientHWND);
 	m_rubiFont = new CRubiFont(m_clientHWND);
 	m_message = new CMyMessage(m_font,m_rubiFont);
@@ -1220,6 +1228,7 @@ void CMyApplication::End(void)
 	ENDDELETECLASS(m_message);
 	ENDDELETECLASS(m_rubiFont);
 	ENDDELETECLASS(m_font);
+	ENDDELETECLASS(m_okikaeData);
 
 	ENDDELETECLASS(m_nameWinPic);
 	ENDDELETECLASS(m_mesWinPic);

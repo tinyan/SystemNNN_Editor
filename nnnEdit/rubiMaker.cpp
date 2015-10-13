@@ -3,6 +3,7 @@
 
 #include "..\..\systemNNN\nyanlib\include\commonMacro.h"
 #include "..\..\systemNNN\nnnUtilLib\nameList.h"
+#include "..\..\systemNNN\nnnUtilLib\myFont.h"
 
 #include "rubimaker.h"
 
@@ -11,6 +12,9 @@
 #define RUBI_END ( (('］' >> 8) & 0xff) | (('］' << 8) & 0x0ff00) )
 #define NUMBER_ZERO ( (('０' >> 8) & 0xff) | (('０' << 8) & 0x0ff00) )
 
+#define RUBI_START_1BYTE '['
+#define RUBI_END_1BYTE ']'
+#define NUMBER_ZERO_1BYTE '0'
 
 char CRubiMaker::m_suujiMessage[][4] = 
 {
@@ -89,6 +93,8 @@ LPSTR CRubiMaker::RubiConvert(LPSTR mes)
 {
 	int mesLen = strlen(mes);
 
+	int codeByte = CMyFont::m_codeByte;
+
 	if (m_loadFlag == FALSE)
 	{
 		int ln = mesLen;
@@ -122,24 +128,55 @@ LPSTR CRubiMaker::RubiConvert(LPSTR mes)
 
 			short* ptr = (short*)(mes+k);
 			short kanji = *ptr;
-			
-			if (kanji == RUBI_START)
+			char* ptr1Byte = mes+k;
+
+			BOOL rb = FALSE;
+			if (codeByte == 2)
 			{
-				k += 2;
+				if (kanji == RUBI_START) rb = TRUE;
+			}
+			else
+			{
+				if ((*ptr1Byte) == RUBI_START_1BYTE) rb = TRUE;
+			}
+
+//			if (kanji == RUBI_START)
+			if (rb)
+			{
+				k += codeByte;
 				ptr++;
+				ptr1Byte++;
 
 				short numKanji = *ptr;
-				k += 2;
+				char numKanji1Byte = *ptr1Byte;
+				k += codeByte;
 				ptr++;
+				ptr1Byte++;
 
 				int numkanjirev = ((numKanji>>8)& 0xff) | ((numKanji<<8) & 0xff00);
-				int nn = numkanjirev - '０';
+				int nn;
+				if (codeByte == 2)
+				{
+					nn = numkanjirev - '０';
+				}
+				else
+				{
+					nn = numKanji1Byte - '0';
+				}
+
 				if ((nn >= 1) && (nn<= 9))
 				{
 					int pp = kanjiLen - nn;
 					if (pp<0)
 					{
-						PrintRubiError("元のメッセージのルビ表記に問題があります(ルビ対象文字がたりません)",mes);
+						if (codeByte == 2)
+						{
+							PrintRubiError("元のメッセージのルビ表記に問題があります(ルビ対象文字がたりません)",mes);
+						}
+						else
+						{
+							PrintRubiError("orgMessage ruby error(not enough ruby-target string)",mes);
+						}
 						errorFlag = TRUE;
 						break;
 					}
@@ -152,7 +189,15 @@ LPSTR CRubiMaker::RubiConvert(LPSTR mes)
 				}
 				else
 				{
-					PrintRubiError("元のメッセージのルビ表記に問題があります",mes);
+					if (codeByte == 2)
+					{
+						PrintRubiError("元のメッセージのルビ表記に問題があります",mes);
+					}
+					else
+					{
+						PrintRubiError("orgMessage ruby error",mes);
+					}
+
 					errorFlag = TRUE;
 					break;
 				}
@@ -163,24 +208,48 @@ LPSTR CRubiMaker::RubiConvert(LPSTR mes)
 				while (k<mesLen)
 				{
 					short chk = *ptr;
+					char chk1Byte = *ptr1Byte;
+
 					ptr++;
-					k += 2;
-					if (chk == RUBI_END)
+					ptr1Byte++;
+
+					k += codeByte;
+
+					if (codeByte == 2)
 					{
-						tojiFlag = TRUE;
-						break;
+						if (chk == RUBI_END)
+						{
+							tojiFlag = TRUE;
+							break;
+						}
 					}
+					else
+					{
+						if (chk1Byte == RUBI_END_1BYTE)
+						{
+							tojiFlag = TRUE;
+							break;
+						}
+					}
+
 				}
 				if (tojiFlag == FALSE)
 				{
-					PrintRubiError("元のメッセージのルビ表記に問題があります(ルビが閉じられていません)",mes);
+					if (codeByte == 2)
+					{
+						PrintRubiError("元のメッセージのルビ表記に問題があります(ルビが閉じられていません)",mes);
+					}
+					else
+					{
+						PrintRubiError("orgMessageError(not found ])",mes);
+					}
 					errorFlag = TRUE;
 					break;
 				}
 			}
 			else
 			{
-				k += 2;
+				k += codeByte;
 				kanjiLen++;
 			}
 
@@ -189,7 +258,7 @@ LPSTR CRubiMaker::RubiConvert(LPSTR mes)
 		}
 		else
 		{
-			k += 2;
+			k += codeByte;
 			kanjiLen++;
 		}
 	}
@@ -224,46 +293,74 @@ LPSTR CRubiMaker::RubiConvert(LPSTR mes)
 
 			short* ptr = (short*)(mes+k);
 			short kanji = *ptr;
-			
-			if (kanji == RUBI_START)
+			char* ptr1byte = mes+k;
+
+			BOOL rb = FALSE;
+			if (codeByte == 2)
 			{
-				memcpy(&m_makedBuffer[makedLen],mes+k,2);
-				k += 2;
+				if (kanji == RUBI_START) rb = TRUE;
+			}
+			else
+			{
+				if ((*ptr1byte) == RUBI_START_1BYTE) rb = TRUE;
+			}
+
+			if (rb)
+//			if (kanji == RUBI_START)
+			{
+				memcpy(&m_makedBuffer[makedLen],mes+k,codeByte);
+				k += codeByte;
 //				kanjiLen++;
-				makedLen+=2;
+				makedLen+=codeByte;
 				ptr++;
+				ptr1byte++;
 
 				while (k<mesLen)
 				{
 					short chk = *ptr;
-					ptr++;
-					memcpy(&m_makedBuffer[makedLen],mes+k,2);
-					k += 2;
-//					kanjiLen++;
-					makedLen+=2;
+					char chk1byte = *ptr1byte;
 
-					if (chk == RUBI_END)
+					ptr++;
+					ptr1byte++;
+
+
+					memcpy(&m_makedBuffer[makedLen],mes+k,codeByte);
+					k += codeByte;
+//					kanjiLen++;
+					makedLen+=codeByte;
+
+					if (codeByte == 2)
 					{
-						break;
+						if (chk == RUBI_END)
+						{
+							break;
+						}
+					}
+					else
+					{
+						if (chk1byte == RUBI_END_1BYTE)
+						{
+							break;
+						}
 					}
 				}
 			}
 			else
 			{
-				memcpy(&m_makedBuffer[makedLen],mes+k,2);
-				k += 2;
+				memcpy(&m_makedBuffer[makedLen],mes+k,codeByte);
+				k += codeByte;
 				kanjiLen++;
-				makedLen+=2;
+				makedLen+=codeByte;
 			}
 		}
 		else
 		{
 			if (usedFlag[kanjiLen])
 			{
-				memcpy(&m_makedBuffer[makedLen],mes+k,2);
-				k += 2;
+				memcpy(&m_makedBuffer[makedLen],mes+k,codeByte);
+				k += codeByte;
 				kanjiLen++;
-				makedLen+=2;
+				makedLen+=codeByte;
 			}
 			else
 			{
@@ -288,10 +385,10 @@ LPSTR CRubiMaker::RubiConvert(LPSTR mes)
 				}
 				if (found == -1)
 				{
-					memcpy(&m_makedBuffer[makedLen],mes+k,2);
-					k += 2;
+					memcpy(&m_makedBuffer[makedLen],mes+k,codeByte);
+					k += codeByte;
 					kanjiLen++;
-					makedLen+=2;
+					makedLen+=codeByte;
 				}
 				else
 				{
@@ -299,7 +396,7 @@ LPSTR CRubiMaker::RubiConvert(LPSTR mes)
 					LPSTR rubiSrcMes = m_list->GetName(found*2+1);
 
 					memcpy(&m_makedBuffer[makedLen],mes+k,rubiSrcLen);
-					kanjiLen += rubiSrcLen / 2;
+					kanjiLen += rubiSrcLen / codeByte;
 					k += rubiSrcLen;
 					makedLen += rubiSrcLen;
 
@@ -308,18 +405,39 @@ LPSTR CRubiMaker::RubiConvert(LPSTR mes)
 						m_makedBuffer[makedLen] = '#';
 						makedLen++;
 
-						memcpy(&m_makedBuffer[makedLen],"［",2);
-						makedLen+=2;
+						if (codeByte == 2)
+						{
+							memcpy(&m_makedBuffer[makedLen],"［",2);
+						}
+						else
+						{
+							memcpy(&m_makedBuffer[makedLen],"[",1);
+						}
+						makedLen+=codeByte;
 
-						memcpy(&m_makedBuffer[makedLen],m_suujiMessage[rubiSrcLen/2],2);
-						makedLen+=2;
+						if (codeByte == 2)
+						{
+							memcpy(&m_makedBuffer[makedLen],m_suujiMessage[rubiSrcLen/2],2);
+						}
+						else
+						{
+							m_makedBuffer[makedLen] = '0' + rubiSrcLen;
+						}
+						makedLen+=codeByte;
 
 						int ll = strlen(rubiSrcMes);
 						memcpy(&m_makedBuffer[makedLen],rubiSrcMes,ll);
 						makedLen += ll;
 
-						memcpy(&m_makedBuffer[makedLen],"］",2);
-						makedLen+=2;
+						if (codeByte == 2)
+						{
+							memcpy(&m_makedBuffer[makedLen],"］",2);
+						}
+						else
+						{
+							memcpy(&m_makedBuffer[makedLen],"]",1);
+						}
+						makedLen+=codeByte;
 					}
 				}
 			}

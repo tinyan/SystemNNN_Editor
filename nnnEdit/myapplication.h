@@ -29,6 +29,8 @@ class CStoryData;
 
 class CMyFileOpen;
 class CMyMessage;
+class CAutoSaveSubData;
+class COkikaeData;
 class CMyFont;
 class CRubiFont;
 class CScriptData;
@@ -556,6 +558,7 @@ private:
 	CMyFrameWindow* m_frame;
 	CMyClientWindow* m_client;
 
+	COkikaeData* m_okikaeData;
 	CMyFont* m_font;
 	CRubiFont* m_rubiFont;
 	CMyMessage* m_message;

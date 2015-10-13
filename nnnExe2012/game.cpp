@@ -32,6 +32,14 @@
 
 
 
+
+
+
+
+
+
+
+
 #include "mode.h"
 
 #include "game.h"
@@ -42,6 +50,11 @@ int CGame::m_daysOfMonth[13]=
 	0,	31,29,31,30,31,30,31,31,30,31,30,31,
 };
 */
+
+
+
+
+
 
 
 
