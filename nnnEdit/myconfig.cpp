@@ -284,8 +284,10 @@ CMyConfig::MYCONFIGWINDOWTYPE CMyConfig::m_initDataWindow[]=
 
 
 
-CMyConfig::CMyConfig()
+CMyConfig::CMyConfig(int varType)
 {
+	m_varType = varType;
+
 	m_configData = new CConfigData();
 	if (m_configData->CheckLoadOk() == FALSE)
 	{
@@ -323,13 +325,13 @@ int CMyConfig::GetValue(LPSTR name)
 
 BOOL CMyConfig::SetText(LPSTR name, LPSTR text)
 {
-	m_configData->SetString(name,text);
+	m_configData->SetString(name, text);
 	return TRUE;
 }
 
 BOOL CMyConfig::SetValue(LPSTR name, int d)
 {
-	m_configData->SetData(name,d);
+	m_configData->SetData(name, d);
 	return TRUE;
 }
 
@@ -351,22 +353,22 @@ BOOL CMyConfig::SaveData(void)
 void CMyConfig::AdjustInitData(void)
 {
 	int i;
-	for (i=0;i<MYCONFIGKOSUUMAX;i++)
+	for (i = 0; i < MYCONFIGKOSUUMAX; i++)
 	{
 		if (m_initDataString[i].name[0] == 0) break;
 		if (m_configData->SearchName(m_initDataString[i].name) == -1)
 		{
-			SetText(m_initDataString[i].name,m_initDataString[i].text);
+			SetText(m_initDataString[i].name, m_initDataString[i].text);
 		}
 	}
 
 
-	for (i=0;i<MYCONFIGKOSUUMAX;i++)
+	for (i = 0; i < MYCONFIGKOSUUMAX; i++)
 	{
 		if (m_initDataValue[i].name[0] == 0) break;
 		if (m_configData->SearchName(m_initDataValue[i].name) == -1)
 		{
-			SetValue(m_initDataValue[i].name,m_initDataValue[i].value);
+			SetValue(m_initDataValue[i].name, m_initDataValue[i].value);
 		}
 	}
 }
@@ -374,19 +376,27 @@ void CMyConfig::AdjustInitData(void)
 
 void CMyConfig::SetInitData(void)
 {
+
 	int i;
-	for (i=0;i<MYCONFIGKOSUUMAX;i++)
+	for (i = 0; i < MYCONFIGKOSUUMAX; i++)
 	{
 		if (m_initDataString[i].name[0] == 0) break;
-		SetText(m_initDataString[i].name,m_initDataString[i].text);
+		SetText(m_initDataString[i].name, m_initDataString[i].text);
 	}
 
 
-	for (i=0;i<MYCONFIGKOSUUMAX;i++)
+	for (i = 0; i < MYCONFIGKOSUUMAX; i++)
 	{
 		if (m_initDataValue[i].name[0] == 0) break;
-		SetValue(m_initDataValue[i].name,m_initDataValue[i].value);
+		SetValue(m_initDataValue[i].name, m_initDataValue[i].value);
 	}
+
+
+	if (m_varType > 0)
+	{
+		SetValue("varBlock2",600);
+	}
+
 
 	for (i=0;i<MYCONFIGKOSUUMAX;i++)
 	{

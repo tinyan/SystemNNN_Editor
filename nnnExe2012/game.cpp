@@ -40,6 +40,7 @@
 
 
 
+
 #include "mode.h"
 
 #include "game.h"
@@ -60,9 +61,17 @@ int CGame::m_daysOfMonth[13]=
 
 
 
+
+
+
+
+
 CGame::CGame(HWND hwnd, HINSTANCE hinstance, CCommonSystemFile* lpSystemFile, int windowSizeX, int windowSizeY, int bpp) : CGameCallBack(hwnd, hinstance, lpSystemFile, windowSizeX, windowSizeY, bpp)
 {
 }
+
+
+
 
 void CGame::Create(void)
 {
@@ -76,6 +85,10 @@ void CGame::Create(void)
 
 
 
+
+
+
+
 CGame::~CGame()
 {
 	End();
@@ -84,6 +97,11 @@ CGame::~CGame()
 void CGame::End(void)
 {
 }
+
+
+
+
+
 
 
 
@@ -267,6 +285,7 @@ BOOL CGame::CheckDebugOk(void)
 }
 
 
+
 void CGame::GetExtDataForSave(LPVOID ptr,int extNumber)
 {
 }
@@ -274,6 +293,7 @@ void CGame::GetExtDataForSave(LPVOID ptr,int extNumber)
 void CGame::SetExtDataByLoad(LPVOID ptr,int extNumber)
 {
 }
+
 
 
 

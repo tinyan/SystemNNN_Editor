@@ -159,7 +159,7 @@ LRESULT CProgramView::ViewWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM
 				case COMMANDDATATYPE_SCRIPT:
 					if (mes != NULL)
 					{
-						DrawText(hdc,mes,-1,&rc,0);
+						DrawText(hdc,mes,-1,&rc,DT_NOPREFIX);
 					}
 					else
 					{

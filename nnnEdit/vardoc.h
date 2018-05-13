@@ -90,7 +90,7 @@ private:
 	int m_varBlockKosuu;
 	BOOL m_scrapFlag;
 
-	int m_markColor[1000];
+	int m_markColor[2200];
 	BOOL m_markChangeFlag;
 
 	int m_scrapColor;

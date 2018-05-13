@@ -22,6 +22,7 @@
 #include "vardoc.h"
 
 #include "myapplicationBase.h"
+
 #include "varSearchOrReplace.h"
 
 #include "..\..\systemNNN\nnnUtilLib\namelist.h"
@@ -56,23 +57,32 @@ CVarDoc::CVarDoc(CMyApplicationBase* lpApp) : CMyDocument(lpApp)
 	ReCalcuVarKosuu();
 
 
+//	int varType = 1;
+	int varKosuu = m_app->GetVarKosuu();
 	//load mark color
 	m_markChangeFlag = FALSE;
-	FILE* file = CMyFile::Open("nnndir\\nnn\\varmark.col","rb");
+	int varType = m_app->GetVarType();
+	
+	
+	
+	LPSTR varmarkFilename = m_app->GetVarMarkFilename();
+
+	FILE* file = CMyFile::Open(varmarkFilename,"rb");
 	if (file == NULL)
 	{
-		file = CMyFile::Open("nnndir\\setup\\varmark.col","rb");
+		LPSTR varmarkSetupFilename = m_app->GetVarMarkSetupFilename();
+		file = CMyFile::Open(varmarkSetupFilename,"rb");
 		m_markChangeFlag = TRUE;
 	}
 
 	if (file != NULL)
 	{
-		fread(m_markColor,sizeof(int),1000,file);
+		fread(m_markColor,sizeof(int),varKosuu,file);
 		fclose(file);
 	}
 	else
 	{
-		for (int i=0;i<1000;i++)
+		for (int i=0;i<varKosuu;i++)
 		{
 			m_markColor[i] = 0;
 		}
@@ -395,10 +405,14 @@ void CVarDoc::OnChangeMarkColor(int n,int color,int backColor)
 
 void CVarDoc::SaveMarkColor(void)
 {
-	FILE* file = CMyFile::Open("nnndir\\nnn\\varmark.col","wb");
+	int varKosuu = m_app->GetVarKosuu();
+
+	LPSTR varmarkFilename = m_app->GetVarMarkFilename();
+
+	FILE* file = CMyFile::Open(varmarkFilename,"wb");
 	if (file != NULL)
 	{
-		fwrite(m_markColor,sizeof(int),1000,file);
+		fwrite(m_markColor,sizeof(int),varKosuu,file);
 		fclose(file);
 	}
 	m_markChangeFlag = FALSE;
@@ -421,26 +435,44 @@ int CVarDoc::GetBlockKosuu(void)
 
 void CVarDoc::ReCalcuVarKosuu(void)
 {
-	m_varStart[0] = 0;
-	m_varKosuu[0] = 100;
-	m_varStart[1] = 100;
-	m_varKosuu[1] = 100;
-	m_varStart[2] = 200;
-	m_varKosuu[2] = 100;
+	int varType = 1;
+	int varStart = 300;
+	int varKosuu = 700;
+
+	if (varType == 0)
+	{
+		m_varStart[0] = 0;
+		m_varKosuu[0] = 100;
+		m_varStart[1] = 100;
+		m_varKosuu[1] = 100;
+		m_varStart[2] = 200;
+		m_varKosuu[2] = 100;
+	}
+	else
+	{
+		m_varStart[0] = 0;
+		m_varKosuu[0] = 100;
+		m_varStart[1] = 100;
+		m_varKosuu[1] = 100;
+		m_varStart[2] = 200;
+		m_varKosuu[2] = 1000;
+		varStart = 1200;
+		varKosuu = 1000;
+	}
 
 	m_varBlockKosuu = m_app->GetConfig("varBlockNumber");
 	if (m_varBlockKosuu < 1)
 	{
 		m_varBlockKosuu = 1;
-		m_varStart[3] = 300;
-		m_varKosuu[3] = 700;
+		m_varStart[3] = varStart;
+		m_varKosuu[3] = varKosuu;
 		m_nowSelectNumber[3] = 0;
 	}
 	else
 	{
 		if (m_varBlockKosuu>7) m_varBlockKosuu = 7;
 
-		int start = 300;
+		int start = varStart;
 		for (int j=0;j<m_varBlockKosuu;j++)
 		{
 			char name[256];
@@ -654,15 +686,27 @@ void CVarDoc::ReplaceVarName(int varNumber,LPSTR searchString,LPSTR replaceStrin
 
 
 
-LPSTR CVarDoc::GetVarInitDataString(int n,int md)
+LPSTR CVarDoc::GetVarInitDataString(int n, int md)
 {
 	if (md == -1) md = GetVarMode();
 	n += m_varStart[md];
-	if (n<100) return m_varTypeNameSys;
-	if ((n>=200) && (n<300)) return m_varTypeNameGame;
+	if (n < 100) return m_varTypeNameSys;
+	int type = m_app->GetVarType();
 
-	wsprintf(m_varTypeNameWork,"%d",m_varInitData->GetData(n));
+	if (type == 0)
+	{
+		if ((n >= 200) && (n < 300)) return m_varTypeNameGame;
+
+		wsprintf(m_varTypeNameWork, "%d", m_varInitData->GetData(n));
+		return m_varTypeNameWork;
+
+	}
+
+	if ((n >= 200) && (n < 1200)) return m_varTypeNameGame;
+	wsprintf(m_varTypeNameWork, "%d", m_varInitData->GetData(n));
 	return m_varTypeNameWork;
+
+
 }
 
 void CVarDoc::OnChangeInitData(int n)
@@ -673,7 +717,17 @@ void CVarDoc::OnChangeInitData(int n)
 	n += m_varStart[md];
 
 	if (n<100) f = FALSE;
-	if ((n>=200) && (n<300)) f = FALSE;
+
+	int type = m_app->GetVarType();
+
+	if (type == 0)
+	{
+		if ((n >= 200) && (n < 300)) f = FALSE;
+	}
+	else
+	{
+		if ((n >= 200) && (n < 1200)) f = FALSE;
+	}
 
 	if (f == FALSE)
 	{

@@ -233,6 +233,7 @@ CMainScreenView::CMainScreenView(CMyDocument* pDocument,HWND clientHWND,HINSTANC
 
 
 
+
 	m_mmx->Set565Mode(m_directX->Check565Mode());
 	m_mmx->SetRGB24Mode(m_directX->CheckRGB24Mode());
 	m_mmx->SetRGB32Mode(m_directX->CheckRGB32Mode());

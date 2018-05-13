@@ -423,6 +423,14 @@ public:
 	virtual CUndoMemoryObject* GetUndoObject(void) = 0;
 	virtual void CheckAndGetKomaUndo(void) = 0;
 
+
+	virtual int GetVarType(void) = 0;
+	virtual int GetVarKosuu(void) = 0;
+
+	virtual LPSTR GetVarMarkFilename(void) = 0;
+	virtual LPSTR GetVarMarkSetupFilename(void) = 0;
+	virtual LPSTR GetVarFxfFilename(void) = 0;
+
 protected:
 
 private:

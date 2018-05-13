@@ -34,6 +34,7 @@
 
 
 
+
 CMainScreenDoc::CMainScreenDoc(CMyApplicationBase* lpApp) : CMyDocument(lpApp)
 {
 	m_windowNumber = MAINSCREEN_WINDOW;
@@ -45,6 +46,7 @@ CMainScreenDoc::CMainScreenDoc(CMyApplicationBase* lpApp) : CMyDocument(lpApp)
 	m_effectParamNamePrintMode = m_app->GetConfig("effectNamePrintFlag");
 	m_effectDescPrintMode = m_app->GetConfig("effectDescPrintFlag");
 	m_effectParamDescPrintMode = m_app->GetConfig("effectParamDescPrintFlag");
+
 
 
 	GetEditFrameSetup();

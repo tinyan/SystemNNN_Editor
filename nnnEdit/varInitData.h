@@ -19,7 +19,7 @@ public:
 	BOOL CheckModify(void){return m_editFlag;}
 private:
 	CNameList* m_list;
-	int m_data[1000];
+	int m_data[2200];
 	BOOL m_editFlag;
 };
 

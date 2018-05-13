@@ -17,7 +17,7 @@
 CVarInitData::CVarInitData()
 {
 	m_list = new CNameList();
-	for (int i=0;i<1000;i++)
+	for (int i=0;i<2200;i++)
 	{
 		m_data[i] = 0;
 	}
@@ -36,7 +36,7 @@ void CVarInitData::End(void)
 
 int CVarInitData::GetData(int n)
 {
-	if ((n>=0) && (n<1000))
+	if ((n>=0) && (n<2200))
 	{
 		return m_data[n];
 	}
@@ -45,7 +45,7 @@ int CVarInitData::GetData(int n)
 
 void CVarInitData::SetData(int n,int d)
 {
-	if ((n>=0) && (n<1000))
+	if ((n>=0) && (n<2200))
 	{
 		m_data[n] = d;
 		m_editFlag = TRUE;
@@ -58,7 +58,7 @@ BOOL CVarInitData::Load(LPSTR filename)
 	if (m_list->LoadFile(filename,FALSE,TRUE))
 	{
 		int kosuu = m_list->GetNameKosuu();
-		if (kosuu>1000) kosuu = 1000;
+		if (kosuu>2200) kosuu = 2200;
 		for (int i=0;i<kosuu;i++)
 		{
 			m_data[i] = atoi(m_list->GetName(i));
@@ -84,7 +84,7 @@ BOOL CVarInitData::Save(LPSTR filename)
 		return FALSE;
 	}
 
-	for (int j=0;j<200;j++)
+	for (int j=0;j<2200/5;j++)
 	{
 		char mes[1024];
 		wsprintf(mes,"%d,%d,%d,%d,%d\x00d\x00a",m_data[j*5+0],m_data[j*5+1],m_data[j*5+2],m_data[j*5+3],m_data[j*5+4]);

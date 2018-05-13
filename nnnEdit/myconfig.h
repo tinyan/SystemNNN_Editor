@@ -10,7 +10,7 @@ class CConfigData;
 class CMyConfig
 {
 public:
-	CMyConfig();
+	CMyConfig(int varType = 1);
 	~CMyConfig();
 	void End(void);
 
@@ -46,6 +46,8 @@ public:
 
 	void GetWindowZahyo(LPSTR windowName, int md, RECT* lpRect, BOOL* lpFlag);
 	void SetWindowZahyo(LPSTR windowName, int md, RECT* lpRect, BOOL flag);
+
+	int m_varType;
 
 private:
 	BOOL SaveData(void);

@@ -330,7 +330,7 @@ LRESULT CConteView::ViewWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
 												TextOut(hdc,mesPrintX,mesPrintY,mes,strlen(mes));
 												rc000.top += 10;
 											}
-											DrawText(hdc,text,ln,&rc000,0);
+											DrawText(hdc,text,ln,&rc000,DT_NOPREFIX);
 										}
 									}
 								}

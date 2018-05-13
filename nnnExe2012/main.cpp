@@ -11,6 +11,7 @@
 
 
 
+
 #include <Math.h>
 //#include <bits.nan.h>
 
@@ -25,7 +26,7 @@
 
 //#include MYINCLUDE2("aaa")
 
-#include "d:\tinyan\systemNNNLib\\nyanLib\include\libinclude2.h"
+#include "d:\tinyan\systemNNNLib\\nyanLib\include\libinclude2017.h"
 
 #include "d:\tinyan\systemNNNLib\nyanLib\include\commonmacro.h"
 
@@ -42,6 +43,8 @@
 
 #include "game.h"
 #include "main.h"
+
+
 
 
 
@@ -240,8 +243,71 @@ void test(void)
 }
 */
 
-int WINAPI WinMain(  HINSTANCE hInstance,   HINSTANCE hPrevInstance,  LPSTR lpCmdLine,  int nCmdShow)
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
+	/*
+	int saikoro[6];
+	for (int i = 0; i < 6; i++)
+	{
+		saikoro[i] = 0;
+	}
+	for (int a = 1; a <= 8; a++)
+	{
+		for (int b = 1; b <= 8; b++)
+		{
+			for (int c0 = 1; c0 <= 8; c0++)
+			{
+				int c = c0;
+				if (b == c0)
+				{
+					c = 9 - b;
+				}
+
+				int r = -1;
+				int minbc = min(b, c);
+				int maxbc = max(b, c);
+
+				if (a < minbc)
+				{
+					r = a;
+				}
+				else if ((minbc <= a) && (a < maxbc))
+				{
+					r = a - 1;
+				}
+				else if (a >= maxbc)
+				{
+					r = a - 2;
+				}
+				else
+				{
+					OutputDebugString("Error!!!!");
+				}
+
+				if ((r < 1) || (r > 6))
+				{
+					char mes[256];
+					sprintf_s(mes, 256, "%d %d %d = %d\n", a,b,c0, r);
+					OutputDebugString(mes);
+
+				}
+				saikoro[r-1]++;
+
+			}
+		}
+	}
+
+	for (int i = 0; i < 6; i++)
+	{
+		char mes[256];
+		sprintf_s(mes, 256, "%d = %d\n", i + 1, saikoro[i]);
+		OutputDebugString(mes);
+	}
+
+	return 0;
+	*/
+
+
 	/*
 	for (int n=1;n<30;n++)
 	{
@@ -994,6 +1060,7 @@ bbb
 //	m_systemFile = new CCommonSystemFile();
 //	m_systemFile->Load(TRUE);
 
+
 		
 	
 
@@ -1018,7 +1085,6 @@ bbb
 
 	return 0;
 }
-
 
 
 

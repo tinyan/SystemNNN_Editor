@@ -4,6 +4,7 @@
 
 
 
+
 #include <windows.h>
 #include <stdio.h>
 #include <time.h>
@@ -11,6 +12,15 @@
 //#include <msxml.h>
 
 #include "resource.h"
+
+#define __TINYANLIBDIR__ "d:\\tinyan\\systemNNNLib\\"
+#define __LIBPNGDIR__ "d:\\libpng\\lib\\"
+#define __TINYANINCLUDEDIR__ "d:\\tinyan\\systemNNNLib\\"
+
+
+#include "d:\tinyan\systemNNNLib\\nyanLib\include\libinclude2017.h"
+
+
 #include "..\..\systemNNN\nyanLib\include\commonmacro.h"
 
 #include "..\..\systemNNN\nnnUtilLib\mySaveFolder.h"
@@ -32,7 +42,7 @@
 
 #include "main.h"
 
-#include "..\..\systemNNN\nyanlib\include\libinclude.h"
+//#include "..\..\systemNNN\nyanlib\include\libinclude.h"
 
 //#pragma comment(lib,"winmm.lib")
 #pragma comment(lib,"comctl32.lib")
@@ -48,13 +58,13 @@
 #if _MSC_VER >= 1700
 
 		#if !defined _DEBUG
-			#pragma comment(lib,"..\\..\\systemNNN\\nyanLib\\lib\\nnnEditUtil2012.lib")
-			#pragma comment(lib,"..\\..\\systemNNN\\nyanLib\\lib\\nnnEditView2012.lib")
-			#pragma comment(lib,"..\\..\\systemNNN\\nyanLib\\lib\\nnnEditControl2012.lib")
+			#pragma comment(lib,"..\\..\\systemNNN\\nyanLib\\lib\\nnnEditUtil2017.lib")
+			#pragma comment(lib,"..\\..\\systemNNN\\nyanLib\\lib\\nnnEditView2017.lib")
+			#pragma comment(lib,"..\\..\\systemNNN\\nyanLib\\lib\\nnnEditControl2017.lib")
 		#else
-			#pragma comment(lib,"..\\..\\systemNNN\\nyanLib\\lib\\nnnEditUtil2012D.lib")
-			#pragma comment(lib,"..\\..\\systemNNN\\nyanLib\\lib\\nnnEditView2012D.lib")
-			#pragma comment(lib,"..\\..\\systemNNN\\nyanLib\\lib\\nnnEditControl2012D.lib")
+			#pragma comment(lib,"..\\..\\systemNNN\\nyanLib\\lib\\nnnEditUtil2017D.lib")
+			#pragma comment(lib,"..\\..\\systemNNN\\nyanLib\\lib\\nnnEditView2017D.lib")
+			#pragma comment(lib,"..\\..\\systemNNN\\nyanLib\\lib\\nnnEditControl2017D.lib")
 		#endif
 #else
 
@@ -74,6 +84,7 @@
 
 #endif
 
+/*
 
 #if !defined _DEBUG
 #pragma comment(lib,"d:\\libpng\\lib\\zlib.lib")
@@ -83,6 +94,7 @@
 #pragma comment(lib,"d:\\libpng\\lib\\libpngD.lib")
 #endif
 
+*/
 
 
 

@@ -67,12 +67,14 @@ CScriptCompiler::CScriptCompiler(CMyApplicationBase* app)
 	m_varControlList = m_app->GetVarControlList();
 	int listKosuu = m_varControlList->GetNameKosuu();
 
+	int varKosuu = m_app->GetVarKosuu();
+
 	m_varListNumber = new int[listKosuu/2 + 1];
 	for (int i=1;i<listKosuu/2 - 1;i++)
 	{
 		m_varListNumber[i] = -1;
 		LPSTR listName = m_varControlList->GetName(i*2+2+1);
-		for (int k=1;k<1000;k++)
+		for (int k=1;k<varKosuu;k++)
 		{
 			LPSTR varName = m_app->GetVarName(k);
 			if (_stricmp(varName,listName) == 0)
@@ -859,6 +861,9 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 
 	char json[1024];
 
+	int varType = m_app->GetVarType();
+	int varKosuu = m_app->GetVarKosuu();
+
 	for (int k=0;k<kosuu;k++)
 	{
 		CFilmData* pFilm = (CFilmData*)(pCase->GetObjectData(k));
@@ -1007,11 +1012,23 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 					if (setVar != 0)
 					{
 
-						int varListNumber = setVar & 0x3ff;
-						int varData = (setVar >> 10);
+						int varListNumber;
+						int varData;
+
+						if (varType == 0)
+						{
+							varListNumber = setVar & 0x3ff;
+							varData = (setVar >> 10);
+						}
+						else
+						{
+							varListNumber = setVar & 0xfff;
+							varData = (setVar >> 12);
+						}
+
 						int varNumber = m_varListNumber[varListNumber];
 
-						if ((varNumber > 0) && (varNumber < 1000))
+						if ((varNumber > 0) && (varNumber < varKosuu))
 						{
 							int varpara[2];
 							varpara[0] = varNumber;
@@ -3151,7 +3168,8 @@ void CScriptCompiler::AllBuild(FILE* makeJsonFlag)
 	if (1)
 	{
 		BOOL oldModify = m_varList->CheckModify();
-		m_varList->SaveFile("spt\\var.fxf",TRUE);
+		LPSTR varFxfFilename = m_app->GetVarFxfFilename();
+		m_varList->SaveFile(varFxfFilename,TRUE);
 		m_varList->SetModify(oldModify);
 	}
 
@@ -3167,6 +3185,7 @@ void CScriptCompiler::AllBuild(FILE* makeJsonFlag)
 	CopyFile("nnndir\\namecol.txt","spt\\namecol.xtx",FALSE);
 	CopyFile("nnndir\\movielist.txt","spt\\movielist.xtx",FALSE);
 	CopyFile("nnndir\\varinitdata.txt","spt\\varinitdata.xtx",FALSE);
+	CopyFile("nnndir\\varinitdata2.txt", "spt\\varinitdata2.xtx", FALSE);
 	CopyFile("nnndir\\termlist.txt","spt\\termlist.xtx",FALSE);
 
 	//shoplist à√çÜ

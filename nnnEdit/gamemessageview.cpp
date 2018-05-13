@@ -1107,7 +1107,7 @@ void CGameMessageView::OnPaint(HWND hWnd,WPARAM wParam, LPARAM lParam)
 						SetBkMode(hdc,TRANSPARENT);
 					}
 
-					DrawText(hdc,text,-1,&rc,0);
+					DrawText(hdc,text,-1,&rc,DT_NOPREFIX);
 					SetBkMode(hdc,bkMode);
 
 

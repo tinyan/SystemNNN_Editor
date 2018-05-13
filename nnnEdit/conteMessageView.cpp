@@ -258,7 +258,7 @@ void CConteMessageView::OnPaint(HWND hwnd, HDC hdc, RECT rc)
 
 				SetRect(&rc0,0,yLine,rcWnd.right - rcWnd.left,yLine+m_fontSize*sy);
 
-				DrawText(hdc,text,ln,&rc0,0);
+				DrawText(hdc,text,ln,&rc0,DT_NOPREFIX);
 
 				yLine += sy * m_fontSize;
 

@@ -153,10 +153,10 @@ BEGIN
         MENUITEM SEPARATOR
         POPUP "変数ブロック指定"
         BEGIN
-            MENUITEM "[700]",                       ID_MENU_SET_VARBLOCK1
-            MENUITEM "[400][300]",                  ID_MENU_SET_VARBLOCK2
-            MENUITEM "[300][200][200]",             ID_MENU_SET_VARBLOCK3
-            MENUITEM "[100]x7",                     ID_MENU_SET_VARBLOCK4
+            MENUITEM "[1000]",                      ID_MENU_SET_VARBLOCK1
+            MENUITEM "[400][600]",                  ID_MENU_SET_VARBLOCK2
+            MENUITEM "[300][200][500]",             ID_MENU_SET_VARBLOCK3
+            MENUITEM "[100]x6[400]",                ID_MENU_SET_VARBLOCK4
         END
         POPUP "EDIT表示フレーム"
         BEGIN
@@ -1241,6 +1241,7 @@ END
 
 IDR_TOOLBAR1            BITMAP                  "bmpresource\\toolbar1.bmp"
 
+
 /////////////////////////////////////////////////////////////////////////////
 //
 // Toolbar
@@ -1603,9 +1604,13 @@ END
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
 IDI_ICON1               ICON                    "bmpresource\\nnnEdit2008.ico"
+
 IDI_ICON_NNNEDIT        ICON                    "bmpresource\\icon1.ico"
+
 IDI_ICON_MDICHILDWINDOW ICON                    "bmpresource\\ico00002.ico"
+
 IDI_ICON_VARWINDOW      ICON                    "bmpresource\\ico00001.ico"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -1652,9 +1657,13 @@ END
 //
 
 IDC_NODROP              CURSOR                  "bmpresource\\nodrop.cur"
+
 IDC_LAYERCOPY           CURSOR                  "bmpresource\\layercop.cur"
+
 IDC_LAYERMOVE           CURSOR                  "bmpresource\\cursor1.cur"
+
 IDC_LAYEREXCHANGE       CURSOR                  "bmpresource\\cur00001.cur"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //

@@ -1198,6 +1198,8 @@ void CFilmDoc::OnVarControl(int n)
 
 	CheckAndGetUndo(pFilm,n,n);
 
+	int varType = m_app->GetVarType();
+
 	if (block == -1)
 	{
 		char mes[1024*16];
@@ -1217,8 +1219,19 @@ void CFilmDoc::OnVarControl(int n)
 			{
 				flg = TRUE;
 
-				int varNumber = d  & 0x3ff;
-				int varData = (d >> 10);
+				int varNumber;
+				int varData;
+				if (varType == 0)
+				{
+					varNumber = d & 0x3ff;
+					varData = (d >> 10);
+				}
+				else
+				{
+					varNumber = d & 0xfff;
+					varData = (d >> 12);
+
+				}
 
 				sprintf_s(mes0,sizeof(mes0),"[%d]%s=%d\n",i+1,list->GetName(varNumber*2+2+1),varData);
 				strcat_s(mes,sizeof(mes),mes0);
@@ -1270,9 +1283,25 @@ void CFilmDoc::OnVarControl(int n)
 
 	int nm = pKoma->GetVarControl(block);
 
-	int varNumber = nm  & 0x3ff;
-	int varData = (nm >> 10);
-	if (varNumber > 999) varNumber = 999;
+//	int varNumber = nm  & 0x3ff;
+//	int varData = (nm >> 10);
+	int varNumber;
+	int varData;
+	if (varType == 0)
+	{
+		varNumber = nm & 0x3ff;
+		varData = (nm >> 10);
+	}
+	else
+	{
+		varNumber = nm & 0xfff;
+		varData = (nm >> 12);
+
+	}
+
+
+	int varKosuu = m_app->GetVarKosuu();
+	if (varNumber >= varKosuu) varNumber = varKosuu - 1;
 
 	int v = varNumber;
 	if (v>0) v++;
@@ -1289,8 +1318,16 @@ void CFilmDoc::OnVarControl(int n)
 
 		if (m_input->GetNumber(varData,&nm2,"•Ï”ƒRƒ“ƒgƒ[ƒ‹"))
 		{
-			int d = (nm2 << 10) & 0xfffffc00;
-			d += (rt2-1);
+			int d;
+			if (varType == 0)
+			{
+				d = (nm2 << 10) & 0xfffffc00;
+			}
+			else
+			{
+				d = (nm2 << 12) & 0xfffff000;
+			}
+			d += (rt2 - 1);
 
 			pKoma->SetVarControl(block,d);
 			UpdateMyWindow();

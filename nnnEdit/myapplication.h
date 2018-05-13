@@ -423,6 +423,7 @@ public:
 	void CreateNextKoma(void);
 
 	static int m_varBlockTable[][8];
+	static int m_varBlockTable2[][8];
 
 
 	int GetWarningDelScene(void){return m_warningDeleteScene;}
@@ -551,6 +552,14 @@ public:
 
 	void ClearUndo(void);
 	void CheckAndGetKomaUndo(void);
+
+	int GetVarType(void);
+	int GetVarKosuu(void);
+
+
+	LPSTR GetVarMarkFilename(void);
+	LPSTR GetVarMarkSetupFilename(void);
+	LPSTR GetVarFxfFilename(void);
 
 private:
 	HINSTANCE m_hInstance;
@@ -986,6 +995,9 @@ private:
 	int m_undoEnable;
 	int m_undoKakuninEnable;
 	int m_undoAfterEnable;
+
+	int m_varType;
+	LPSTR m_varFileName;
 
 	CUndoMemoryObject* m_undoObject;
 };

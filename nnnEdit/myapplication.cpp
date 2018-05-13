@@ -206,10 +206,23 @@
 
 
 #define FILMVARNAME_KOSUU 1000
+#define FILMVARNAME_KOSUU2 2200
+
 
 
 #define VAR_FILE_NAME "nnndir\\var.txt"
+#define VAR_FILE_NAME2 "nnndir\\var2.txt"
 #define VARINITDATA_FILE_NAME "nnndir\\varinitdata.txt"
+#define VARINITDATA_FILE_NAME2 "nnndir\\varinitdata2.txt"
+#define VARMARK_FILE_NAME "nnndir\\nnn\\varmark.col"
+#define VARMARK_FILE_NAME2 "nnndir\\nnn\\varmark2.col"
+#define VARMARK_SETUP_FILE_NAME "nnndir\\setup\\varmark.col"
+#define VARMARK_SETUP_FILE_NAME2 "nnndir\\setup\\varmark2.col"
+
+#define VAR_FXF_FILE_NAME "spt\\var.fxf"
+#define VAR_FXF_FILE_NAME2 "spt\\var2.fxf"
+
+
 #define CHARA_FILE_NAME "nnndir\\charaname.txt"
 #define FACE_FILE_NAME "nnndir\\facelist.txt"
 #define PROJECT_FILE_NAME "nnndir\\project.txt"
@@ -222,6 +235,7 @@
 #define TERMLIST_FILE_NAME "nnndir\\termlist.txt"
 
 #define VAR_FILE_NAME_ORG "nnndir\\setup\\org\\var.org"
+#define VAR_FILE_NAME_ORG2 "nnndir\\setup\\org\\var2.org"
 //#define VAR_FILE_NAME_ORG "nnndir\\setup\\org\\varinitdata.org"
 #define CHARA_FILE_NAME_ORG "nnndir\\setup\\org\\charaname.org"
 #define FACE_FILE_NAME_ORG "nnndir\\setup\\org\\facelist.org"
@@ -272,6 +286,14 @@ int CMyApplication::m_varBlockTable[][8]=
 	{2,400,300},
 	{3,300,200,200},
 	{7,100,100,100,100,100,100,100},
+};
+
+int CMyApplication::m_varBlockTable2[][8] =
+{
+	{ 1,1000 },
+	{ 2,400,600 },
+	{ 3,300,200,500 },
+	{ 7,100,100,100,100,100,100,400 },
 };
 
 char CMyApplication::m_varInitName[100][32]=
@@ -367,6 +389,9 @@ CMyApplication::CMyApplication(HINSTANCE hinstance) : CMyApplicationBase(hinstan
 		}
 	}
 
+	m_varType = 1;
+
+
 	m_nextPrintFlag = FALSE;
 	m_windowMode = 0;
 
@@ -405,7 +430,8 @@ CMyApplication::CMyApplication(HINSTANCE hinstance) : CMyApplicationBase(hinstan
 	m_bitTable[31] = 0x80000000;
 
 	m_selObj = new CSelectObjectOnly();
-	m_nnnConfig = new CMyConfig();
+
+	m_nnnConfig = new CMyConfig(GetVarType());
 
 
 	int jpegMMX = GetConfig("jpegMMX");
@@ -596,8 +622,16 @@ CMyApplication::CMyApplication(HINSTANCE hinstance) : CMyApplicationBase(hinstan
 	}
 
 
+
+	int varType = GetVarType();
+	m_varFileName = VAR_FILE_NAME;
+	if (varType > 0)
+	{
+		m_varFileName = VAR_FILE_NAME2;
+	}
+
 	m_varList = new CNameList();
-	if (m_varList->LoadFile(VAR_FILE_NAME) == FALSE)
+	if (m_varList->LoadFile(m_varFileName) == FALSE)
 	{
 		for (int i=0;i<100;i++)
 		{
@@ -628,12 +662,22 @@ CMyApplication::CMyApplication(HINSTANCE hinstance) : CMyApplicationBase(hinstan
 
 
 
-	//1000‚±‚É‚·‚é
 
-	m_varList->AdjustNameKosuu(1000);
+	//1000‚±‚É‚·‚é
+	int varMax = GetVarKosuu();
+	m_varList->AdjustNameKosuu(varMax);
+
+
 
 	m_varInitData = new CVarInitData();
-	m_varInitData->Load(VARINITDATA_FILE_NAME);
+	if (varType == 0)
+	{
+		m_varInitData->Load(VARINITDATA_FILE_NAME);
+	}
+	else
+	{
+		m_varInitData->Load(VARINITDATA_FILE_NAME2);
+	}
 
 	m_charaList = new CNameList();
 	if (m_charaList->LoadFile(CHARA_FILE_NAME) == FALSE)
@@ -713,7 +757,8 @@ CMyApplication::CMyApplication(HINSTANCE hinstance) : CMyApplicationBase(hinstan
 		{
 			LPSTR controlVarName = m_varControlList->GetName(i*2+1);
 			int found = -1;
-			for (int k=0;k<1000;k++)
+			int n = m_varList->GetNameKosuu();
+			for (int k=0;k<n;k++)
 			{
 				LPSTR varName = m_varList->GetName(k);
 				if (strcmp(controlVarName,varName) == 0)
@@ -1262,7 +1307,7 @@ BOOL CMyApplication::SaveVarName(void)
 
 
 
-	BOOL b = m_varList->SaveFile(VAR_FILE_NAME);
+	BOOL b = m_varList->SaveFile(m_varFileName);
 
 	m_varList->SetModify(FALSE);
 
@@ -1278,7 +1323,13 @@ BOOL CMyApplication::SaveVarName(void)
 
 BOOL CMyApplication::SaveVarInitData(void)
 {
-	BOOL b = m_varInitData->Save(VARINITDATA_FILE_NAME);
+	int type = GetVarType();
+	if (type == 0)
+	{
+		BOOL b = m_varInitData->Save(VARINITDATA_FILE_NAME);
+		return b;
+	}
+	BOOL b = m_varInitData->Save(VARINITDATA_FILE_NAME2);
 	return b;
 }
 
@@ -4560,7 +4611,15 @@ void CMyApplication::CreateNextKoma(void)
 
 void CMyApplication::ChangeVarBlock(int n)
 {
+	int varType = GetVarType();
+
 	int kosuu = m_varBlockTable[n][0];
+	if (varType > 0)
+	{
+		kosuu = m_varBlockTable2[n][0];
+	}
+
+
 	SetConfig("varBlockNumber",kosuu);
 	SetConfig("varBlockType",n);
 
@@ -4568,8 +4627,17 @@ void CMyApplication::ChangeVarBlock(int n)
 	{
 		char mes[256];
 		wsprintf(mes,"varBlock%d",i+1);
-		SetConfig(mes,m_varBlockTable[n][i+1]);
+		if (varType == 0)
+		{
+			SetConfig(mes, m_varBlockTable[n][i + 1]);
+		}
+		else
+		{
+			SetConfig(mes, m_varBlockTable2[n][i + 1]);
+		}
 	}
+
+
 
 	CVarDoc* pDoc = (CVarDoc*)m_document[VAR_WINDOW];
 	pDoc->ReCalcuVarKosuu();
@@ -6518,6 +6586,51 @@ void CMyApplication::CheckAndGetKomaUndo(void)
 
 }
 
+int  CMyApplication::GetVarType(void)
+{
+	return 1;
+}
+int  CMyApplication::GetVarKosuu(void)
+{
+	int type = GetVarType();
+	if (type == 0)
+	{
+		return 1000;
+	}
+	return 2200;
+}
+
+
+LPSTR CMyApplication::GetVarMarkFilename(void)
+{
+	int type = GetVarType();
+	if (type == 0)
+	{
+		return VARMARK_FILE_NAME;
+	}
+	return VARMARK_FILE_NAME2;
+}
+
+LPSTR CMyApplication::GetVarMarkSetupFilename(void)
+{
+	int type = GetVarType();
+	if (type == 0)
+	{
+		return VARMARK_SETUP_FILE_NAME;
+
+	}
+	return VARMARK_SETUP_FILE_NAME2;
+}
+
+LPSTR CMyApplication::GetVarFxfFilename(void)
+{
+	int type = GetVarType();
+	if (type == 0)
+	{
+		return VAR_FXF_FILE_NAME;
+	}
+	return VAR_FXF_FILE_NAME2;
+}
 
 /*_*/
 
