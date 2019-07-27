@@ -1141,7 +1141,7 @@ void CLayerView::PutLeftButton(HDC hdc,HDC src,int n,BOOL onFlag)
 	int srcY = 48;
 	
 	if (onFlag) srcX += sizeX;
-	if ((n < 4) || (n == 14)) srcY += sizeY;
+	if ((n < 4) || (n == 30)) srcY += sizeY;
 
 	int putX = m_leftPicSizeX;
 	int putY = m_upperAreaSizeY + n*sizeY;
@@ -1158,7 +1158,7 @@ void CLayerView::PutRightButton(HDC hdc,HDC src,int n,BOOL onFlag)
 	int srcY = 96;
 	
 	if (onFlag) srcX += sizeX;
-	if ((n < 4) || (n == 14)) srcY += sizeY;
+	if ((n < 4) || (n == 30)) srcY += sizeY;
 
 	int putX = m_leftPicSizeX + m_leftButtonSizeX + m_eyeSizeX;
 	int putY = m_upperAreaSizeY + n*sizeY;

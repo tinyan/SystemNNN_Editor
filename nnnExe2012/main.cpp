@@ -12,6 +12,7 @@
 
 
 
+
 #include <Math.h>
 //#include <bits.nan.h>
 
@@ -25,6 +26,10 @@
 //#define MYINCLUDE2(x) "d:\\tinyan\\systemNNNLib\\include\\" #x
 
 //#include MYINCLUDE2("aaa")
+
+
+
+
 
 #include "d:\tinyan\systemNNNLib\\nyanLib\include\libinclude2017.h"
 
@@ -43,6 +48,10 @@
 
 #include "game.h"
 #include "main.h"
+
+
+
+
 
 
 
@@ -125,6 +134,13 @@ COLORNAMETABLE m_colorNameTable[100]=
 
 
 
+
+
+
+
+
+
+
 #include <locale.h>
 //#define __DEMO_VERSION__
 
@@ -154,6 +170,16 @@ void test(void)
 		{3,1,1,3,1,3,3,1,1,3},
 	};
 
+
+
+	
+
+
+
+
+
+
+
 	int* anstable = new int[1024*1024*2];
 
 	int bt[10];
@@ -180,6 +206,8 @@ void test(void)
 			}
 			a[p] = s;
 		}
+
+
 
 		int aa[2];
 		aa[0] = 0;
@@ -243,8 +271,96 @@ void test(void)
 }
 */
 
+/*
+struct aaa
+{
+	aaa() {}
+	~aaa() {}
+	int x;
+};
+
+struct bbb
+{
+	bbb() {}
+	virtual ~bbb() {}
+	virtual void ccc(void) {}
+	virtual void ddd(void) {}
+	int x;
+};
+*/
+
+
+
+
+#include <time.h>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
+
+
+	/*
+
+	for (int i = 1; i < 100; i++)
+	{
+		float db = 6000.0f + 2000.0f * (log(i) / log(10));
+		char mes[256];
+		sprintf_s(mes, 256, "\nvol=%d:%dDB", i, (int)db);
+		OutputDebugString(mes);
+		//6000.0f + 2000.0f * log(m_volume) / log(10);
+
+	}
+	
+	return 0;
+	*/
+
+
+	/*
+	srand(time(NULL));
+
+	int a = (int)(rand()%1000);
+	a = 789;
+	int b = 765;
+	int c = 666;
+	int d = 333;
+	int e = 0;
+	int f = 0;
+
+	srand(a+b+c+d+e+f);
+	int x = (int)(rand() % 1000);
+	int delta = abs(x - a) - abs(x - b);
+
+
+	return 0;
+	*/
+
+
+//	double a = 0x7000000000001234;
+//	long long b = (long long)a;
+//	b += 0;
+
+	/*
+	int a = sizeof(aaa);
+	int b = sizeof(bbb);
+	char mes[256];
+	sprintf_s(mes, 256, "%d %d", a, b);
+	OutputDebugString(mes);
+
+	return 0;
+	*/
+
 	/*
 	int saikoro[6];
 	for (int i = 0; i < 6; i++)
@@ -1044,6 +1160,8 @@ bbb
 
 
 
+
+
 	//
 	// 必要ならここで体験版フラグなどをたてる
 	//
@@ -1060,9 +1178,11 @@ bbb
 //	m_systemFile = new CCommonSystemFile();
 //	m_systemFile->Load(TRUE);
 
-
 		
-	
+
+
+
+
 
 	m_mainControl = new CMainControl();	//コンストラクタでwheelMouse,systemfileを指定できる 指定なし、またはNULLだと内部で標準のを作成する
 

@@ -316,7 +316,7 @@ int CMyOnTimer::OnTimer(int n)
 //	m_effect->CountUp();
 			m_effect->CalcuOnly();
 			m_effect->Print(FALSE,TRUE);
-
+			m_effect->Print(TRUE, TRUE);
 
 
 m_app->PrintHint();
