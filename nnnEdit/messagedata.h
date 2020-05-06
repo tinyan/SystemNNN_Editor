@@ -8,6 +8,37 @@
 class CCase;
 class CUndoMemoryObject;
 
+#define VOICE_SE_FLAG_BIT_STOP 0x0001
+#define VOICE_SE_FLAG_BIT_TEII 0x0002
+#define VOICE_SE_FLAG_BIT_MOVE 0x0004
+#define VOICE_SE_FLAG_BIT_TEII2 0x0008
+#define VOICE_SE_FLAG_BIT_DOPPLER 0x0010
+#define VOICE_SE_FLAG_BIT_LOOP 0x0020
+#define VOICE_SE_FLAG_BIT_VOICECONTINUE 0x0040
+
+#define VOICE_SE_FLAG_BIT_FADE 0x0100
+#define VOICE_SE_FLAG_BIT_VOLUMEONLY 0x0200
+
+#define VOICE_SE_FLAG_BIT_SYSTEMSE 0x1000
+#define VOICE_SE_FLAG_BIT_VOICECOMPLETE 0x2000
+#define VOICE_SE_FLAG_BIT_NOWAITSAMECHARA 0x4000
+
+
+//
+// flag bit
+// 
+// 0:stop
+// 1:teii
+// 2:move
+// 3:teii2
+// 4:doppler
+// 5:loop
+// 6:voicecontinue
+//
+// 8:fade flag
+// 9:volumeonly
+//
+
 class CMessageData : public CCase
 {
 public:
@@ -74,6 +105,12 @@ public:
 	void SetVoiceContinue(int channel = 0, BOOL continueFlag = TRUE);
 	BOOL CheckVoiceContinue(int channel = 0);
 
+	void ChangeVoiceComplete(int channel = 0);
+	bool CheckVoiceComplete(int channel = 0);
+
+	void ChangeVoiceNoWaitSameCharaVoice(int channel = 0);
+	bool CheckVoiceNoWaitSameCharaVoice(int channel = 0);
+
 	BOOL CheckVoiceVolumeExist(int channel = 0);
 	void SetVoiceVolume(int vol,int channel = 0);
 	int GetVoiceVolume(int channel = 0);
@@ -101,6 +138,11 @@ public:
 	BOOL CheckVoiceEffect(int channel = 0);
 
 	void CheckAllVoiceEffectClear(int channel = 0);
+
+
+	BOOL CheckSEIsSystem(int channel = 0);
+	void SetSEIsSystem(BOOL flg = TRUE, int channel = 0);
+
 
 
 

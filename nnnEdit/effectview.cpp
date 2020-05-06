@@ -547,6 +547,12 @@ int CEffectView::AdjustCenterY(int d)
 	return d - centerY / 2;
 }
 
+void CEffectView::OnEnterKey(void)
+{
+	CEffectDoc* pDoc = (CEffectDoc*)m_document;
+	pDoc->OnEnterKey();
+}
+
 
 void CEffectView::OnLeftKey(void)
 {

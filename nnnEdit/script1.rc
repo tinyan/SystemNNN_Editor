@@ -1059,6 +1059,7 @@ BEGIN
         MENUITEM "ファイル名変更",                     ID_MENU_MESSAGE_VOICEFILENAME
         MENUITEM SEPARATOR
         MENUITEM "音声継続",                        ID_MENU_MESSAGE_VOICE_CONTINUE
+        MENUITEM "音声完全",                        ID_MENU_MESSAGE_VOICE_COMPLETE, INACTIVE
         MENUITEM SEPARATOR
         MENUITEM "ループ切り替え",                     ID_MENU_MESSAGE_VOICE_LOOP, GRAYED
         MENUITEM SEPARATOR
@@ -1091,6 +1092,8 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "ボリューム",                       ID_MENU_MESSAGE_SE_VOLUME
         MENUITEM "定位",                          ID_MENU_MESSAGE_SE_EFFECT
+        MENUITEM SEPARATOR
+        MENUITEM "System音声",                    40880
         MENUITEM SEPARATOR
         MENUITEM "削除",                          ID_MENU_MESSAGE_SEDELETE
         MENUITEM SEPARATOR
@@ -1206,6 +1209,7 @@ BEGIN
         MENUITEM "ファイル名変更",                     ID_MENU_MESSAGE_VOICEFILENAME
         MENUITEM SEPARATOR
         MENUITEM "音声継続",                        ID_MENU_MESSAGE_VOICE_CONTINUE, GRAYED
+        MENUITEM "音声に影響されない",                   ID_MENU_MESSAGE_VOICE_NOWAITVOICE
         MENUITEM SEPARATOR
         MENUITEM "ループ切り替え",                     ID_MENU_MESSAGE_VOICE_LOOP
         MENUITEM SEPARATOR

@@ -77,12 +77,12 @@ char CMiniCompiler::m_defaultCaption[] = "ÉGÉâÅ[";
 
 CMiniCompiler::ENZANSHINAMETABLE CMiniCompiler::m_enzanshiName[]=
 {
-	{ENZANSHI_NULL,			"null",		TOKEN_NUMBER | 0},
-	{ENZANSHI_TRUE,			"true",		TOKEN_NUMBER | 1},
-	{ENZANSHI_FALSE,		"false",	TOKEN_NUMBER | 0},
-	{ENZANSHI_AND,			"and",		TOKEN_DOUBLE | '&'},
-	{ENZANSHI_XOR,			"xor",		TOKEN_DOUBLE | '^'},
-	{ENZANSHI_OR,			"or",		TOKEN_DOUBLE | '|'},
+	{ENZANSHI_NULL,			"null",		(int)TOKEN_NUMBER | 0},
+	{ENZANSHI_TRUE,			"true",		(int)TOKEN_NUMBER | 1},
+	{ENZANSHI_FALSE,			"false",		(int)TOKEN_NUMBER | 0},
+	{ENZANSHI_AND,			"and",		(int)TOKEN_DOUBLE | '&'},
+	{ENZANSHI_XOR,			"xor",		(int)TOKEN_DOUBLE | '^'},
+	{ENZANSHI_OR,				"or",		(int)TOKEN_DOUBLE | '|'},
 
 
 	{-1,					"nothing",	0},
@@ -1769,6 +1769,11 @@ BOOL CMiniCompiler::Pass2Sound(int seNum,int ch,int paraKosuu,int* pPara,FILE* j
 {
 	m_objectSize = 4 + 1 + 1 + paraKosuu;
 	
+
+	for (int i = 0; i < 32; i++)
+	{
+		m_objectCode[i] = 0;
+	}
 	m_objectCode[0] = m_objectSize;
 	m_objectCode[1] = IDENTIFY_SYSTEMFUNCTION;
 	m_objectCode[2] = CODE_SYSTEMFUNCTION_SOUND;

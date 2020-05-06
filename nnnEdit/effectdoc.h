@@ -8,6 +8,8 @@
 #include "mydocument.h"
 
 class CEffectParam;
+class CMyInputDialog;
+
 class CEffectDoc : public CMyDocument
 {
 public:
@@ -34,6 +36,7 @@ public:
 
 	void ChangeSelectParam(int selectParam);
 
+	void OnEnterKey(void);
 	void OnLeftKey(void);
 	void OnRightKey(void);
 	void OnUpKey(void);
@@ -51,6 +54,9 @@ private:
 	void CenterRoutine(CKomaData* pKoma,int layer,int n);
 
 	void OnUpDownKey(int delta);
+
+	CMyInputDialog* m_inputDialog;
+
 };
 
 

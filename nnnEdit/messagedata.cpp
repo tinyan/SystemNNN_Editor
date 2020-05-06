@@ -28,7 +28,7 @@ int CMessageData::m_bitPattern[]=
 	0x00010000,0x00020000,0x00040000,0x00080000,
 	0x00100000,0x00200000,0x00400000,0x00800000,
 	0x01000000,0x02000000,0x04000000,0x08000000,
-	0x10000000,0x20000000,0x40000000,0x80000000,
+	0x10000000,0x20000000,0x40000000,(int)0x80000000,
 };
 
 
@@ -78,6 +78,8 @@ char CMessageData::m_whiteSpaceStr[1024]={""};
 // 8:fade flag
 // 9:volumeonly
 //
+// 12systemse
+// 13 complete
 
 
 
@@ -1815,12 +1817,12 @@ void CMessageData::SetVoiceStop(int channel,BOOL stopFlag)
 		m_voiceControlFlag |= m_bitPattern[channel];
 		int kosuuMax = GetMaxBit(m_voiceControlFlag);
 		CreateVoiceControl(kosuuMax);
-		m_voiceControlData[channel*8+1] |= 1;
+		m_voiceControlData[channel*8+1] |= VOICE_SE_FLAG_BIT_STOP;
 	}
 	else
 	{
 		if (CheckVoiceControlFlag(channel) == FALSE) return;
-		m_voiceControlData[channel*8+1] &= ~1;
+		m_voiceControlData[channel*8+1] &= ~VOICE_SE_FLAG_BIT_STOP;
 	}
 }
 
@@ -1829,7 +1831,7 @@ BOOL CMessageData::CheckVoiceOff(int channel)
 {
 	if (CheckVoiceControlFlag(channel) == FALSE) return FALSE;
 
-	if (m_voiceControlData[channel*8+1] & 1) return TRUE;
+	if (m_voiceControlData[channel*8+1] & VOICE_SE_FLAG_BIT_STOP) return TRUE;
 
 	return FALSE;
 }
@@ -1841,31 +1843,65 @@ void CMessageData::SetVoiceContinue(int channel, BOOL continueFlag)
 		m_voiceControlFlag |= m_bitPattern[channel];
 		int kosuuMax = GetMaxBit(m_voiceControlFlag);
 		CreateVoiceControl(kosuuMax);
-		m_voiceControlData[channel*8+1] |= 0x40;
+		m_voiceControlData[channel*8+1] |= VOICE_SE_FLAG_BIT_VOICECONTINUE;
 	}
 	else
 	{
 		if (CheckVoiceControlFlag(channel) == FALSE) return;
-		m_voiceControlData[channel*8+1] &= ~0x40;
+		m_voiceControlData[channel*8+1] &= ~VOICE_SE_FLAG_BIT_VOICECONTINUE;
 	}
 }
+
 
 
 BOOL CMessageData::CheckVoiceContinue(int channel)
 {
 	if (CheckVoiceControlFlag(channel) == FALSE) return FALSE;
 
-	if (m_voiceControlData[channel*8+1] & 0x40) return TRUE;
+	if (m_voiceControlData[channel*8+1] & VOICE_SE_FLAG_BIT_VOICECONTINUE) return TRUE;
 
 	return FALSE;
 }
 
+void CMessageData::ChangeVoiceComplete(int channel)
+{
+	m_voiceControlFlag |= m_bitPattern[channel];
+	int kosuuMax = GetMaxBit(m_voiceControlFlag);
+	CreateVoiceControl(kosuuMax);
+	m_voiceControlData[channel * 8 + 1] ^= VOICE_SE_FLAG_BIT_VOICECOMPLETE;
+}
+
+bool CMessageData::CheckVoiceComplete(int channel)
+{
+	if (CheckVoiceControlFlag(channel) == false) return false;
+
+	if (m_voiceControlData[channel * 8 + 1] & VOICE_SE_FLAG_BIT_VOICECOMPLETE) return true;
+
+	return false;
+}
+
+void CMessageData::ChangeVoiceNoWaitSameCharaVoice(int channel)
+{
+	m_voiceControlFlag |= m_bitPattern[channel];
+	int kosuuMax = GetMaxBit(m_voiceControlFlag);
+	CreateVoiceControl(kosuuMax);
+	m_voiceControlData[channel * 8 + 1] ^= VOICE_SE_FLAG_BIT_NOWAITSAMECHARA;
+}
+
+bool CMessageData::CheckVoiceNoWaitSameCharaVoice(int channel)
+{
+	if (CheckVoiceControlFlag(channel) == false) return false;
+
+	if (m_voiceControlData[channel * 8 + 1] & VOICE_SE_FLAG_BIT_NOWAITSAMECHARA) return true;
+
+	return false;
+}
 
 
 BOOL CMessageData::CheckVoiceTeiiExist(int channel)
 {
 	if (CheckVoiceControlFlag(channel) == FALSE) return FALSE;
-	if ((m_voiceControlData[channel*8+1] & 0x2) == 0) return FALSE;
+	if ((m_voiceControlData[channel*8+1] & VOICE_SE_FLAG_BIT_TEII) == 0) return FALSE;
 	return TRUE;
 }
 
@@ -1898,11 +1934,11 @@ void CMessageData::SetVoiceTeii(int xyz,int d,int channel,int cal)
 
 	if (cal == 0)
 	{
-		m_voiceControlData[channel*8+1] |= 0x2;
+		m_voiceControlData[channel*8+1] |= VOICE_SE_FLAG_BIT_TEII;
 	}
 	else if (cal == 1)
 	{
-		m_voiceControlData[channel*8+1] |= 0x8;
+		m_voiceControlData[channel*8+1] |= VOICE_SE_FLAG_BIT_TEII2;
 	}
 }
 
@@ -1927,7 +1963,7 @@ int CMessageData::GetVoiceTeii(int xyz,int channel,int cal)
 BOOL CMessageData::CheckVoiceMoveFlag(int channel)
 {
 	if (CheckSeControlFlag(channel) == FALSE) return FALSE;
-	if ((m_seControlData[channel*8+1] & 0x4) == 0) return FALSE;
+	if ((m_seControlData[channel*8+1] & VOICE_SE_FLAG_BIT_MOVE) == 0) return FALSE;
 	return TRUE;
 }
 
@@ -1936,18 +1972,18 @@ void CMessageData::SetVoiceMoveFlag(BOOL flg,int channel)
 	CreateVoiceControl(channel+1);
 	if (flg)
 	{
-		m_voiceControlData[channel*8+1] |= 0x4;
+		m_voiceControlData[channel*8+1] |= VOICE_SE_FLAG_BIT_MOVE;
 	}
 	else
 	{
-		m_voiceControlData[channel*8+1] &= ~0x4;
+		m_voiceControlData[channel*8+1] &= ~VOICE_SE_FLAG_BIT_MOVE;
 	}
 }
 
 BOOL CMessageData::CheckVoiceTeii2Exist(int channel)
 {
 	if (CheckVoiceControlFlag(channel) == FALSE) return FALSE;
-	if ((m_voiceControlData[channel*8+1] & 0x8) == 0) return FALSE;
+	if ((m_voiceControlData[channel*8+1] & VOICE_SE_FLAG_BIT_STOP) == 0) return FALSE;
 	return TRUE;
 }
 
@@ -1965,7 +2001,7 @@ int CMessageData::GetVoiceTeii2(int xyz,int channel)
 BOOL CMessageData::CheckVoiceDopplerSoutou(int channel)
 {
 	if (CheckVoiceControlFlag(channel) == FALSE) return FALSE;
-	if ((m_voiceControlData[channel*8+1] & 0x10) == 0) return FALSE;
+	if ((m_voiceControlData[channel*8+1] & VOICE_SE_FLAG_BIT_DOPPLER) == 0) return FALSE;
 	return TRUE;
 }
 
@@ -1973,7 +2009,7 @@ BOOL CMessageData::CheckVoiceDopplerSoutou(int channel)
 void CMessageData::SetVoiceDopplerSoutou(BOOL flg,int channel)
 {
 	CreateVoiceControl(channel+1);
-	m_voiceControlData[channel*8+1] |= 0x10;
+	m_voiceControlData[channel*8+1] |= VOICE_SE_FLAG_BIT_DOPPLER;
 }
 
 
@@ -2002,7 +2038,7 @@ void CMessageData::SetVoiceMoveTime(int tm,int channel)
 BOOL CMessageData::CheckVoiceLoop(int channel)
 {
 	if (CheckVoiceControlFlag(channel) == FALSE) return FALSE;
-	if ((m_voiceControlData[channel*8+1] & 0x20) == 0) return FALSE;
+	if ((m_voiceControlData[channel*8+1] & VOICE_SE_FLAG_BIT_LOOP) == 0) return FALSE;
 	return TRUE;
 }
 
@@ -2011,11 +2047,11 @@ void CMessageData::SetVoiceLoop(BOOL flg,int channel)
 	CreateVoiceControl(channel+1);
 	if (flg)
 	{
-		m_voiceControlData[channel*8+1] |= 0x20;
+		m_voiceControlData[channel*8+1] |= VOICE_SE_FLAG_BIT_LOOP;
 	}
 	else
 	{
-		m_voiceControlData[channel*8+1] &= ~0x20;
+		m_voiceControlData[channel*8+1] &= ~VOICE_SE_FLAG_BIT_LOOP;
 	}
 }
 
@@ -2031,7 +2067,7 @@ void CMessageData::CheckAllVoiceEffectClear(int channel)
 		if (GetVoiceTeii(1,channel) != 0) return;
 		if (GetVoiceTeii(2,channel) != 0) return;
 
-		m_voiceControlData[channel*8+1] &= ~0x2;
+		m_voiceControlData[channel*8+1] &= ~VOICE_SE_FLAG_BIT_TEII;
 	}
 }
 
@@ -2057,7 +2093,7 @@ BOOL CMessageData::CheckSeStop(int channel)
 {
 	if (CheckSeControlFlag(channel) == FALSE) return FALSE;
 
-	if (m_seControlData[channel*8+1] & 1) return TRUE;
+	if (m_seControlData[channel*8+1] & VOICE_SE_FLAG_BIT_STOP) return TRUE;
 	return FALSE;
 }
 
@@ -2067,11 +2103,11 @@ void CMessageData::SetSeStop(BOOL stopFlag,int channel)
 	
 	if (stopFlag)
 	{
-		m_seControlData[channel*8+1] |= 0x1;
+		m_seControlData[channel*8+1] |= VOICE_SE_FLAG_BIT_STOP;
 	}
 	else
 	{
-		m_seControlData[channel*8+1] &= ~0x1;
+		m_seControlData[channel*8+1] &= ~VOICE_SE_FLAG_BIT_STOP;
 	}
 }
 
@@ -2160,7 +2196,7 @@ int CMessageData::GetSeTeii(int xyz,int channel,int cal)
 BOOL CMessageData::CheckSeMoveFlag(int channel)
 {
 	if (CheckSeControlFlag(channel) == FALSE) return FALSE;
-	if ((m_seControlData[channel*8+1] & 0x4) == 0) return FALSE;
+	if ((m_seControlData[channel*8+1] & VOICE_SE_FLAG_BIT_MOVE) == 0) return FALSE;
 	return TRUE;
 }
 
@@ -2169,11 +2205,11 @@ void CMessageData::SetSeMoveFlag(BOOL flg,int channel)
 	CreateSeControl(channel+1);
 	if (flg)
 	{
-		m_seControlData[channel*8+1] |= 0x4;
+		m_seControlData[channel*8+1] |= VOICE_SE_FLAG_BIT_MOVE;
 	}
 	else
 	{
-		m_seControlData[channel*8+1] &= ~0x4;
+		m_seControlData[channel*8+1] &= ~VOICE_SE_FLAG_BIT_MOVE;
 	}
 }
 
@@ -2181,7 +2217,7 @@ void CMessageData::SetSeMoveFlag(BOOL flg,int channel)
 BOOL CMessageData::CheckSeTeii2Exist(int channel)
 {
 	if (CheckSeControlFlag(channel) == FALSE) return FALSE;
-	if ((m_seControlData[channel*8+1] & 0x8) == 0) return FALSE;
+	if ((m_seControlData[channel*8+1] & VOICE_SE_FLAG_BIT_TEII2) == 0) return FALSE;
 	return TRUE;
 }
 
@@ -2199,14 +2235,14 @@ int CMessageData::GetSeTeii2(int xyz,int channel)
 BOOL CMessageData::CheckDopplerSoutou(int channel)
 {
 	if (CheckSeControlFlag(channel) == FALSE) return FALSE;
-	if ((m_seControlData[channel*8+1] & 0x10) == 0) return FALSE;
+	if ((m_seControlData[channel*8+1] & VOICE_SE_FLAG_BIT_DOPPLER) == 0) return FALSE;
 	return TRUE;
 }
 
 void CMessageData::SetDopplerSoutou(BOOL flg,int channel)
 {
 	CreateSeControl(channel+1);
-	m_seControlData[channel*8+1] |= 0x10;
+	m_seControlData[channel*8+1] |= VOICE_SE_FLAG_BIT_DOPPLER;
 }
 
 int CMessageData::GetSeMoveTime(int channel)
@@ -2258,7 +2294,7 @@ void CMessageData::SetFixFace(int fixFace)
 BOOL CMessageData::CheckSeLoop(int channel)
 {
 	if (CheckSeControlFlag(channel) == FALSE) return FALSE;
-	if ((m_seControlData[channel*8+1] & 0x20) == 0) return FALSE;
+	if ((m_seControlData[channel*8+1] & VOICE_SE_FLAG_BIT_LOOP) == 0) return FALSE;
 	return TRUE;
 }
 
@@ -2267,11 +2303,11 @@ void CMessageData::SetSeLoop(BOOL flg,int channel)
 	CreateSeControl(channel+1);
 	if (flg)
 	{
-		m_seControlData[channel*8+1] |= 0x20;
+		m_seControlData[channel*8+1] |= VOICE_SE_FLAG_BIT_LOOP;
 	}
 	else
 	{
-		m_seControlData[channel*8+1] &= ~0x20;
+		m_seControlData[channel*8+1] &= ~VOICE_SE_FLAG_BIT_LOOP;
 	}
 }
 
@@ -2432,6 +2468,25 @@ void CMessageData::SetSEVolumeOnly(int flg ,int channel)
 	}
 }
 
+BOOL CMessageData::CheckSEIsSystem(int channel)
+{
+	if (CheckSeControlFlag(channel) == FALSE) return FALSE;
+	return (m_seControlData[channel * 8 + 1] & 0x1000) != 0;
+}
+
+
+void CMessageData::SetSEIsSystem(BOOL flg, int channel)
+{
+	CreateSeControl(channel + 1);
+	if (flg)
+	{
+		m_seControlData[channel * 8 + 1] |= 0x1000;
+	}
+	else
+	{
+		m_seControlData[channel * 8 + 1] &= ~0x1000;
+	}
+}
 
 
 int CMessageData::GetSEFadeTime(int channel )

@@ -6,6 +6,8 @@
 #include <stdio.h>
 #include "windowlist.h"
 
+#include "..\..\systemNNN\nyanLib\include\commonmacro.h"
+
 #include "case.h"
 #include "..\..\systemNNN\nyanEffectLib\effectStruct.h"
 
@@ -16,6 +18,8 @@
 #include "effectdoc.h"
 
 #include "myapplicationBase.h"
+
+#include "myinputdialog.h"
 
 #include "komadata.h"
 
@@ -34,6 +38,8 @@ CEffectDoc::CEffectDoc(CMyApplicationBase* lpApp) : CMyDocument(lpApp)
 	m_view = new CEffectView(this,m_clientHWND,m_hInstance);
 	m_view->InitWindowZahyo();
 
+	m_inputDialog = new CMyInputDialog(m_app->GetFrameHWND(), m_hInstance);
+
 //	m_view->SetViewWindowText("エフェクト");
 //	m_view->MoveViewWindow(769+24,23,256-24,24*16);
 }
@@ -50,6 +56,7 @@ CEffectDoc::~CEffectDoc()
 
 void CEffectDoc::End(void)
 {
+	ENDDELETECLASS(m_inputDialog);
 }
 
 //void CEffectDoc::OnCloseButton(void)
@@ -291,6 +298,52 @@ void CEffectDoc::ChangeSelectParam(int selectParam)
 		m_app->UpdateMainScreen();
 	}
 }
+
+void CEffectDoc::OnEnterKey(void)
+{
+	CKomaData* pKoma = GetNowSelectKoma();
+	if (pKoma == NULL) return;
+
+	int layer = m_app->GetNowSelectEffectLayer();
+	if (layer == -1) return;
+
+	int eff = pKoma->GetEffect(layer);
+	if (eff == -1) return;
+
+	int kosuu = pKoma->GetEffectParaKosuu(layer);
+	int n = pKoma->GetSelectParam(layer);
+	if ((n < 0) || (n >= kosuu)) return;
+
+
+	m_app->CheckAndGetKomaUndo();
+
+	CEffectParam* effectParam = m_app->GetEffectParam(eff);
+
+	//	int dataMin = CEffectParaList::m_para[eff].effectParaData[n].paraMin;
+	//	int dataMax = CEffectParaList::m_para[eff].effectParaData[n].paraMax;
+	int dataMin = effectParam->GetParaMin(n);
+	int dataMax = effectParam->GetParaMax(n);
+
+
+	int old = pKoma->GetEffectPara(layer, n);
+
+	int newData = old;
+	if (m_inputDialog->GetNumber(old, &newData, "エフェクトパラメーター"))
+	{
+		int ans = newData;
+		if (ans < dataMin) ans = dataMin;
+		if (ans > dataMax) ans = dataMax;
+
+		if (ans == old) return;
+
+		pKoma->SetEffectPara(layer, n, ans);
+
+		m_view->MyInvalidateRect();
+		m_app->UpdateMainScreen();
+		m_app->SetModify();
+	}
+}
+
 
 void CEffectDoc::OnLeftKey(void)
 {

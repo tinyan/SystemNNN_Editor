@@ -358,6 +358,13 @@ LRESULT CGameMessageView::ViewWndProc(HWND hWnd, UINT message, WPARAM wParam, LP
 						case ID_MENU_MESSAGE_VOICE_CONTINUE:
 							pDoc->OnVoiceContinue(n,voiceChannel);
 							break;
+						case ID_MENU_MESSAGE_VOICE_COMPLETE:
+							pDoc->OnVoiceComplete(n, voiceChannel);
+							break;
+						case ID_MENU_MESSAGE_VOICE_NOWAITVOICE:
+							pDoc->OnVoiceNoWaitSameCharaVoice(n, voiceChannel);
+							break;
+
 						case ID_MENU_MESSAGE_VOICE_EFFECT:
 							pDoc->OnVoiceEffect(n,voiceChannel);
 							break;
@@ -408,6 +415,9 @@ LRESULT CGameMessageView::ViewWndProc(HWND hWnd, UINT message, WPARAM wParam, LP
 							break;
 						case ID_MENU_MESSAGE_SE_VOLUMEONLY:
 							pDoc->OnSeVolumeOnly(n,seChannel);
+							break;
+						case ID_MENU_MESSAGE_SE_SYSTEM:
+							pDoc->OnSeSystem(n, seChannel);
 							break;
 						}
 						break;
@@ -854,6 +864,15 @@ void CGameMessageView::OnPaint(HWND hWnd,WPARAM wParam, LPARAM lParam)
 								addPicFlag |= 0x8;
 							}
 
+							if (pMessage->CheckVoiceComplete(ch))
+							{
+								addPicFlag |= 0x200;
+							}
+							if (pMessage->CheckVoiceNoWaitSameCharaVoice(ch))
+							{
+								addPicFlag |= 0x400;
+							}
+
 							if (ch<2)
 							{
 								if (pMessage->CheckVoiceContinue(ch))
@@ -956,6 +975,12 @@ void CGameMessageView::OnPaint(HWND hWnd,WPARAM wParam, LPARAM lParam)
 							}
 						}
 					}
+
+					if (pMessage->CheckSEIsSystem(ch))
+					{
+						addPicFlag |= 0x100;
+					}
+
 
 					if (ch != seChannel) sx2  += 24*3;
 
@@ -1431,7 +1456,7 @@ void CGameMessageView::PutAddButtonPic(HDC hdc,HDC src,int putX,int putY,int add
 {
 	HGDIOBJ old = SelectObject(src,m_addButtonHBitmap);
 	
-	for (int i=0;i<8;i++)
+	for (int i=0;i<16;i++)
 	{
 		if (addPicFlag & 1)
 		{

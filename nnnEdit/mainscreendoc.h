@@ -71,6 +71,7 @@ public:
 	void OnClickEffectType(void);
 	void OnClickEffectGaze(int d);
 	void OnDragEffectGaze(int d);
+	void OnUpDownEffectGaze(int d);
 
 	CPicture* GetMesNameWinPic(int n);
 	void SetMessageSetup(CMessageSetup* lpMessageSetup);

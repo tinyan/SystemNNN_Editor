@@ -261,6 +261,7 @@ CMyConfig::MYCONFIGVALUETYPE CMyConfig::m_initDataValue[]=
 
 
 
+
 CMyConfig::MYCONFIGWINDOWTYPE CMyConfig::m_initDataWindow[]=
 {
 	{"mainScreen",1,247,28,800,600, -1},

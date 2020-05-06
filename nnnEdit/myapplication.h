@@ -644,6 +644,8 @@ private:
 	CNameList* m_varControlList;
 	CNameList* m_termList;
 
+	CNameList* m_gameXTXList;
+
 	CStartTitle* m_startTitle;
 	CBalloon* m_balloon;
 

@@ -54,6 +54,8 @@
 
 #include "..\..\systemNNN\nyanPictureLib\pngLoader.h"
 
+#include "..\..\SystemNNN\nyanEffectLib\calcuSpeed.h"
+
 
 #include "define.h"
 
@@ -746,6 +748,20 @@ CMyApplication::CMyApplication(HINSTANCE hinstance) : CMyApplicationBase(hinstan
 		m_varControlList->LoadFile(TERMLIST_FILE_NAME);
 	}
 
+
+	m_gameXTXList = new CNameList();
+	m_gameXTXList->LoadInit("game");
+	{
+		int customParamN = m_gameXTXList->SearchName2("SpeedCustomParam");
+		if (customParamN != -1)
+		{
+			int customParam = atol(m_gameXTXList->GetName(customParamN+1));
+			CCalcuSpeed::m_customParam = customParam;
+
+		}
+	}
+
+
 	m_balloonFlag = GetConfig("balloonFlag");
 	m_zahyoPrintType = GetConfig("zahyoPrintType");
 
@@ -1136,6 +1152,7 @@ void CMyApplication::End(void)
 	ENDDELETECLASS(m_setCGList);
 	ENDDELETECLASS(m_termList);
 	ENDDELETECLASS(m_varControlList);
+	ENDDELETECLASS(m_gameXTXList);
 
 	ENDDELETECLASS(m_menuCheckControl);
 	ENDDELETECLASS(m_musicControl);
@@ -2793,8 +2810,9 @@ void CMyApplication::dmy(int cnt)
 
 	if (cnt == 0)
 	{
-		m_effect->Calcu();
-//OutputDebugString("_");
+		//m_effect->Calcu();
+		m_effect->CalcuOnly();
+		//OutputDebugString("_");
 	}
 	else
 	{

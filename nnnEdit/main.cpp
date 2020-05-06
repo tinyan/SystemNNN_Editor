@@ -3,8 +3,6 @@
 //
 
 
-
-
 #include <windows.h>
 #include <stdio.h>
 #include <time.h>
@@ -57,6 +55,7 @@
 
 #if _MSC_VER >= 1700
 
+	#if !defined __SYSTEMNNN_VER2__
 		#if !defined _DEBUG
 			#pragma comment(lib,"..\\..\\systemNNN\\nyanLib\\lib\\nnnEditUtil2017.lib")
 			#pragma comment(lib,"..\\..\\systemNNN\\nyanLib\\lib\\nnnEditView2017.lib")
@@ -66,6 +65,17 @@
 			#pragma comment(lib,"..\\..\\systemNNN\\nyanLib\\lib\\nnnEditView2017D.lib")
 			#pragma comment(lib,"..\\..\\systemNNN\\nyanLib\\lib\\nnnEditControl2017D.lib")
 		#endif
+	#else
+		#if !defined _DEBUG
+		#pragma comment(lib,"..\\..\\systemNNN\\nyanLib\\lib\\nnnEditUtil2017_ver2.lib")
+		#pragma comment(lib,"..\\..\\systemNNN\\nyanLib\\lib\\nnnEditView2017_ver2.lib")
+		#pragma comment(lib,"..\\..\\systemNNN\\nyanLib\\lib\\nnnEditControl2017_ver2.lib")
+		#else
+		#pragma comment(lib,"..\\..\\systemNNN\\nyanLib\\lib\\nnnEditUtil2017_ver2D.lib")
+		#pragma comment(lib,"..\\..\\systemNNN\\nyanLib\\lib\\nnnEditView2017_ver2D.lib")
+		#pragma comment(lib,"..\\..\\systemNNN\\nyanLib\\lib\\nnnEditControl2017_ver2D.lib")
+		#endif
+	#endif
 #else
 
 	#if _MSC_VER >= 1500
@@ -220,10 +230,10 @@ OutputDebugString("End CreateWindow()\n");
 //	UpdateWindow(m_hWnd);
 
 
+
 	CoInitialize(NULL);
 
-
-
+	
 	CMySaveFolder::ChangeMyFolder("bugnekosoft","nnnedit",MYFOLDER_TYPE_MYDOCUMENT);
 	CMySaveFolder::ChangeSaveFolder(NULL,TRUE);
 //	CMySaveFolder::CreateSubFolder();

@@ -54,6 +54,10 @@ Temporary Items
 
 *.zip
 *.lib
+*.tlog
+*.db
+*.log
+
 
 # User-specific files
 *.suo

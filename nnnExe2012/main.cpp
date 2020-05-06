@@ -13,6 +13,9 @@
 
 
 
+
+
+
 #include <Math.h>
 //#include <bits.nan.h>
 
@@ -48,10 +51,6 @@
 
 #include "game.h"
 #include "main.h"
-
-
-
-
 
 
 
@@ -293,8 +292,6 @@ struct bbb
 
 
 #include <time.h>
-
-
 
 
 
@@ -971,6 +968,7 @@ a[k]=
 
 
 
+
 /*
 aaa
 /* aaa */
@@ -1130,6 +1128,7 @@ bbb
 	}
 
 
+	
 
 	MessageBox(NULL,"チェック終了","end",MB_OK);
 
@@ -1156,6 +1155,7 @@ bbb
 		}
 	}
 */
+
 
 
 

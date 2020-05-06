@@ -474,6 +474,12 @@ LRESULT CMainScreenView::ViewWndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
 			case VK_NUMPAD6:
 				pDoc->MovePicture(10,0);
 				break;
+			case VK_NEXT:
+				pDoc->OnUpDownEffectGaze(-1);
+				break;
+			case VK_PRIOR:
+				pDoc->OnUpDownEffectGaze(1);
+				break;
 			}
 		}
 		break;
@@ -1064,7 +1070,7 @@ void CMainScreenView::PrintEffectHint(int effectLayer)
 void CMainScreenView::PrintFrameTime(int nowFrame,int setFrame,int printPlace)
 {
 	int printX = 16;
-	int printY = 16;
+	int printY = 8;
 	if (printPlace == 1)
 	{
 		//
@@ -1072,7 +1078,7 @@ void CMainScreenView::PrintFrameTime(int nowFrame,int setFrame,int printPlace)
 
 	if (nowFrame >= 0)
 	{
-		PrintSuuji(16,16,nowFrame);
+		PrintSuuji(printX,printY,nowFrame);
 		printX += 48;
 		PutChara(printX,printY,'/');
 		printX += 16;
@@ -1105,7 +1111,7 @@ void CMainScreenView::PrintShakin(int shakin,int skip,int totalSkip)
 	if (totalSkip>999) totalSkip = 999;
 
 	int printX = 16;
-	int printY = 48;
+	int printY = 28;
 
 	PrintSuuji(printX,printY,shakin,2);
 	printX += 16*2;
@@ -1576,20 +1582,26 @@ void CMainScreenView::CheckGazeControl(int mouseX,int mouseY,BOOL dragFlag,WPARA
 									int d = pKoma->GetEffectPara(effectLayer,i);
 									int rev = (d / 100) % 2;
 									int dRnd = d / 200;
-									int curve = (d % 100) / 30;
-									if ((d % 100)>=75)
-									{
-										curve = 3;
-									}
+									int curve = (d % 100) / 15;
+									
+//									if ((d % 100)>=75)
+//									{
+//										curve = 3;
+//									}
 
 									int arrowType = (d % 100) % 15;
 
 									arrowType++;
-									if (arrowType >= 11)
+									if ((arrowType >= 11) || (curve * 15 + arrowType) >= 91)
 									{
 										arrowType = 0;
+										if (curve == 0)
+										{
+											curve++;
+										}
 										curve++;
-										if (curve >= 4)
+
+										if (curve >= 6)
 										{
 											curve = 0;
 											rev++;
@@ -1603,11 +1615,11 @@ void CMainScreenView::CheckGazeControl(int mouseX,int mouseY,BOOL dragFlag,WPARA
 									}
 
 
-									int p = dRnd * 200 + rev * 100 + curve * 30 + arrowType;
-									if (curve == 3)
-									{
-										p -= 15;
-									}
+									int p = dRnd * 200 + rev * 100 + curve * 15 + arrowType;
+//									if (curve == 3)
+//									{
+//										p -= 15;
+//									}
 
 									pKoma->SetEffectPara(effectLayer,i,p);
 								}
@@ -2376,12 +2388,12 @@ void CMainScreenView::PutSpeedTypePic(POINT pt,int d,int md)
 
 	int rev = (d / 100) % 2;
 	int dRnd = (d / 200);//未使用
-	int kagensoku = (d % 100) / 30;
+	int kagensoku = (d % 100) / 15;
 
 
 	if (d >= 75)
 	{
-		kagensoku = 3;
+//		kagensoku = 3;
 	}
 
 	int srcX = ((d % 100) % 15) * sizeX;
@@ -2481,6 +2493,7 @@ POINT CMainScreenView::GetParamNameZahyo(int effect,int n)
 }
 
 
+
 void CMainScreenView::PutParamName(POINT pt,LPSTR name,int md)
 {
 	//if (m_leftRight != 0) return;
@@ -2503,7 +2516,14 @@ void CMainScreenView::PutParamName(POINT pt,LPSTR name,int md)
 	}
 
 	CAllGeo::TransBoxFill(pt.x-1,pt.y-1,17*6+1,18,64,192,128,60);
-	m_message->PrintMessage(putX,putY,name);
+	if (name != NULL)
+	{
+		m_message->PrintMessage(putX, putY, name);
+	}
+	else
+	{
+		m_message->PrintMessage(putX, putY, "エラー");
+	}
 }
 
 

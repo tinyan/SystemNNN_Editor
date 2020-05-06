@@ -457,10 +457,52 @@ BOOL CMyView::MoveViewWindow(int wx, int wy, int sizeX, int sizeY)
 {
 	if (m_hWnd == NULL) return FALSE;
 
+
+	if (false)
+	{
+		RECT rc;
+		rc.left = wx;
+		rc.top = wy;
+		rc.right = wx + sizeX;
+		rc.bottom = wy + sizeY;
+
+		int nonFullFlag = 0xffffffff;
+		DWORD style = ((WS_OVERLAPPED |
+			WS_CAPTION |
+			WS_SYSMENU |
+			//								WS_THICKFRAME |
+			WS_MAXIMIZEBOX |
+			WS_MINIMIZEBOX
+			)&nonFullFlag) |
+			WS_POPUP |
+			WS_VISIBLE
+			;
+		DWORD exStyle = 0;
+		AdjustWindowRectEx(&rc, style, false, exStyle);
+
+		wx = rc.left;
+		wy = rc.top;
+		sizeX = rc.right - rc.left;
+		sizeY = rc.bottom - rc.top;
+
+		m_windowX = wx;
+		m_windowY = wy;
+		m_windowSizeX = sizeX;
+		m_windowSizeY = sizeY;
+
+		return MoveWindow(m_hWnd, wx, wy, sizeX, sizeY, TRUE);
+	}
+
+
 	m_windowX = wx;
 	m_windowY = wy;
 	m_windowSizeX = sizeX;
 	m_windowSizeY = sizeY;
+
+
+
+
+
 
 //char mes[256];
 //sprintf(mes,"[y=%d***]",sizeY);

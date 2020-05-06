@@ -52,6 +52,8 @@ public:
 	void OnChangeVoicePlayer(int n,int channel = 0);
 
 	void OnVoiceContinue(int n,int channel = 0);
+	void OnVoiceComplete(int n, int channel = 0);
+	void OnVoiceNoWaitSameCharaVoice(int n, int channel = 0);
 	void OnVoiceVolume(int n,int channel = 0);
 
 	void OnVoiceEffect(int n,int channel = 0);
@@ -87,6 +89,7 @@ public:
 	void OnSeVolumeOnly(int n,int channel = 0);
 	void OnVoiceFade(int n,int channel = 0);
 	void OnVoiceVolumeOnly(int n,int channel = 0);
+	void OnSeSystem(int n, int channel = 0);
 
 	void OnClickMusicFadeButton(void);
 

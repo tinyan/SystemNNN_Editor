@@ -584,6 +584,14 @@ void CMainScreenDoc::OnClickEffectGaze(int d)
 //	m_app->UpdateMyWindow(MAINSCREEN_WINDOW);
 }
 
+void CMainScreenDoc::OnUpDownEffectGaze(int d)
+{
+	int f = GetEditFrame();
+	f += d;
+	if (f < 0) f = 0;
+	OnClickEffectGaze(f);
+}
+
 void CMainScreenDoc::OnDragEffectGaze(int d)
 {
 	int f = GetEditFrame();

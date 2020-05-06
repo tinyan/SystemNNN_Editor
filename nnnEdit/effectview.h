@@ -34,6 +34,8 @@ public:
 	void OnUpKey(void);
 	void OnDownKey(void);
 
+	void OnEnterKey(void);
+
 	BOOL MoveMouse(int x,int y,POINT screenPos);
 
 private:

@@ -1690,11 +1690,11 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 				{
 					int voiceMode = pMessage->GetVoiceMode(ch);
 
-					if (voiceMode == 3)
-					{
-						int bbb = 0;
-						bbb++;
-					}
+//					if (voiceMode == 3)
+//					{
+//						int bbb = 0;
+//						bbb++;
+//					}
 
 					if (voiceMode != 0)
 					{
@@ -1825,6 +1825,14 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 								}
 							}
 
+							if (pMessage->CheckVoiceNoWaitSameCharaVoice(ch))
+							{
+								vpara[10] = 1;
+								vpKosuu = 11;
+
+							}
+
+
 
 							int useDef = 0;
 							if (defaultVoiceFlag)
@@ -1932,6 +1940,13 @@ BOOL CScriptCompiler::CompileFilm(FILE* makeJsonFlag)
 									spKosuu = 10;
 								}
 							}
+						}
+
+
+						if (pMessage->CheckSEIsSystem(ch))
+						{
+							spara[10] = 1;
+							spKosuu = 11;
 						}
 
 						m_miniCompiler->Pass2Sound(senum,ch,spKosuu,spara,makeJsonFlag,messageTab+1);

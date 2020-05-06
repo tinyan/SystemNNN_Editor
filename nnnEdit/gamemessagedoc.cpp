@@ -1939,7 +1939,51 @@ void CGameMessageDoc::OnVoiceContinue(int n,int channel)
 	m_app->MessageIsChanged();
 }
 
+void CGameMessageDoc::OnVoiceComplete(int n, int channel)
+{
+	CKomaData* pKoma = GetNowSelectKoma();
+	if (pKoma == NULL) return;	//error
+	if (n == -1) n = pKoma->GetNowSelectNumber();
+	int kosuu = pKoma->GetObjectKosuu();
+	if ((n < 0) || (n > kosuu)) return;
+	CMessageData* pMessage = (CMessageData*)(pKoma->GetObjectData(n));
+	if (pMessage == NULL) return;
+	if (pMessage->CheckVoiceLock(channel)) return;
 
+	if (!pMessage->CheckVoiceFlag(channel)) return;
+
+	CheckAndGetUndo(pKoma, n, n);
+
+//	pMessage->ClearAllVoiceEffect(channel);
+	pMessage->ChangeVoiceComplete(channel);
+	//	pMessage->SetVoiceChannel(channel);
+
+	m_app->SetModify();
+	m_app->MessageIsChanged();
+}
+
+void CGameMessageDoc::OnVoiceNoWaitSameCharaVoice(int n, int channel)
+{
+	CKomaData* pKoma = GetNowSelectKoma();
+	if (pKoma == NULL) return;	//error
+	if (n == -1) n = pKoma->GetNowSelectNumber();
+	int kosuu = pKoma->GetObjectKosuu();
+	if ((n < 0) || (n > kosuu)) return;
+	CMessageData* pMessage = (CMessageData*)(pKoma->GetObjectData(n));
+	if (pMessage == NULL) return;
+	if (pMessage->CheckVoiceLock(channel)) return;
+
+	if (!pMessage->CheckVoiceFlag(channel)) return;
+
+	CheckAndGetUndo(pKoma, n, n);
+
+	//	pMessage->ClearAllVoiceEffect(channel);
+	pMessage->ChangeVoiceNoWaitSameCharaVoice(channel);
+	//	pMessage->SetVoiceChannel(channel);
+
+	m_app->SetModify();
+	m_app->MessageIsChanged();
+}
 
 void CGameMessageDoc::OnDeleteSe(int n,int channel)
 {
@@ -1975,6 +2019,29 @@ void CGameMessageDoc::OnSeStop(int n,int channel)
 	CheckAndGetUndo(pKoma,n,n);
 
 	pMessage->SetSeStop(TRUE,channel);
+	pMessage->SetSeChannel(channel);
+
+	m_app->SetModify();
+	m_app->MessageIsChanged();
+	UpdateMyWindow();
+}
+
+void CGameMessageDoc::OnSeSystem(int n, int channel)
+{
+	CKomaData* pKoma = GetNowSelectKoma();
+	if (pKoma == NULL) return;	//error
+	if (n == -1) n = pKoma->GetNowSelectNumber();
+	int kosuu = pKoma->GetObjectKosuu();
+	if ((n < 0) || (n > kosuu)) return;
+	CMessageData* pMessage = (CMessageData*)(pKoma->GetObjectData(n));
+	if (pMessage == NULL) return;
+
+	//if (pMessage->CheckSEFlag(channel)) return;
+	CheckAndGetUndo(pKoma, n, n);
+
+	BOOL b = pMessage->CheckSEIsSystem(channel);
+	pMessage->SetSEIsSystem(!b,channel);
+
 	pMessage->SetSeChannel(channel);
 
 	m_app->SetModify();

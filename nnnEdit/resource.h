@@ -950,13 +950,22 @@
 #define ID_UNDO_KAKUNIN_NASHI           40874
 #define ID_UNDO_AFTER_ARI               40875
 #define ID_UNDO_AFTER_NASHI             40876
+#define ID_40877                        40877
+#define ID_40878                        40878
+#define ID_MENU_MESSAGE_SYSTEM          40879
+#define ID_MENU_MESSAGE_SE_SYSTEM       40880
+#define ID_40881                        40881
+#define ID_MENU_MESSAGE_VOICE_COMPLETE  40882
+#define ID_40883                        40883
+#define ID_MENU_MESSAGE_VOICE_NOWAITVOICE 40884
+#define ID_MENU_MESSAGE_NOWAITVOICE     40885
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        229
-#define _APS_NEXT_COMMAND_VALUE         40877
+#define _APS_NEXT_COMMAND_VALUE         40886
 #define _APS_NEXT_CONTROL_VALUE         1095
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
