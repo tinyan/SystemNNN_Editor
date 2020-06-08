@@ -348,6 +348,9 @@ void CFilmDoc::OnCopyKoma(int n)
 		fclose(file);
 	}
 
+	m_app->SetModify();
+	m_app->KomaIsChanged();
+
 	m_komaBufferFlag = !errorFlag;
 }
 

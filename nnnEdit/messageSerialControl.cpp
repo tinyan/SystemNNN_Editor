@@ -31,6 +31,7 @@ CMessageSerialControl::CMessageSerialControl(CMyApplicationBase* app)
 {
 	m_app = app;
 	m_projectList = m_app->GetProjectList();
+	m_selectSerialID = 1;
 }
 
 CMessageSerialControl::~CMessageSerialControl()
@@ -64,7 +65,7 @@ BOOL CMessageSerialControl::SetAllMessageSerial(BOOL updateFlag)
 	int nnnKosuu = m_projectList->GetNameKosuu();
 
 
-
+	m_selectSerialID = 1;
 
 
 	for (int pp=0;pp<nnnKosuu;pp++)
@@ -239,6 +240,9 @@ BOOL CMessageSerialControl::SetMessageSerial(BOOL updateFlag)
 					pCommand->SetSerial(serial);
 					serial++;
 				}
+
+				pCommand->SetSelectMessageSerial(m_selectSerialID);
+				m_selectSerialID++;
 			}
 		}
 	}

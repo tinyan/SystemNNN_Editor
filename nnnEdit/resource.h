@@ -959,13 +959,20 @@
 #define ID_40883                        40883
 #define ID_MENU_MESSAGE_VOICE_NOWAITVOICE 40884
 #define ID_MENU_MESSAGE_NOWAITVOICE     40885
+#define ID_CONFIG_CTRL                  40886
+#define ID_CTRL_40887                   40887
+#define ID_CTRL_40888                   40888
+#define ID_MENU_CTRL_ENABLE             40889
+#define ID_MENU_CTRL_DISABLE            40890
+#define ID_40891                        40891
+#define ID_MENU_COMMAND_SELECT_ID       40892
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        229
-#define _APS_NEXT_COMMAND_VALUE         40886
+#define _APS_NEXT_COMMAND_VALUE         40893
 #define _APS_NEXT_CONTROL_VALUE         1095
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

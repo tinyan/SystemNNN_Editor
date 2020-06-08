@@ -92,6 +92,10 @@ public:
 	virtual void OnEscapeKey(void);
 	virtual void OnTabKey(int shift = 0);
 
+	virtual void OnCtrlXKey(void) {};
+	virtual void OnCtrlCKey(void) {};
+	virtual void OnCtrlVKey(void) {};
+
 	virtual void OnFunctionKey(int n);
 	int OpenPopupMenu(WPARAM wParam, LPARAM lParam, int nPos1 = 0, int nPos2 = -1, int n = 0);
 

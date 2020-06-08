@@ -304,6 +304,10 @@ LRESULT CStoryView::ViewWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
 						{
 							pDoc->OnChangeSelectStory(n);
 						}
+						else if (cmd == ID_MENU_COMMAND_SELECT_ID)
+						{
+							pDoc->OnChangeSelectID(n);
+						}
 						else if (cmd != 0)
 						{
 							CheckChangeMarkColor(n,cmd);
@@ -549,7 +553,18 @@ void CStoryView::OnPaint(HWND hWnd, WPARAM wParam,LPARAM lParam)
 								///	deltaX = m_danrakuX / 2;
 								}
 
-								TextOut(hdc,x+deltaX+33,y,mes,strlen(mes));
+								if (typ == COMMANDDATATYPE_SELECT)
+								{
+									char selmes[2048];
+									int selid = pCommand->GetSelectMessageSerial();
+
+									sprintf_s(selmes, 2048, "[ID:%d]%s", selid,mes);
+									TextOut(hdc, x + deltaX + 33, y, selmes, strlen(selmes));
+								}
+								else
+								{
+									TextOut(hdc, x + deltaX + 33, y, mes, strlen(mes));
+								}
 							}
 						}
 

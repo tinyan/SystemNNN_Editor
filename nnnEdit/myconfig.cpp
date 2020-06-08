@@ -254,6 +254,7 @@ CMyConfig::MYCONFIGVALUETYPE CMyConfig::m_initDataValue[]=
 	{"undoKakuninEnable",1},
 	{"undoAfterEnable",1},
 
+	{"controlKeyEnable",0},
 
 	{"",0},
 };

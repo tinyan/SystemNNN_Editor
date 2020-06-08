@@ -125,6 +125,8 @@ CCommandData::CCommandData() : CCase()
 	m_systemCommandNumber = 0;
 	m_bgmNumber = 0;
 
+	m_selectMessageSerial = 0;
+
 //	m_messageDataKosuuMax = 0;
 //	m_messageDataKosuu = 0;
 //	m_messageDataArray = NULL;
@@ -153,6 +155,7 @@ void CCommandData::Init(LPVOID para)
 	m_serial = 0;
 	m_color = 0;
 	m_backColor = 0;
+	m_selectMessageSerial = 0;
 
 	if (typ == -1) typ = COMMANDDATATYPE_NOP;
 
@@ -230,6 +233,7 @@ BOOL CCommandData::Load(FILE* file,CUndoMemoryObject* memory)
 	m_color = col & 0xffff;
 	m_backColor = (col>>16) & 0x7fff;
 
+	m_selectMessageSerial = tmp[10];
 
 	if (m_bufferSize != 0)
 	{
@@ -260,6 +264,7 @@ BOOL CCommandData::Save(FILE* file,CUndoMemoryObject* memory)
 	tmp[8] = m_serial;
 	
 	tmp[9] = m_color | (m_backColor << 16);
+	tmp[10] = m_selectMessageSerial;
 
 //	fwrite(tmp,sizeof(int),16,file);
 	CaseWrite(tmp,sizeof(int),16,file,memory);
@@ -797,6 +802,15 @@ void CCommandData::SetSerial(int n)
 int CCommandData::GetSerial(void)
 {
 	return m_serial;
+}
+
+int CCommandData::GetSelectMessageSerial(void)
+{
+	return m_selectMessageSerial;
+}
+void CCommandData::SetSelectMessageSerial(int n)
+{
+	m_selectMessageSerial = n;
 }
 
 

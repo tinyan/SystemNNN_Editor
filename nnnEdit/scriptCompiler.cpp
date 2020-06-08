@@ -691,8 +691,8 @@ BOOL CScriptCompiler::CompileCommandData(CCommandData* pCommand,LPSTR storyName,
 		LPSTR mes = pCommand->GetTextBuffer();
 		int serial = pCommand->GetSerial();
 //int mesHaveFlag = 0;
-
-		if (m_miniCompiler->Pass2Select(typ,serial,mes) == FALSE)
+		int selectSerial = pCommand->GetSelectMessageSerial();
+		if (m_miniCompiler->Pass2Select(typ,serial,mes,selectSerial) == FALSE)
 		{
 			PrintCompileCommandError(pCommand,storyName,nCommand,"PASS2 ERROR [select]");
 //			MessageBox(m_frameHWND,"PASS2 ERROR select ...","ERROR",MB_OK);

@@ -23,6 +23,8 @@ class CEffect;
 class CSelectDialog;
 class CUndoMemoryObject;
 
+class CCommonMessageWindow;
+
 class CStoryData;
 
 //class CConfigFile;
@@ -231,6 +233,7 @@ public:
 //	void DeleteFilmVarName(LPSTR name);
 //	int SearchFilmVarName(LPSTR name);
 
+	void PrintMessageWindow(bool nameFlag) override;
 
 	void MoveRectRoutine(int layer, int md, int dx, int dy);//dummy
 
@@ -547,6 +550,9 @@ public:
 	int GetUndoMode(void){return m_undoEnable;}
 	int GetUndoKakuninEnable(void){return m_undoKakuninEnable;}
 	int GetUndoAfterUnable(void){return m_undoAfterEnable;}
+	int GetControlKeyEnable(void) { return m_controlKeyEnable; }
+	void SetControlKeyEnable(int n);
+
 	BOOL CheckUndoMode(void);
 	CUndoMemoryObject* GetUndoObject(void);
 
@@ -560,6 +566,9 @@ public:
 	LPSTR GetVarMarkFilename(void);
 	LPSTR GetVarMarkSetupFilename(void);
 	LPSTR GetVarFxfFilename(void);
+
+	CCommonMessageWindow* m_messageWindow;
+
 
 private:
 	HINSTANCE m_hInstance;
@@ -997,6 +1006,7 @@ private:
 	int m_undoEnable;
 	int m_undoKakuninEnable;
 	int m_undoAfterEnable;
+	int m_controlKeyEnable;
 
 	int m_varType;
 	LPSTR m_varFileName;

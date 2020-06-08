@@ -23,7 +23,7 @@ private:
 	CNameList* m_projectList;
 	int GetMaxSerial(void);
 	int GetMaxSelectSerial(void);
-
+	int m_selectSerialID;
 };
 
 

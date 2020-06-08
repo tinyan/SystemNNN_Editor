@@ -458,6 +458,11 @@ BEGIN
         BEGIN
             MENUITEM "先頭スペース数設定",                   ID_DAIHON_WHITESPACE
         END
+        POPUP "Ctrl-[X][C][V]", INACTIVE
+        BEGIN
+            MENUITEM "有効",                          ID_MENU_CTRL_ENABLE
+            MENUITEM "無効",                          ID_MENU_CTRL_DISABLE
+        END
     END
     POPUP "Window(&W)"
     BEGIN
@@ -952,6 +957,7 @@ BEGIN
             MENUITEM "3個(&3)",                      ID_MENU_COMMAND_SELECT3
             MENUITEM "4個(&4)",                      ID_MENU_COMMAND_SELECT4
         END
+        MENUITEM "選択肢ID",                       ID_MENU_COMMAND_SELECT_ID
         MENUITEM "シナリオ(&s)",                    ID_MENU_COMMAND_STORY
         MENUITEM "フィルム(&F)",                    ID_MENU_COMMAND_FILM
         MENUITEM "ムービー",                        ID_MENU_COMMAND_MOVIE, INACTIVE

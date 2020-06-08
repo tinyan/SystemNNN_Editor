@@ -142,6 +142,7 @@ public:
 	virtual CNameList* GetBGMList(void) = 0;
 	virtual CNameList* GetVarControlList(void) = 0;
 
+	virtual void PrintMessageWindow(bool nameFlag = true) {};
 
 	virtual CNameList* GetCharaList(void) = 0;
 	virtual CNameList* GetSetCGList(void) = 0;

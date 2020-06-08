@@ -44,6 +44,9 @@ public:
 	int GetMessageGyo(void);
 	int GetMessage1Gyo(int n);
 
+	int GetSelectMessageSerial(void);
+	void SetSelectMessageSerial(int n);
+
 //åpè≥
 	BOOL Load(FILE* file,CUndoMemoryObject* memory = NULL);
 	BOOL Save(FILE* file,CUndoMemoryObject* memory = NULL);
@@ -106,6 +109,7 @@ private:
 	int m_color;
 	int m_backColor;
 
+	int m_selectMessageSerial;
 //	int m_messageDataKosuuMax;
 //	int m_messageDataKosuu;
 

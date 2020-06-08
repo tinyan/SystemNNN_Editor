@@ -313,9 +313,20 @@ int CMyOnTimer::OnTimer(int n)
 		{
 			CAreaControl::SetNextAllPrint();
 			m_effect->BeginEffect();
-//	m_effect->CountUp();
+			//	m_effect->CountUp();
 			m_effect->CalcuOnly();
-			m_effect->Print(FALSE,TRUE);
+			m_effect->Print(FALSE, TRUE);
+			if (m_messageWindowPrintMode == 2)
+			{
+				if (pMessage != NULL)
+				{
+					int md = pMessage->GetMessageMode();
+					if (md != 3)
+					{
+						m_app->PrintMessageWindow();
+					}
+				}
+			}
 			m_effect->Print(TRUE, TRUE);
 
 

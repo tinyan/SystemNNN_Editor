@@ -43,6 +43,7 @@ public:
 	void OnEditCommand(int n = -1);
 	void OnSelectCommand(int n = -1);
 	void OnChangeSelectStory(int n = -1);
+	void OnChangeSelectID(int n = -1);
 
 	int SearchFilm(LPSTR filmName, int searchStart=0);
 

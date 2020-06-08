@@ -29,6 +29,9 @@
 
 #include "..\..\systemNNN\nnnUtilLib\waveMusic.h"
 
+#include "..\..\systemNNN\nnnUtilLib\basicSetup.h"
+#include "..\..\systemNNN\nnnUtilLib\commonMessageWindow.h"
+
 #include "..\..\systemNNN\nnnUtilLib\mmlControl.h"
 #include "..\..\systemNNN\nnnUtilLib\musicControl.h"
 
@@ -484,6 +487,8 @@ CMyApplication::CMyApplication(HINSTANCE hinstance) : CMyApplicationBase(hinstan
 	m_undoKakuninEnable = GetConfig("undoKakuninEnable");
 	m_undoAfterEnable = GetConfig("undoAfterEnable");
 
+	m_controlKeyEnable = GetConfig("controlKeyEnable");
+
 	m_allEffectParam = new CAllEffectParam();
 	CKomaData::m_allEffectParam = m_allEffectParam;
 
@@ -805,6 +810,8 @@ CMyApplication::CMyApplication(HINSTANCE hinstance) : CMyApplicationBase(hinstan
 	m_scriptData = new CScriptData();
 
 	m_undoObject = NULL;
+
+	m_messageWindow = new CCommonMessageWindow();
 
 
 
@@ -1278,7 +1285,7 @@ void CMyApplication::End(void)
 
 	ENDDELETECLASS(m_effect);
 
-
+	ENDDELETECLASS(m_messageWindow);
 
 
 	ENDDELETECLASS(m_selectDialog);
@@ -2754,7 +2761,13 @@ void CMyApplication::OnCommand(WPARAM wParam,LPARAM lParam)
 	case ID_SETDEFAULTMEI:
 		SetDefaultName();
 		break;
-//	case ID_ALIEN:
+	case ID_MENU_CTRL_ENABLE:
+		SetControlKeyEnable(1);
+		break;
+	case ID_MENU_CTRL_DISABLE:
+		SetControlKeyEnable(0);
+		break;
+		//	case ID_ALIEN:
 //		BugBug();
 		break;
 	}
@@ -2802,6 +2815,13 @@ void CMyApplication::SetEyeStatus(int layer,int st)
 //	pDoc->MyInvalidateRect();
 }
 
+void CMyApplication::PrintMessageWindow(bool nameFlag)
+{
+	if (m_messageWindow != nullptr)
+	{
+		m_messageWindow->Print(TRUE, nameFlag);
+	}
+}
 
 void CMyApplication::dmy(int cnt)
 {
@@ -6538,6 +6558,13 @@ void CMyApplication::ChangeUndoAfterMode(int n)
 	SetConfig("undoAfterEnable",n);
 	m_undoAfterEnable = n;
 	m_menuCheckControl->SetUndoAfterCheck();
+}
+
+void CMyApplication::SetControlKeyEnable(int n)
+{
+	SetConfig("controlKeyEnable", n);
+	m_controlKeyEnable = n;
+	m_menuCheckControl->SetControlKeyCheck();
 }
 
 

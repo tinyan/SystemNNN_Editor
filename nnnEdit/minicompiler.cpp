@@ -1455,7 +1455,7 @@ BOOL CMiniCompiler::Pass2Case(int n)
 }
 
 
-BOOL CMiniCompiler::Pass2Select(int typ, int serial, LPSTR mes)
+BOOL CMiniCompiler::Pass2Select(int typ, int serial, LPSTR mes,int selectSerial)
 {
 	int kosuu = 0;
 	int mesHaveGyo = 0;
@@ -1626,17 +1626,22 @@ BOOL CMiniCompiler::Pass2Select(int typ, int serial, LPSTR mes)
 		return FALSE;
 	}
 
-	m_objectCode[0] = 6+kosuu+2+1;
+//	int selectSerial = 0;
+
+
+	m_objectCode[0] = 6+kosuu+2+1+1;
 	m_objectCode[1] = IDENTIFY_SYSTEMCOMMAND;
 	m_objectCode[2] = CODE_SYSTEMCOMMAND_SELECT;
 	m_objectCode[3] = sentakushiKosuu;
 	m_objectCode[4+kosuu] = serial;	//‚ ‚Æ‚Å’Ç‰Á‚µ‚½‚½‚ß‚±‚ñ‚È‚Æ‚±‚ë‚É‚¢‚ê‚½
 	//‚¤‚µ‚ë‚©‚çŽg‚¤
-	m_objectCode[8+kosuu] = mesHaveGyo;
-	m_objectCode[7+kosuu] = timeLimit;
-	m_objectCode[6+kosuu] = autoSelect;
-	m_objectCode[5+kosuu] = specialFlag;
-	m_objectSize = 6+kosuu+2+1;
+
+	m_objectCode[9+kosuu] = mesHaveGyo;
+	m_objectCode[8+kosuu] = timeLimit;
+	m_objectCode[7+kosuu] = autoSelect;
+	m_objectCode[6+kosuu] = specialFlag;
+	m_objectCode[5 + kosuu] = selectSerial;
+	m_objectSize = 6+kosuu+2+1+1;
 
 
 	if (serial >= m_selectTableSize)

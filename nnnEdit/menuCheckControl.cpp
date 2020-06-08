@@ -349,6 +349,16 @@ int CMenuCheckControl::m_undoAfterTable[] =
 	-1
 };
 
+int CMenuCheckControl::m_controlKeyTable[] =
+{
+	ID_MENU_CTRL_ENABLE,0,1,
+	ID_MENU_CTRL_DISABLE,0,0,
+	-1
+};
+
+
+
+
 CMenuCheckControl::CMenuCheckControl(CMyApplicationBase* app)
 {
 	m_app = app;
@@ -408,7 +418,7 @@ void CMenuCheckControl::CheckAllMenu(void)
 	SetUndoModeCheck();
 	SetUndoKakuninCheck();
 	SetUndoAfterCheck();
-
+	SetControlKeyCheck();
 }
 
 
@@ -741,6 +751,12 @@ void CMenuCheckControl::SetUndoAfterCheck(void)
 	SetMenuCheckRoutine(m_undoAfterTable,checkData);
 }
 
+void CMenuCheckControl::SetControlKeyCheck(void)
+{
+	int checkData[1];
+	checkData[0] = m_app->GetConfig("controlKeyEnable");
+	SetMenuCheckRoutine(m_controlKeyTable, checkData);
+}
 
 /*_*/
 

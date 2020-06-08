@@ -105,7 +105,7 @@ public:
 	BOOL Pass2Goto(int n);
 
 	BOOL Pass2Message(int typ, LPSTR mes);
-	BOOL Pass2Select(int typ, int serial,LPSTR mes);
+	BOOL Pass2Select(int typ, int serial,LPSTR mes,int selectSerial = 0);
 	BOOL Pass2Case(int n);
 
 	BOOL Pass2Simple(int typ,FILE* jsonFlag = NULL,int tab = 0);

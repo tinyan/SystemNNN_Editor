@@ -792,6 +792,37 @@ void CStoryDoc::OnChangeSelectStory(int n)
 }
 
 
+void CStoryDoc::OnChangeSelectID(int n)
+{
+	CStoryData* pStory = GetNowSelectStory();
+	if (pStory == NULL) return;
+
+	if (n == -1) n = pStory->GetNowSelectNumber();
+
+	int kosuu = pStory->GetObjectKosuu();
+	if ((n < 0) || (n >= kosuu)) return;
+
+	CCommandData* pCommand = (CCommandData*)(pStory->GetObjectData(n));
+	if (pCommand == NULL) return;
+
+	int cmd = pCommand->GetCommandType();
+	if (cmd != COMMANDDATATYPE_SELECT) return;
+
+	int oldID = pCommand->GetSelectMessageSerial();
+	char old[256];
+	sprintf_s(old, 256, "%d", oldID);
+
+	int id = oldID;
+	if (m_inputDialog->GetNumber(oldID,&id,"ID‘I‘ð"))
+	{
+		if (id != oldID)
+		{
+			pCommand->SetSelectMessageSerial(id);
+			m_app->SetModify();
+			m_app->CommandIsChanged();
+		}
+	}
+}
 
 
 void CStoryDoc::OnEditCommand(int n)

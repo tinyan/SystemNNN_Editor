@@ -56,6 +56,7 @@ public:
 	void SetUndoModeCheck(void);
 	void SetUndoKakuninCheck(void);
 	void SetUndoAfterCheck(void);
+	void SetControlKeyCheck(void);
 
 	static int m_buildMenuTable[];
 	static int m_deleteMenuTable[];
@@ -95,6 +96,7 @@ public:
 	static int m_undoEnableTable[];
 	static int m_undoKakuninTable[];
 	static int m_undoAfterTable[];
+	static int m_controlKeyTable[];
 
 private:
 	CMyApplicationBase* m_app;
