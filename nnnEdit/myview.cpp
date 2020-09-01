@@ -458,7 +458,7 @@ BOOL CMyView::MoveViewWindow(int wx, int wy, int sizeX, int sizeY)
 	if (m_hWnd == NULL) return FALSE;
 
 
-	if (false)
+	if (true)
 	{
 		RECT rc;
 		rc.left = wx;
@@ -467,9 +467,9 @@ BOOL CMyView::MoveViewWindow(int wx, int wy, int sizeX, int sizeY)
 		rc.bottom = wy + sizeY;
 
 		int nonFullFlag = 0xffffffff;
-		DWORD style = ((WS_OVERLAPPED |
-			WS_CAPTION |
-			WS_SYSMENU |
+		DWORD style = ((
+			//WS_CAPTION |
+			//WS_SYSMENU |
 			//								WS_THICKFRAME |
 			WS_MAXIMIZEBOX |
 			WS_MINIMIZEBOX
@@ -485,6 +485,36 @@ BOOL CMyView::MoveViewWindow(int wx, int wy, int sizeX, int sizeY)
 		sizeX = rc.right - rc.left;
 		sizeY = rc.bottom - rc.top;
 
+
+		if (m_resizeFlag)
+		{
+			sizeX += 2 * GetSystemMetrics(SM_CXSIZEFRAME);
+			sizeY += 2 * GetSystemMetrics(SM_CYSIZEFRAME);
+			wx -= GetSystemMetrics(SM_CXSIZEFRAME);
+			wy -= GetSystemMetrics(SM_CYSIZEFRAME);
+		}
+		else
+		{
+			sizeX += 2 * GetSystemMetrics(SM_CXFIXEDFRAME);
+			sizeY += 2 * GetSystemMetrics(SM_CYFIXEDFRAME);
+			wx -= GetSystemMetrics(SM_CXFIXEDFRAME);
+			wy -= GetSystemMetrics(SM_CYFIXEDFRAME);
+		}
+
+		if (m_scrollFlag[0])
+		{
+			sizeX += GetSystemMetrics(SM_CXVSCROLL);
+		}
+
+		if (m_scrollFlag[1])
+		{
+			sizeY += GetSystemMetrics(SM_CYHSCROLL);
+		}
+
+		sizeY += GetSystemMetrics(SM_CYCAPTION);
+		wy -= GetSystemMetrics(SM_CYCAPTION);
+
+
 		m_windowX = wx;
 		m_windowY = wy;
 		m_windowSizeX = sizeX;
@@ -492,13 +522,14 @@ BOOL CMyView::MoveViewWindow(int wx, int wy, int sizeX, int sizeY)
 
 		return MoveWindow(m_hWnd, wx, wy, sizeX, sizeY, TRUE);
 	}
+	else
+	{
 
-
-	m_windowX = wx;
-	m_windowY = wy;
-	m_windowSizeX = sizeX;
-	m_windowSizeY = sizeY;
-
+		m_windowX = wx;
+		m_windowY = wy;
+		m_windowSizeX = sizeX;
+		m_windowSizeY = sizeY;
+	}
 
 
 

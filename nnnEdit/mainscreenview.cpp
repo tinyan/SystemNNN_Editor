@@ -25,6 +25,8 @@
 
 #include "..\..\systemNNN\nnnUtilLib\myMessage.h"
 
+#include "..\..\systemNNN\nnnLib\mainControl.h"
+
 #include "case.h"
 #include "messageData.h"
 #include "myapplicationBase.h"
@@ -97,6 +99,10 @@ CMainScreenView::CMainScreenView(CMyDocument* pDocument,HWND clientHWND,HINSTANC
 
 	m_waitVSync = 0;
 
+
+	int dx = GetSystemMetrics(SM_CXFIXEDFRAME);
+	int dy = GetSystemMetrics(SM_CYFIXEDFRAME);
+	CMainControl::SetClientOffset(dx, dy);
 
 	m_leftRight = 0;
 	m_topBottom = 0;
@@ -587,8 +593,27 @@ LRESULT CMainScreenView::ViewWndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
 			RECT rc;
 			GetWindowRect(hWnd,&rc);
 
+			/*
+			int nonFullFlag = 0xffffffff;
+			DWORD style = ((
+				//WS_CAPTION |
+				//WS_SYSMENU |
+				//								WS_THICKFRAME |
+				WS_MAXIMIZEBOX |
+				WS_MINIMIZEBOX
+				)&nonFullFlag) |
+				WS_POPUP |
+				WS_VISIBLE
+				;
+			DWORD exStyle = 0;
+			AdjustWindowRectEx(&rc, style, false, exStyle);
+			*/
+
+			int dx = GetSystemMetrics(SM_CXFIXEDFRAME);
+			int dy = GetSystemMetrics(SM_CYFIXEDFRAME);
+
 //			m_directWindowX = rc.left + xPos;
-			m_directX->WindowIsMoved(rc.left + xPos, rc.top + yPos);
+			m_directX->WindowIsMoved(rc.left + xPos + dx, rc.top + yPos + dy);
 //			CAreaControl::SetNextAllPrint();
 		}
 
@@ -1248,7 +1273,13 @@ void CMainScreenView::FlipToScreen(void)
 		m_directX->Unlock();
 	}
 
-	m_directX->NiseFlip(0,0,screenSizeX,screenSizeY,m_waitVSync);
+//	m_directX->NiseFlip(0,0,screenSizeX,screenSizeY,m_waitVSync);
+	RECT srcRect;
+	RECT dstRect;
+	SetRect(&srcRect, 0, 0, screenSizeX, screenSizeY);
+	SetRect(&dstRect, 0, 0, screenSizeX, screenSizeY);
+
+	m_directX->NiseFlip2(srcRect,dstRect, m_waitVSync);
 }
 
 
