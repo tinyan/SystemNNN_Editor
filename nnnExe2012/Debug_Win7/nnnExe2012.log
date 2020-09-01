@@ -1,9 +1,0 @@
-﻿  main.cpp
-  コードを生成中...
-  コンパイル中...
-  game.cpp
-  コードを生成中...
-C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(1198,5): warning MSB8012: TargetPath(d:\tinyan\nnnEditRelease\nnnExe2017_Win7_debug.exe) が Linker の OutputFile プロパティ値 (d:\tinyan\nnnEditRelease\nnnExe2017_Debug.exe) と一致しません。このため、プロジェクトが正常にビルドされない可能性があります。この問題を解決するには、$(OutDir)、$(TargetName)、および $(TargetExt) の各プロパティ値が、%(Link.OutputFile) で指定されている値と一致することを確認してください。
-C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(1200,5): warning MSB8012: TargetName(nnnExe2017_Win7_debug) が Linker の OutputFile プロパティ値 (nnnExe2017_Debug) と一致しません。このため、プロジェクトが正常にビルドされない可能性があります。この問題を解決するには、$(OutDir)、$(TargetName)、および $(TargetExt) の各プロパティ値が、%(Link.OutputFile) で指定されている値と一致することを確認してください。
-  LINK : プログラム データベース d:\tinyan\nnnEditRelease\nnnExe2017_Win7_debug.pdb が指定されていません。フル リンクを行います。
-  nnnExe2012.vcxproj -> d:\tinyan\nnnEditRelease\nnnExe2017_Win7_debug.exe
