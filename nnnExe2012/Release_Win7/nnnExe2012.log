@@ -1,9 +1,0 @@
-﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Platforms\Win32\PlatformToolsets\v141_xp\Toolset.targets(39,5): warning MSB8051: Windows XP をターゲットとするサポートは非推奨であり、Visual Studio の将来のリリースで提供されなくなります。詳細については、https://go.microsoft.com/fwlink/?linkid=2023588 をご覧ください。
-  main.cpp
-  コード生成しています。
-d:\tinyan\systemnnn\nyaneffectwipelib\effecthamon.cpp(559): warning C4731: 'CEffectHamon::Print': インライン アセンブラー コードにより変更されたフレーム ポインター レジスタ 'ebx' です。
-d:\tinyan\systemnnn\nyaneffectwipelib\effecthamon.cpp(563): warning C4731: 'CEffectHamon::Print': インライン アセンブラー コードにより変更されたフレーム ポインター レジスタ 'ebx' です。
-d:\tinyan\systemnnn\nyaneffectwipelib\effecthamon.cpp(569): warning C4731: 'CEffectHamon::Print': インライン アセンブラー コードにより変更されたフレーム ポインター レジスタ 'ebx' です。
-d:\tinyan\systemnnn\nyaneffectwipelib\effecthamon.cpp(773): warning C4731: 'CEffectHamon::Print': インライン アセンブラー コードにより変更されたフレーム ポインター レジスタ 'ebx' です。
-  コード生成が終了しました。
-  nnnExe2012.vcxproj -> d:\tinyan\nnnEditRelease\nnnExe2017_Win7.exe
