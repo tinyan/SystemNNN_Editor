@@ -1542,6 +1542,8 @@ void CMyApplication::SetNewEffect(int nxt)
 //	n2++;
 	n2 += nxt;
 
+	int laterMax = CKomaData::m_layerMax;
+
 	if (n2<kosuu2)
 	{
 		BOOL overrapFlag = FALSE;
@@ -1613,7 +1615,8 @@ void CMyApplication::SetNewEffect(int nxt)
 		}
 		else
 		{
-			for (int i=0;i<16;i++)
+			//@@@@@@@@@@
+			for (int i=0;i<laterMax;i++)
 			{
 				int eff = pKoma->GetEffect(i);
 				if (eff != EFFECT_MAE)
@@ -2970,7 +2973,10 @@ void CMyApplication::MakeAllMiniPic(void)
 {
 	CLayerDoc* pDoc = (CLayerDoc*)m_document[LAYER_WINDOW];
 
-	for (int i=0;i<16;i++)
+	int layerMax = CKomaData::m_layerMax;
+
+	//@@@@@@@@@@
+	for (int i=0;i< layerMax;i++)
 	{
 		//int pic = m_effect->m_effect[i].pic;
 		
@@ -5630,6 +5636,8 @@ void CMyApplication::Debug(void)
 	CNameList* overrapName = new CNameList();
 	overrapName->LoadFile("nnndir\\setup\\list\\wipenamelist.txt");
 
+	int layerMax = CKomaData::m_layerMax;
+
 	int nnnKosuu = m_projectList->GetNameKosuu();
 	for (int pp=0;pp<nnnKosuu;pp++)
 	{
@@ -5662,7 +5670,7 @@ void CMyApplication::Debug(void)
 						CKomaData* pKoma = (CKomaData*)(pFilm->GetObjectData(j));
 						if (pKoma != NULL)
 						{
-							for (int e=0;e<16;e++)
+							for (int e=0;e< layerMax;e++)
 							{
 								if (pKoma->GetEffectFlag(e))
 								{

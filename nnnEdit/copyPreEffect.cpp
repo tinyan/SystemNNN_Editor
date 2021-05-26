@@ -50,7 +50,9 @@ void CCopyPreEffect::CopyPreEffect(int pre)
 	CKomaData* pPre = pFilm->GetKoma(k-pre);
 	if (pPre == NULL) return;
 
-	for (int i=0;i<16;i++)
+	int layerMax = CKomaData::m_layerMax;
+
+	for (int i=0;i< layerMax;i++)
 	{
 		if (pPre->GetEffectFlag(i))
 		{

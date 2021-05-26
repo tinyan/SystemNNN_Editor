@@ -57,7 +57,7 @@ BOOL CMakeUseDWQBat::MakeBat(void)
 	int rtt = MessageBox(NULL,"‘ÌŒ±”Å‚É‚µ‚Ü‚·‚©","Šm”F",MB_OKCANCEL | MB_DEFBUTTON2);
 
 
-	char* namelist = new char[16*10000];
+	char* namelist = new char[16*30000];
 	int nameKosuu = 0;
 
 	CreateDirectory("tmp",NULL);
@@ -67,6 +67,8 @@ BOOL CMakeUseDWQBat::MakeBat(void)
 
 	FILE* batFile = CMyFile::Open("copydwq.bat","wb");
 
+
+	int layerMax = CKomaData::m_layerMax;
 
 
 	int nnnKosuu = m_projectList->GetNameKosuu();
@@ -115,7 +117,7 @@ BOOL CMakeUseDWQBat::MakeBat(void)
 						CKomaData* pKoma = (CKomaData*)(pFilm->GetObjectData(j));
 						if (pKoma != NULL)
 						{
-							for (int k=0;k<16;k++)
+							for (int k=0;k<layerMax;k++)
 							{
 								if (pKoma->GetEffectFlag(k))
 								{

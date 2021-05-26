@@ -307,7 +307,6 @@ struct bbb
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 
-
 	/*
 
 	for (int i = 1; i < 100; i++)
@@ -1024,6 +1023,7 @@ bbb
 		}
 
 
+
 		ans_len = buf_len;
 		for (int k=0;k<buf_len;k++)
 		{
@@ -1044,6 +1044,19 @@ bbb
 
 	return 0;
 */
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /*

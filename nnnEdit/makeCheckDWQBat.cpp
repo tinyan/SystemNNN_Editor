@@ -56,13 +56,15 @@ BOOL CMakeCheckDWQBat::MakeBat(void)
 
 
 
-	char* namelist = new char[64*10000];
+	char* namelist = new char[64*30000];
 	int nameKosuu = 0;
 
 	FILE* batFile = CMyFile::Open("checkdwq.bat","wb");
 
 	char* mes0 = "echo off\r\n";
 	fwrite(mes0,sizeof(char),strlen(mes0),batFile);
+
+	int layerMax = CKomaData::m_layerMax;
 
 
 	int nnnKosuu = m_projectList->GetNameKosuu();
@@ -103,7 +105,7 @@ BOOL CMakeCheckDWQBat::MakeBat(void)
 						CKomaData* pKoma = (CKomaData*)(pFilm->GetObjectData(j));
 						if (pKoma != NULL)
 						{
-							for (int k=0;k<16;k++)
+							for (int k=0;k<layerMax;k++)
 							{
 								if (pKoma->GetEffectFlag(k))
 								{
