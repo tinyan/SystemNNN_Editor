@@ -253,6 +253,8 @@ CKumiawase::CKumiawase(CGameCallBack* lpGame) : CCommonGeneral(lpGame)
 	GetBackExecSetup();
 	GetAllPrintSetup();
 
+	GetDisableQuickButtonSetup();
+	GetDisableFreeButtonSetup();
 
 
 	//	m_filenameBG = m_defaultBGFileName;
@@ -594,6 +596,7 @@ int CKumiawase::Init(void)
 
 	//	m_game->StopVoice();
 
+	m_game->InitOptionButton();
 
 	//////////////////////
 	int i, j;
@@ -859,25 +862,163 @@ int CKumiawase::Calcu(void)
 	if (m_catchCard == -1)
 	{
 
-		//@@@@@@@@@@@@@@@オプション関連一時コメントアウト
 
-		/*
+		
+		int rt = m_game->CalcuOptionButton();
+
+		if (rt != NNNBUTTON_NOTHING)
+		{
+			int nm = ProcessCommonButton(rt);
+
+			if (nm == 0)
+			{
+				TaihiKumiawase();
+				return ReturnFadeOut(m_game->ChangeToSystemMode(SYSTEMMENU_MODE, BARA_KUMIAWASE_MODE));
+			}
+		}
+
+
+		if (rt == NNNBUTTON_NOTHING)
+		{
+			int nextMode = m_game->ProcessGameKey(BARA_KUMIAWASE_MODE);
+			if (nextMode != -1)
+			{
+				if (nextMode == SYSTEMMENU_MODE)
+				{
+					TaihiKumiawase();
+					m_game->SetCommonBackMode(SYSTEMMENU_MODE, BARA_KUMIAWASE_MODE);
+					m_game2->MakeMiniCG();
+					m_game2->SetSaveMode(BARA_KUMIAWASE_MODE);
+					return ReturnFadeOut(m_game->ChangeToSystemMode(SYSTEMMENU_MODE, BARA_KUMIAWASE_MODE));
+				}
+				if (nextMode == CONFIG_MODE)
+				{
+					TaihiKumiawase();
+					m_game->SetCommonBackMode(CONFIG_MODE, BARA_KUMIAWASE_MODE);
+					return ReturnFadeOut(m_game->ChangeToSystemMode(CONFIG_MODE, BARA_KUMIAWASE_MODE));
+				}
+
+				if (nextMode == BACKLOG_MODE)
+				{
+					TaihiKumiawase();
+					m_game->SetCommonBackMode(BACKLOG_MODE, BARA_KUMIAWASE_MODE);
+					return ReturnFadeOut(m_game->ChangeToSystemMode(BACKLOG_MODE, BARA_KUMIAWASE_MODE));
+				}
+
+				if (nextMode == LOAD_MODE)
+				{
+					TaihiKumiawase();
+					m_game->SetCommonBackMode(LOAD_MODE, BARA_KUMIAWASE_MODE);
+					return ReturnFadeOut(m_game->ChangeToSystemMode(LOAD_MODE, BARA_KUMIAWASE_MODE));
+				}
+
+				if (nextMode == SAVE_MODE)
+				{
+					TaihiKumiawase();
+					m_game2->MakeMiniCG();
+					m_game->SetCommonBackMode(SAVE_MODE, BARA_KUMIAWASE_MODE);
+					return ReturnFadeOut(m_game->ChangeToSystemMode(SAVE_MODE, BARA_KUMIAWASE_MODE));
+				}
+			}
+
+
+
+
+	/*
+			int nm = ProcessCommonButton(rt);
+
+			if (nm == 0)
+			{
+				TaihiKumiawase();
+				m_game2->MakeMiniCG();
+				m_game2->SetSaveMode(BARA_KUMIAWASE_MODE);
+				return ReturnFadeOut(m_game->ChangeToSystemMode(SYSTEMMENU_MODE, BARA_KUMIAWASE_MODE));
+			}
+
+			if (nm == 1)
+			{
+				TaihiKumiawase();
+				m_game->SetCommonBackMode(CONFIG_MODE, BARA_KUMIAWASE_MODE);
+				return ReturnFadeOut(m_game->ChangeToSystemMode(CONFIG_MODE, BARA_KUMIAWASE_MODE));
+			}
+
+			if (nm == 2)
+			{
+				TaihiKumiawase();
+				m_game->SetCommonBackMode(BACKLOG_MODE, BARA_KUMIAWASE_MODE);
+				return ReturnFadeOut(m_game->ChangeToSystemMode(BACKLOG_MODE, BARA_KUMIAWASE_MODE));
+			}
+
+			if (nm == 3)
+			{
+				TaihiKumiawase();
+				m_game2->MakeMiniCG();
+				m_game->SetCommonBackMode(SAVE_MODE, BARA_KUMIAWASE_MODE);
+				return ReturnFadeOut(m_game->ChangeToSystemMode(SAVE_MODE, BARA_KUMIAWASE_MODE));
+			}
+
+			if (nm == 4)
+			{
+				TaihiKumiawase();
+				m_game->SetCommonBackMode(LOAD_MODE, BARA_KUMIAWASE_MODE);
+				return ReturnFadeOut(m_game->ChangeToSystemMode(LOAD_MODE, BARA_KUMIAWASE_MODE));
+			}
+
+			if (nm == 5)//auto
+			{
+				int autoMode = m_game->GetSystemParam(NNNPARAM_AUTOMODE);
+				m_game->SetSystemParam(NNNPARAM_AUTOMODE, 1 - autoMode);
+			}
+			if (nm == 6)//skip
+			{
+				m_game->SetMessageSkipFlag();
+				m_game->InitFreeButton(NNN_FREEBUTTON_SKIP);
+
+			}
+//			if (nm == 7)//windowoff
+//			{
+//				if (CheckWindowOnOffEnable())
+//				{
+//					WindowOn(0);
+//					m_game->SetSystemParam(NNNPARAM_AUTOMODE, 0);
+//					CAreaControl::SetNextAllPrint();
+//				}
+//			}
+*/
+
+
+		//	int st = CCommonButton::GetButtonStatus(rt);
+	//		if (st == NNNBUTTON_STARTCLICK) return -1;
+//			if (st == NNNBUTTON_CLICKING) return -1;
+		}
+
+		
+
+		
+
 		//option
+		/*
 		if (m_game2->CheckOnOption(mouseX, mouseY))
 		{
 			if (CheckClick())
 			{
 				TaihiKumiawase();
 
-				m_game2->SetSaveMode(KUMIAWASE_MODE);
+				m_game2->SetSaveMode(BARA_KUMIAWASE_MODE);
 				m_game2->MakeMiniCG();
-				m_game2->SetSaveBackMode(KUMIAWASE_MODE);
-				m_game2->SetLoadBackMode(KUMIAWASE_MODE);
-				m_game2->SetConfigBackMode(KUMIAWASE_MODE);
-				m_game2->SetOptionBackMode(KUMIAWASE_MODE);
+
+				m_game->SetCommonBackMode(SAVE_MODE, BARA_KUMIAWASE_MODE);
+				m_game->SetCommonBackMode(LOAD_MODE, BARA_KUMIAWASE_MODE);
+				m_game->SetCommonBackMode(CONFIG_MODE, BARA_KUMIAWASE_MODE);
+				m_game->SetCommonBackMode(SYSTEMMENU_MODE, BARA_KUMIAWASE_MODE);
+
+//				m_game2->SetSaveBackMode(KUMIAWASE_MODE);//
+//				m_game2->SetLoadBackMode(KUMIAWASE_MODE);
+//				m_game2->SetConfigBackMode(KUMIAWASE_MODE);
+//				m_game2->SetOptionBackMode(KUMIAWASE_MODE);
 
 				m_game2->PlaySystemSound(SYSTEMSOUND_OK);
-				return OPTIONMENU_MODE;
+				return SYSTEMMENU_MODE;
 			}
 		}
 		//keyboard shortcut
@@ -920,8 +1061,9 @@ int CKumiawase::Calcu(void)
 			m_game2->SetOptionBackMode(KUMIAWASE_MODE);
 			return OPTIONMENU_MODE;
 		}
-
 		*/
+
+
 
 		CheckBookOpen(mouseX, mouseY);
 
@@ -1265,7 +1407,7 @@ int CKumiawase::Print(void)
 	CAllGraphics::FillScreen();
 	BOOL b = CAreaControl::CheckAllPrintMode();
 
-	m_message->PrintMessage(300, 300, "くみあわせがめん");
+	//m_message->PrintMessage(300, 300, "くみあわせがめん");
 
 	return PrintKumiawaseMode();
 
@@ -1286,7 +1428,7 @@ int CKumiawase::PrintKumiawaseMode(void)
 
 	BOOL b = CAreaControl::CheckAllPrintMode();
 
-	m_game->SetOption();
+//	m_game->SetOption();
 
 	m_commonBG->Put(0, 0, FALSE);
 
@@ -1611,6 +1753,7 @@ int CKumiawase::PrintKumiawaseMode(void)
 
 	PrintHana();
 
+	m_game->PrintOptionButtonYoyaku();
 
 
 	return -1;
@@ -4208,6 +4351,10 @@ void CKumiawase::PrintHana(void)
 }
 
 
+void CKumiawase::ReCreateExitScreen(void)
+{
+	Print();
+}
 
 /*_*/
 

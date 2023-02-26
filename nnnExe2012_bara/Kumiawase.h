@@ -39,7 +39,7 @@ public:
 	virtual int Print(void) override;
 
 
-	//	virtual void ReCreateExitScreen(void);
+	virtual void ReCreateExitScreen(void);
 	//	virtual void CreateStartScreen(void);
 
 	//	virtual void FinalExitRoutine(void);

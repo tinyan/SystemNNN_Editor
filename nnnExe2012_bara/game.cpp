@@ -34,7 +34,12 @@
 #include "PrintCalendar.h"
 #include "Kumiawase.h"
 
+#include "title.h"
 
+#include "SelectCGChara.h"
+#include "SelectCG.h"
+#include "SelectSceneChara.h"
+#include "SelectScene.h"
 
 
 
@@ -240,7 +245,6 @@ int CGame::m_saijitsu[] =
 CGame::CGame(HWND hwnd, HINSTANCE hinstance, CCommonSystemFile* lpSystemFile, int windowSizeX, int windowSizeY, int bpp) : CGameCallBack(hwnd, hinstance, lpSystemFile, windowSizeX, windowSizeY, bpp)
 {
 
-
 }
 
 
@@ -353,6 +357,12 @@ void CGame::CreateAllClass(void)
 
 	CreateCommonClass(MINIGAME_MODE);
 	*/
+
+	m_general[TITLE_MODE] = new CTitle(this);
+	m_general[SELECTCGCHARA_MODE] = new CSelectCGChara(this);
+	m_general[SELECTCG_MODE] = new CSelectCG(this);
+	m_general[SELECTSCENECHARA_MODE] = new CSelectSceneChara(this);
+	m_general[SELECTSCENE_MODE] = new CSelectScene(this);
 
 
 	m_general[BARA_PRINTCALENDAR_MODE] = new CPrintCalendar(this);

@@ -261,6 +261,11 @@
     <ClCompile Include="Kumiawase.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PrintCalendar.cpp" />
+    <ClCompile Include="SelectCG.cpp" />
+    <ClCompile Include="SelectCGChara.cpp" />
+    <ClCompile Include="SelectScene.cpp" />
+    <ClCompile Include="SelectSceneChara.cpp" />
+    <ClCompile Include="Title.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h" />
@@ -269,6 +274,11 @@
     <ClInclude Include="mode.h" />
     <ClInclude Include="PrintCalendar.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="SelectCG.h" />
+    <ClInclude Include="SelectCGChara.h" />
+    <ClInclude Include="SelectScene.h" />
+    <ClInclude Include="SelectSceneChara.h" />
+    <ClInclude Include="Title.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />
