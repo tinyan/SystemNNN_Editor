@@ -105,6 +105,8 @@ CMyView::CMyView(CMyDocument* pDocument, HWND clientHWND,HINSTANCE hinstance)
 
 	mdic.x  = mdic.y  = CW_USEDEFAULT;
 	mdic.cx = mdic.cy = CW_USEDEFAULT;
+//	mdic.x = mdic.y = CW_USEDEFAULT;
+//	mdic.cx = mdic.cy = 3;
 	mdic.style   = WS_OVERLAPPEDWINDOW | WS_VISIBLE;
 	mdic.style &= ~(WS_MAXIMIZEBOX | WS_MINIMIZEBOX);
 	mdic.lParam  = (LPARAM)0;
@@ -477,7 +479,7 @@ BOOL CMyView::MoveViewWindow(int wx, int wy, int sizeX, int sizeY)
 			WS_POPUP |
 			WS_VISIBLE
 			;
-		DWORD exStyle = 0;
+		DWORD exStyle = WS_EX_MDICHILD;
 		AdjustWindowRectEx(&rc, style, false, exStyle);
 
 		wx = rc.left;
@@ -485,13 +487,24 @@ BOOL CMyView::MoveViewWindow(int wx, int wy, int sizeX, int sizeY)
 		sizeX = rc.right - rc.left;
 		sizeY = rc.bottom - rc.top;
 
+		int a = GetSystemMetrics(SM_CXEDGE);
+		int b = GetSystemMetrics(SM_CXFIXEDFRAME);
+		int c = GetSystemMetrics(SM_CXSIZEFRAME);
 
-		if (m_resizeFlag)
+		if (m_resizeFlag || TRUE)
 		{
 			sizeX += 2 * GetSystemMetrics(SM_CXSIZEFRAME);
 			sizeY += 2 * GetSystemMetrics(SM_CYSIZEFRAME);
+			sizeX += 2 * GetSystemMetrics(SM_CXFIXEDFRAME);
+			sizeY += 2 * GetSystemMetrics(SM_CYFIXEDFRAME);
+			sizeX += 2;
+			sizeY += 2;
 			wx -= GetSystemMetrics(SM_CXSIZEFRAME);
 			wy -= GetSystemMetrics(SM_CYSIZEFRAME);
+			wx -= GetSystemMetrics(SM_CXFIXEDFRAME);
+			wy -= GetSystemMetrics(SM_CYFIXEDFRAME);
+			wx -= 1;
+			wy -= 1;
 		}
 		else
 		{
@@ -539,7 +552,7 @@ BOOL CMyView::MoveViewWindow(int wx, int wy, int sizeX, int sizeY)
 //sprintf(mes,"[y=%d***]",sizeY);
 //OutputDebugString(mes);
 
-	if (m_resizeFlag)
+	if (m_resizeFlag || TRUE)
 	{
 		sizeX += 2*GetSystemMetrics(SM_CXSIZEFRAME);
 		sizeY += 2*GetSystemMetrics(SM_CYSIZEFRAME);
@@ -769,10 +782,12 @@ SIZE CMyView::CalcuWindowSize(int nx, int ny)
 	int fx = 0;
 	int fy = 0;
 
-	if (m_resizeFlag)
+	if (m_resizeFlag || TRUE)
 	{
 		fx = GetSystemMetrics(SM_CXSIZEFRAME);
 		fy = GetSystemMetrics(SM_CYSIZEFRAME);
+		fx += GetSystemMetrics(SM_CXFIXEDFRAME);
+		fy += GetSystemMetrics(SM_CYFIXEDFRAME);
 	}
 	else
 	{
@@ -782,6 +797,8 @@ SIZE CMyView::CalcuWindowSize(int nx, int ny)
 
 	sx += fx*2;
 	sy += fy*2;
+	sx += 1;
+	sy += 1;
 
 	sy += GetSystemMetrics(SM_CYCAPTION);
 
@@ -846,6 +863,8 @@ void CMyView::AdjustWindowSize(WPARAM fwFlag, LPRECT lpRect)
 
 	int blockKosuuX = (sx - amariSize.cx + m_blockSizeX/2) / m_blockSizeX;
 	int blockKosuuY = (sy - amariSize.cy + m_blockSizeY/2) / m_blockSizeY;
+//	int blockKosuuX = (sx - amariSize.cx ) / m_blockSizeX;
+//	int blockKosuuY = (sy - amariSize.cy ) / m_blockSizeY;
 
 
 
@@ -896,11 +915,16 @@ void CMyView::AdjustWindowSize(WPARAM fwFlag, LPRECT lpRect)
 //	sprintf(mes,"[%d %d %d %d]",x,y,sx,sy);
 //	OutputDebugString(mes);
 
-	if (m_resizeFlag)
+	if (m_resizeFlag || TRUE)
 	{
 		m_windowX = x + GetSystemMetrics(SM_CXSIZEFRAME);
 		m_windowY = y + GetSystemMetrics(SM_CYSIZEFRAME);
 //OutputDebugString("=");
+		m_windowX += GetSystemMetrics(SM_CXFIXEDFRAME);
+		m_windowY += GetSystemMetrics(SM_CYFIXEDFRAME);
+
+		m_windowX += 1;
+		m_windowY += 1;
 	}
 	else
 	{
@@ -926,9 +950,11 @@ void CMyView::AdjustWindowSize(WPARAM fwFlag, LPRECT lpRect)
 	//スクロール関連のパラメーターの再設定
 
 
+//	ex = m_windowSizeX + leftright;
+//	ey = m_windowSizeY + topbottom;
 
 
-
+//	SetRect(lpRect, x, y, m_windowSizeX, m_windowSizeY);
 
 	SetRect(lpRect,x,y,ex,ey);
 }
@@ -961,6 +987,7 @@ void CMyView::SetWindowStyle(void)
 	}
 	else
 	{
+//		style |= WS_SIZEBOX;
 		style &= (~WS_SIZEBOX);
 	}
 
@@ -992,6 +1019,11 @@ void CMyView::InitWindowZahyo(void)
 	RECT rc;
 	BOOL flg;
 	m_document->GetInitWindowZahyo(m_windowName,&rc,&flg);
+	if (!m_resizeFlag)
+	{
+	//	rc.right += 12 * GetSystemMetrics(SM_CXFIXEDFRAME);
+	//	rc.bottom += 2 * GetSystemMetrics(SM_CXFIXEDFRAME);
+	}
 	MoveViewWindow(&rc);
 }
 

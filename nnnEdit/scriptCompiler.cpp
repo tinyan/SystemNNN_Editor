@@ -2571,6 +2571,11 @@ BOOL CScriptCompiler::KaisekiScenePass1(void)
 	{
 		LPSTR name = m_sceneDataList->GetName(i);
 		char c = *name;
+		if (c == '*')
+		{
+			name++;
+			c = *name;
+		}
 		if (c == '[')
 		{
 			charaKosuu++;
@@ -2610,6 +2615,11 @@ BOOL CScriptCompiler::KaisekiScenePass1(void)
 	{
 		LPSTR name = m_sceneDataList->GetName(i);
 		char c = *name;
+		if (c == '*')
+		{
+			name++;
+			c = *name;
+		}
 		if (c == '[')
 		{
 			if (sceneFlag)
@@ -2649,6 +2659,10 @@ BOOL CScriptCompiler::KaisekiScenePass1(void)
 
 			//scriptname check
 			LPSTR name = m_sceneDataList->GetName(i);
+			if (*name == '*')
+			{
+				name++;
+			}
 			name++;
 			int sgn = 1;
 			if ((*name) == '#')
@@ -2741,6 +2755,11 @@ BOOL CScriptCompiler::KaisekiScenePass2(int n)
 							int s = p & 0x0000ffff;
 
 							LPSTR name = m_sceneDataList->GetName(s);
+							if ((*name) == '*')
+							{
+								name++;
+							}
+
 							BOOL sgn = 1;
 							if ((*name) == '!')
 							{
@@ -3521,6 +3540,8 @@ int CScriptCompiler::CheckSameCGList(void)
 LPSTR CScriptCompiler::SkipCGCommand(LPSTR name)
 {
 	LPSTR nameOrg = name;
+
+	if ((*name) == '*') name++;
 
 	if ((*name) == '@') name++;
 

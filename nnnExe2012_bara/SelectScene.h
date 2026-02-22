@@ -53,12 +53,12 @@ protected:
 
 	CMyMessage* m_message;
 
-	int m_nowSelectNumber;
-	int m_maeSelectNumber;
-	int m_selectedNumber;
-	int m_startupWait;
+//	int m_nowSelectNumber;
+//	int m_maeSelectNumber;
+//	int m_selectedNumber;
+//	int m_startupWait;
 
-	int GetOnScene(int mouseX, int mouseY);
+//	int GetOnScene(int mouseX, int mouseY);
 
 private:
 	CGame* m_game2;

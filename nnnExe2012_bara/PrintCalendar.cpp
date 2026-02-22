@@ -112,6 +112,21 @@ CPrintCalendar::CPrintCalendar(CGameCallBack* lpGame) : CCommonGeneral(lpGame)
 	m_cuppleVarNumber = m_game->GetVarNumber("カップリング紹介番号");
 	m_hourVarNumber = m_game->GetVarNumber("時間帯");
 
+	m_slashPic = m_game->GetSystemPicture("ta_slash");
+	m_monthPrintX = 46;
+	m_monthPrintY = 46;
+	m_dayPrintX = 83;
+	m_dayPrintY = 73;
+	m_slashPrintX = 62;
+	m_slashPrintY = 49;
+	GetInitGameParam(&m_monthPrintX, "monthPrintX");
+	GetInitGameParam(&m_monthPrintY, "monthPrintY");
+	GetInitGameParam(&m_dayPrintX, "dayPrintX");
+	GetInitGameParam(&m_dayPrintY, "dayPrintY");
+	GetInitGameParam(&m_slashPrintX, "slashPrintX");
+	GetInitGameParam(&m_slashPrintY, "slashPrintY");
+
+
 }
 
 
@@ -218,13 +233,17 @@ int CPrintCalendar::Init(void)
 	if ((month >= 5) && (month <= 7))
 	{
 		m_commonParts->LoadDWQ(filename);
-		m_commonParts->Blt(5, 5, 0, 0, 33, 46, TRUE);
+//		m_commonParts->Blt(5, 5, 0, 0, 33, 46, TRUE);
+		m_commonParts->Put(m_monthPrintX, m_monthPrintY, true);
+
 
 		//	suujiMes = m_game->NumberToKanji(m_date);
 		sprintf_s(filename, 256,"sys\\ta%d", date);
 		m_commonParts->LoadDWQ(filename);
-		m_commonParts->Blt(66, 67, 0, 0, 48, 54, TRUE);
+//		m_commonParts->Blt(66, 67, 0, 0, 48, 54, TRUE);
+		m_commonParts->Put(m_dayPrintX, m_dayPrintY, true);
 
+		m_slashPic->Put(m_slashPrintX,m_slashPrintY,true);
 	}
 
 

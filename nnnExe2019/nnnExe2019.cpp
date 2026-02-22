@@ -57,8 +57,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	CCurrentDirControl::ChangeCurrentToExe();
 
-	
-	
+
+
+
+
+
+
 
 
 
@@ -85,6 +89,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	//	m_systemFile->Load(TRUE);
 
 	
+
 	m_mainControl = new CMainControl();	//コンストラクタでwheelMouse,systemfileを指定できる 指定なし、またはNULLだと内部で標準のを作成する
 
 	if (m_mainControl->CheckSystem())
@@ -104,6 +109,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	ENDDELETECLASS(m_mainControl);
 
 	CCurrentDirControl::RestoreCurrent();
+
+
+
 
 
 

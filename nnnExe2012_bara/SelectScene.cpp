@@ -57,9 +57,9 @@ int CSelectScene::Init(void)
 {
 	int rt = CCommonSelectScene::Init();
 
-	m_nowSelectNumber = -1;
-	m_maeSelectNumber = -1;
-	m_selectedNumber = -1;
+//	m_nowSelectNumber = -1;
+//	m_maeSelectNumber = -1;
+//	m_selectedNumber = -1;
 	m_startupWait = 3;
 
 	return rt;
@@ -68,12 +68,12 @@ int CSelectScene::Calcu(void)
 {
 	int rt = CCommonSelectScene::Calcu();
 
-	POINT pt = m_mouseStatus->GetZahyo();
-	int mouseX = pt.x;
-	int mouseY = pt.y;
+//	POINT pt = m_mouseStatus->GetZahyo();
+//	int mouseX = pt.x;
+//	int mouseY = pt.y;
 
-	m_maeSelectNumber = m_nowSelectNumber;
-	m_nowSelectNumber = GetOnScene(mouseX, mouseY);
+//	m_maeSelectNumber = m_nowSelectNumber;
+//	m_nowSelectNumber = GetOnScene(mouseX, mouseY);
 
 	if (m_startupWait > 0)
 	{
@@ -99,6 +99,7 @@ int CSelectScene::Print(void)
 	return rt;
 }
 
+/*
 int CSelectScene::GetOnScene(int mouseX, int mouseY)
 {
 	int x = mouseX - m_printX;
@@ -121,6 +122,8 @@ int CSelectScene::GetOnScene(int mouseX, int mouseY)
 
 	return -1;
 }
+*/
+
 
 
 void CSelectScene::ReCreateExitScreen(void)

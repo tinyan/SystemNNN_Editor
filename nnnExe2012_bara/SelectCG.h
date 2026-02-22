@@ -54,25 +54,25 @@ protected:
 
 	CMyMessage* m_message;
 
-	int m_nowSelectNumber;
-	int m_maeSelectNumber;
-	int m_selectedNumber;
-	int m_startupWait;
+//	int m_nowSelectNumber;
+//	int m_maeSelectNumber;
+//	int m_selectedNumber;
+//	int m_startupWait;
 
-	int m_printX;
-	int m_printY;
-	int m_nextX;
-	int m_nextY;
-	int m_sizeX;
-	int m_sizeY;
-	int m_page;
+//	int m_printX;
+//	int m_printY;
+//	int m_nextX;
+//	int m_nextY;
+//	int m_sizeX;
+//	int m_sizeY;
+//	int m_page;
 
-	int m_cgKosuu;
-	int m_playerNumber;
+	//int m_cgKosuu;
+//	int m_playerNumber;
 
-	int GetOnCG(int mouseX, int mouseY);
+	//int GetOnCG(int mouseX, int mouseY);
 
-	CCGDataControl* m_cgDataControl;
+//	CCGDataControl* m_cgDataControl;
 
 private:
 	CGame* m_game2;

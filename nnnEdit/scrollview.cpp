@@ -178,6 +178,7 @@ void CMyScrollView::OnScroll(UINT message, WPARAM wParam, LPARAM lParam)
 		SetRect(&rc,m_scrollAreaStartX,m_scrollAreaStartY,m_scrollAreaEndX,m_scrollAreaEndY);
 		//ScrollWindow(m_hWnd,-dx,-dy,&rc,&rc);
 		ScrollWindowEx(m_hWnd,-dx,-dy,&rc,&rc,NULL,NULL,SW_INVALIDATE | SW_ERASE);
+		InvalidateRect(m_hWnd, NULL,false);
 		UpdateWindow(m_hWnd);
 	}
 }

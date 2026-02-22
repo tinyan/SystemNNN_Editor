@@ -50,6 +50,11 @@ protected:
 	virtual void AfterPrint(void) {}
 	*/
 
+	BOOL CheckOnMiniGameAreaAll(int x, int y);
+	BOOL CheckOnMiniGameArea(int x, int y, int area);
+	BOOL CTitle::CheckMiniGameOk(void);
+	bool m_miniGameOkFlag;
+
 
 	CMyMessage* m_message;
 private:

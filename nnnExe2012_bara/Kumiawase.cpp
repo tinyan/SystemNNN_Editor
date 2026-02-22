@@ -238,7 +238,7 @@ CKumiawase::CKumiawase(CGameCallBack* lpGame) : CCommonGeneral(lpGame)
 {
 	SetClassNumber(BARA_KUMIAWASE_MODE);
 	//	m_classNumber = TITLE_MODE;
-	LoadSetupFile("printcalendar", 64);
+	LoadSetupFile("kumiawase", 64);
 
 	m_game2 = dynamic_cast<CGame*>(lpGame);
 
@@ -256,6 +256,8 @@ CKumiawase::CKumiawase(CGameCallBack* lpGame) : CCommonGeneral(lpGame)
 	GetDisableQuickButtonSetup();
 	GetDisableFreeButtonSetup();
 
+	m_ketteiLastWait = 20;
+	GetInitGameParam(&m_ketteiLastWait,"kekkaLastWait");
 
 	//	m_filenameBG = m_defaultBGFileName;
 	//	GetInitGameString(&m_filenameBG, "filenameBG");
@@ -547,6 +549,21 @@ CKumiawase::CKumiawase(CGameCallBack* lpGame) : CCommonGeneral(lpGame)
 			}
 		}
 	}
+
+
+	m_slashPic = m_game->GetSystemPicture("ta_slash");
+	m_monthPrintX = 46;
+	m_monthPrintY = 46;
+	m_dayPrintX = 83;
+	m_dayPrintY = 73;
+	m_slashPrintX = 62;
+	m_slashPrintY = 49;
+	GetInitGameParam(&m_monthPrintX, "monthPrintX");
+	GetInitGameParam(&m_monthPrintY, "monthPrintY");
+	GetInitGameParam(&m_dayPrintX, "dayPrintX");
+	GetInitGameParam(&m_dayPrintY, "dayPrintY");
+	GetInitGameParam(&m_slashPrintX, "slashPrintX");
+	GetInitGameParam(&m_slashPrintY, "slashPrintY");
 
 }
 
@@ -1434,6 +1451,7 @@ int CKumiawase::PrintKumiawaseMode(void)
 
 	PrintMonth();
 	PrintDate();
+	PrintSlash();
 	PrintHour();
 
 	m_lightCount++;
@@ -3512,14 +3530,23 @@ void CKumiawase::CalcuNeedPointAnime(void)
 
 void CKumiawase::PrintMonth(void)
 {
-	m_monthPic->Blt(5, 5, 0, 0, 33, 46, TRUE);
+//	m_monthPic->Blt(5, 5, 0, 0, 33, 46, TRUE);
+	m_monthPic->Blt(m_monthPrintX, m_monthPrintY, 0, 0, 33, 46, TRUE);
+
 }
 
 
 void CKumiawase::PrintDate(void)
 {
-	m_datePic->Blt(66, 67, 0, 0, 48, 54, TRUE);
+//	m_datePic->Blt(66, 67, 0, 0, 48, 54, TRUE);
+	m_datePic->Blt(m_dayPrintX, m_dayPrintY, 0, 0, 48, 54, TRUE);
 }
+
+void CKumiawase::PrintSlash(void)
+{
+	m_slashPic->Put(m_slashPrintX, m_slashPrintY, true);
+}
+
 
 void CKumiawase::PrintHour(void)
 {

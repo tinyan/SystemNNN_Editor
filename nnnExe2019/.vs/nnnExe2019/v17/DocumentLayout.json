@@ -1,0 +1,158 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\tinyan\\SystemNNN_Editor\\nnnExe2019\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{BE940897-034A-4EC5-94EE-A2F37B631290}|nnnExe2019.vcxproj|D:\\tinyan\\SystemNNN_Editor\\nnnExe2019\\nnnExe2019.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{BE940897-034A-4EC5-94EE-A2F37B631290}|nnnExe2019.vcxproj|solutionrelative:nnnExe2019.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\tinyan\\SystemNNN\\nnnUtilLib\\shakin.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\tinyan\\SystemNNN\\nnnLib\\gamecallback.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\tinyan\\SystemNNN\\nnnLib\\commonprintmessage.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\tinyan\\SystemNNN\\nyanGraphicsLib\\grey.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\tinyan\\SystemNNN\\nyanLib\\mygraphics.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\tinyan\\SystemNNN\\nyanPictureLib\\changeTransLucentBlt.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\tinyan\\SystemNNN\\nyanEffectCharaLIB\\effectCharaGhost.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\tinyan\\SystemNNN\\nyanEffectScreenLIB\\effectNega.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "nnnExe2019.cpp",
+              "DocumentMoniker": "D:\\tinyan\\SystemNNN_Editor\\nnnExe2019\\nnnExe2019.cpp",
+              "RelativeDocumentMoniker": "nnnExe2019.cpp",
+              "ToolTip": "D:\\tinyan\\SystemNNN_Editor\\nnnExe2019\\nnnExe2019.cpp",
+              "RelativeToolTip": "nnnExe2019.cpp",
+              "ViewState": "AQIAAGQAAAAAAAAAAAAzwHMAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-03-29T07:46:31.096Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "commonprintmessage.cpp",
+              "DocumentMoniker": "D:\\tinyan\\SystemNNN\\nnnLib\\commonprintmessage.cpp",
+              "RelativeDocumentMoniker": "..\\..\\SystemNNN\\nnnLib\\commonprintmessage.cpp",
+              "ToolTip": "D:\\tinyan\\SystemNNN\\nnnLib\\commonprintmessage.cpp",
+              "RelativeToolTip": "..\\..\\SystemNNN\\nnnLib\\commonprintmessage.cpp",
+              "ViewState": "AQIAAHwDAAAAAAAAAAAnwJoDAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-04-13T18:36:07.311Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "shakin.cpp",
+              "DocumentMoniker": "D:\\tinyan\\SystemNNN\\nnnUtilLib\\shakin.cpp",
+              "RelativeDocumentMoniker": "..\\..\\SystemNNN\\nnnUtilLib\\shakin.cpp",
+              "ToolTip": "D:\\tinyan\\SystemNNN\\nnnUtilLib\\shakin.cpp",
+              "RelativeToolTip": "..\\..\\SystemNNN\\nnnUtilLib\\shakin.cpp",
+              "ViewState": "AQIAAD8AAAAAAAAAAADgv10AAABTAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-04-13T18:33:25.812Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "grey.cpp",
+              "DocumentMoniker": "D:\\tinyan\\SystemNNN\\nyanGraphicsLib\\grey.cpp",
+              "RelativeDocumentMoniker": "..\\..\\SystemNNN\\nyanGraphicsLib\\grey.cpp",
+              "ToolTip": "D:\\tinyan\\SystemNNN\\nyanGraphicsLib\\grey.cpp",
+              "RelativeToolTip": "..\\..\\SystemNNN\\nyanGraphicsLib\\grey.cpp",
+              "ViewState": "AQIAAIEAAAAAAAAAAAAnwJoAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-04-13T11:27:34.15Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "mygraphics.cpp",
+              "DocumentMoniker": "D:\\tinyan\\SystemNNN\\nyanLib\\mygraphics.cpp",
+              "RelativeDocumentMoniker": "..\\..\\SystemNNN\\nyanLib\\mygraphics.cpp",
+              "ToolTip": "D:\\tinyan\\SystemNNN\\nyanLib\\mygraphics.cpp",
+              "RelativeToolTip": "..\\..\\SystemNNN\\nyanLib\\mygraphics.cpp",
+              "ViewState": "AQIAAG0AAAAAAAAAAAAnwIIAAAABAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-04-13T11:27:25.973Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "gamecallback.cpp",
+              "DocumentMoniker": "D:\\tinyan\\SystemNNN\\nnnLib\\gamecallback.cpp",
+              "RelativeDocumentMoniker": "..\\..\\SystemNNN\\nnnLib\\gamecallback.cpp",
+              "ToolTip": "D:\\tinyan\\SystemNNN\\nnnLib\\gamecallback.cpp",
+              "RelativeToolTip": "..\\..\\SystemNNN\\nnnLib\\gamecallback.cpp",
+              "ViewState": "AQIAADw8AAAAAAAAAAAnwFI8AAAdAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-04-13T11:18:16.324Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "changeTransLucentBlt.cpp",
+              "DocumentMoniker": "D:\\tinyan\\SystemNNN\\nyanPictureLib\\changeTransLucentBlt.cpp",
+              "RelativeDocumentMoniker": "..\\..\\SystemNNN\\nyanPictureLib\\changeTransLucentBlt.cpp",
+              "ToolTip": "D:\\tinyan\\SystemNNN\\nyanPictureLib\\changeTransLucentBlt.cpp",
+              "RelativeToolTip": "..\\..\\SystemNNN\\nyanPictureLib\\changeTransLucentBlt.cpp",
+              "ViewState": "AQIAAIYAAAAAAAAAAADgv18AAAAdAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-04-13T08:25:41.385Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "effectNega.cpp",
+              "DocumentMoniker": "D:\\tinyan\\SystemNNN\\nyanEffectScreenLIB\\effectNega.cpp",
+              "RelativeDocumentMoniker": "..\\..\\SystemNNN\\nyanEffectScreenLIB\\effectNega.cpp",
+              "ToolTip": "D:\\tinyan\\SystemNNN\\nyanEffectScreenLIB\\effectNega.cpp",
+              "RelativeToolTip": "..\\..\\SystemNNN\\nyanEffectScreenLIB\\effectNega.cpp",
+              "ViewState": "AQIAAIoAAAAAAAAAAAAAAJMAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-04-05T10:31:09.172Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "effectCharaGhost.cpp",
+              "DocumentMoniker": "D:\\tinyan\\SystemNNN\\nyanEffectCharaLIB\\effectCharaGhost.cpp",
+              "RelativeDocumentMoniker": "..\\..\\SystemNNN\\nyanEffectCharaLIB\\effectCharaGhost.cpp",
+              "ToolTip": "D:\\tinyan\\SystemNNN\\nyanEffectCharaLIB\\effectCharaGhost.cpp",
+              "RelativeToolTip": "..\\..\\SystemNNN\\nyanEffectCharaLIB\\effectCharaGhost.cpp",
+              "ViewState": "AQIAAHwBAAAAAAAAAAAIwIcBAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-04-05T07:40:28.319Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

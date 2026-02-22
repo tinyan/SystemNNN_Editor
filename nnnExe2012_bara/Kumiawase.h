@@ -588,6 +588,14 @@ private:
 
 	CGame* m_game2;
 
+	CPicture* m_slashPic;
+	int m_monthPrintX;
+	int m_monthPrintY;
+	int m_dayPrintX;
+	int m_dayPrintY;
+	int m_slashPrintX;
+	int m_slashPrintY;
+	void PrintSlash();
 };
 
 

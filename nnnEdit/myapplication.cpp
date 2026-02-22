@@ -4474,6 +4474,7 @@ void CMyApplication::PrintHint(void)
 	}*/
 }
 
+
 int CMyApplication::CalcuFilmTime(CFilmData* pFilm,int defaultRate)
 {
 	if (pFilm == NULL) return 0;

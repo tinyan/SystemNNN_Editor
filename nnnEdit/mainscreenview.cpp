@@ -102,6 +102,8 @@ CMainScreenView::CMainScreenView(CMyDocument* pDocument,HWND clientHWND,HINSTANC
 
 	int dx = GetSystemMetrics(SM_CXFIXEDFRAME);
 	int dy = GetSystemMetrics(SM_CYFIXEDFRAME);
+	dx += GetSystemMetrics(SM_CXSIZEFRAME);
+	dy += GetSystemMetrics(SM_CYSIZEFRAME);
 	CMainControl::SetClientOffset(dx, dy);
 
 	m_leftRight = 0;
@@ -611,7 +613,10 @@ LRESULT CMainScreenView::ViewWndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
 
 			int dx = GetSystemMetrics(SM_CXFIXEDFRAME);
 			int dy = GetSystemMetrics(SM_CYFIXEDFRAME);
-
+			dx += GetSystemMetrics(SM_CXSIZEFRAME);
+			dy += GetSystemMetrics(SM_CYSIZEFRAME);
+			dx += 1;
+			dy += 1;
 //			m_directWindowX = rc.left + xPos;
 			m_directX->WindowIsMoved(rc.left + xPos + dx, rc.top + yPos + dy);
 //			CAreaControl::SetNextAllPrint();
