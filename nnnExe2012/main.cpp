@@ -16,15 +16,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
 #include <Math.h>
 //#include <bits.nan.h>
 

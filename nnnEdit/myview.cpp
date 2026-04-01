@@ -192,6 +192,11 @@ LRESULT CALLBACK CMyView::staticViewWndProc(HWND hWnd, UINT message, WPARAM wPar
 				pView->WindowIsMoved((int)(short)LOWORD(lParam),(int)(short)HIWORD(lParam));
 			}
 
+			if (message == WM_SIZING)
+			{
+				pView->AdjustWindowSize(wParam, (LPRECT)lParam);
+			}
+
 			if (message == WM_SIZE)
 			{
 				if (1)
@@ -201,10 +206,10 @@ LRESULT CALLBACK CMyView::staticViewWndProc(HWND hWnd, UINT message, WPARAM wPar
 			}
 
 
-			if (message == WM_SIZING)
-			{
-				pView->AdjustWindowSize(wParam,(LPRECT)lParam);
-			}
+//			if (message == WM_SIZING)
+//			{
+//				pView->AdjustWindowSize(wParam,(LPRECT)lParam);
+//			}
 
 
 //			switch (message)

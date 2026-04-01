@@ -225,11 +225,11 @@ void CMyScrollView::ReCalcuScrollPara(void)
 
 	if (vh == 0)
 	{
-		block = (m_windowSizeY - m_topArea - m_bottomArea) / m_blockSizeY;
+		block = (m_windowSizeY - m_topArea - m_bottomArea+1) / m_blockSizeY;
 	}
 	else
 	{
-		block = (m_windowSizeX - m_leftArea - m_rightArea) / m_blockSizeX;
+		block = (m_windowSizeX - m_leftArea - m_rightArea+1) / m_blockSizeX;
 	}
 
 	if (block<=0) block = 1;
